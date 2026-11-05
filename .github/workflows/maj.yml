@@ -1,0 +1,34 @@
+name: Mise a jour quotidienne
+
+on:
+  schedule:
+    - cron: "40 18 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  maj:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Installer les dependances
+        run: pip install -r requirements.txt
+
+      - name: Lancer la mise a jour
+        run: python -m polaris.maj
+
+      - name: Publier les resultats
+        run: |
+          git config user.name  "polaris-bot"
+          git config user.email "polaris-bot@users.noreply.github.com"
+          git add docs/data.json data/
+          git diff --staged --quiet || git commit -m "maj $(date -u +%Y-%m-%d)"
+          git push
