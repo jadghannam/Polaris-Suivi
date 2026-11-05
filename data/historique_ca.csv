@@ -1,0 +1,61 @@
+Ticker,ca_base,an_base,ca_dernier,an_dernier,devise_ca,remarque
+JD.L,1.52,2015,12.66,2026,GBP,
+EN.PA,32.52,2015,56.91,2025,EUR,
+ZEAL.CO,0.18768,2015,9.21,2025,DKK,base 2015 quasi nulle (societe de biotechnologie) : CAGR non significatif
+KGF.L,10.97,2015,12.95,2026,GBP,
+ROCK-B.CO,2.22,2015,3.9,2025,EUR,
+RAND.AS,19.22,2015,23.08,2025,EUR,
+AD.AS,38.2,2015,92.35,2025,EUR,fusion Ahold / Delhaize en 2016 : le CA de base est pre-fusion
+CA.PA,78.86,2015,84.03,2025,EUR,
+RTO.L,2.59,2015,6.91,2025,USD,
+ACX.MC,4.22,2015,5.78,2025,EUR,
+ANA.MC,6.79,2015,22.44,2025,EUR,
+MKS.L,10.31,2015,17.27,2026,GBP,
+AKZA.AS,14.86,2015,10.16,2025,EUR,cession de la chimie de specialites en 2018
+REP.MC,41.74,2015,50.91,2025,EUR,
+FDR.MC,0.66698,2015,2.25,2025,EUR,
+PUIG.MC,2.59,2021,5.04,2025,EUR,introduction en bourse en 2024 : historique public court
+TTE.PA,143.42,2015,182.34,2025,USD,
+TEP.PA,3.4,2015,10.22,2025,EUR,
+HWDN.L,1.22,2015,2.42,2025,GBP,
+BT-A.L,17.97,2015,19.65,2026,GBP,
+DG.PA,39.16,2015,75.37,2025,EUR,
+RIO.L,43.17,2019,57.64,2025,USD,exercices anterieurs a 2019 reserves aux abonnes de la source
+CRDA.L,1.08,2015,1.7,2025,GBP,
+ABF.L,12.8,2015,19.46,2025,GBP,
+SYENS.BR,5.38,2020,5.97,2025,EUR,societe nee de la scission Solvay (2023) : historique court
+NG.L,13.21,2016,17.69,2026,GBP,exercice 2015 absent de la source : base prise en 2016
+ISS.CO,79.58,2015,84.68,2025,DKK,
+CNA.L,27.97,2015,19.49,2025,GBP,sortie du retail nord-americain
+UMI.BR,9.7,2015,19.37,2025,EUR,
+TEF.MC,52.04,2016,35.12,2025,EUR,cessions Amerique latine ; exercice 2015 absent de la source
+BNZL.L,6.49,2015,11.85,2025,GBP,
+ENGI.PA,69.88,2015,71.94,2025,EUR,
+RBREW.CO,6.03,2015,15.72,2025,DKK,
+BN.PA,22.41,2015,27.28,2025,EUR,
+ERIC-B.ST,246.92,2015,236.68,2025,SEK,
+ENG.MC,1.22,2016,1.11,2025,EUR,exercice 2015 aberrant dans la source : base prise en 2016
+ESSITY-B.ST,98.52,2015,138.49,2025,SEK,
+SPX.L,0.66721,2015,1.7,2025,GBP,
+ERF.PA,1.95,2015,7.3,2025,EUR,
+BRBY.L,2.52,2015,2.42,2026,GBP,
+SN.L,4.56,2020,5.81,2024,USD,exercices anterieurs a 2020 reserves aux abonnes de la source
+RED.MC,1.94,2015,1.66,2025,EUR,
+AI.PA,15.82,2015,26.94,2025,EUR,
+EDV.L,1.42,2020,2.68,2024,USD,exercices anterieurs a 2020 reserves aux abonnes de la source
+NTGY.MC,26.34,2015,19.69,2025,EUR,
+AMBU-B.CO,1.89,2015,6.04,2025,DKK,
+ROVI.MC,0.24601,2015,0.74348,2025,EUR,
+RKT.L,8.87,2015,14.21,2025,GBP,
+SSE.L,31.65,2015,10.19,2026,GBP,"cessions successives (reseaux, retail) : CA de base non comparable"
+IBE.MC,31.42,2015,44.08,2025,EUR,
+CCH.L,6.35,2015,11.6,2025,EUR,
+MC.PA,35.66,2015,80.81,2025,EUR,
+DCC.L,10.61,2015,15.44,2026,GBP,
+DSY.PA,2.84,2015,6.24,2025,EUR,
+SOLB.BR,10.08,2015,4.75,2025,EUR,scission de Syensqo en 2023 : le CA de base est pre-scission
+VIE.PA,24.96,2015,44.4,2025,EUR,
+KPN.AS,7.01,2015,5.8,2025,EUR,
+AAF.L,2.89,2017,6.44,2026,USD,introduction en bourse en 2019 : historique a partir de 2017
+EVO.ST,0.07636,2015,2.12,2025,EUR,base 2015 tres faible : CAGR non significatif
+ASSA-B.ST,68.1,2015,152.41,2025,SEK,

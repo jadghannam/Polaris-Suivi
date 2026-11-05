@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polaris — Suivi</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --ink:#15181d; --ink2:#5b636e; --line:#e3e6ea;
+  --accent:#1f3864; --ok:#2f8a4e; --warn:#b4770c; --bad:#c0392b;
+  --okbg:#eaf5ee; --warnbg:#fdf4e3; --badbg:#fbeceb;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101317; --card:#171b21; --ink:#e8ecf1; --ink2:#9aa4b1; --line:#262c34;
+    --accent:#9bb7e8; --ok:#5fcc87; --warn:#e0a94a; --bad:#ef6b5e;
+    --okbg:#13251a; --warnbg:#2a2113; --badbg:#2c1715;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101317; --card:#171b21; --ink:#e8ecf1; --ink2:#9aa4b1; --line:#262c34;
+  --accent:#9bb7e8; --ok:#5fcc87; --warn:#e0a94a; --bad:#ef6b5e;
+  --okbg:#13251a; --warnbg:#2a2113; --badbg:#2c1715;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:22px}
+h1{font-size:22px;margin:0;letter-spacing:-.01em}
+h1 span{color:var(--ink2);font-weight:400}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin:34px 0 12px}
+.maj{color:var(--ink2);font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .k{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.tile .v{font-size:24px;font-weight:600;margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--ink2);margin-top:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 11px;text-align:right;white-space:nowrap;
+  border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);
+  font-weight:600;position:sticky;top:0;background:var(--card)}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+tr.bloque td{opacity:.45}
+tr.bloque .soc{text-decoration:line-through}
+.pos{color:var(--ok)} .neg{color:var(--bad)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600}
+.b-ok{background:var(--okbg);color:var(--ok)}
+.b-surv{background:var(--warnbg);color:var(--warn)}
+.b-sortie{background:var(--badbg);color:var(--bad)}
+.soc{font-weight:600}
+.tick{color:var(--ink2);font-size:11.5px;margin-left:6px}
+.note{color:var(--ink2);font-size:13px;margin:8px 2px 0}
+.jrn{font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2);
+  white-space:pre-wrap;padding:14px 16px}
+.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:var(--ok)}
+.bar.orange>i{background:var(--warn)} .bar.rouge>i{background:var(--bad)}
+.rempl{font-size:12px;color:var(--ink2)}
+.err{padding:18px;color:var(--bad)}
+button.bl{font:inherit;font-size:12px;padding:3px 10px;border-radius:7px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--ink2)}
+button.bl:hover{border-color:var(--bad);color:var(--bad)}
+button.bl.on{background:var(--badbg);border-color:var(--bad);color:var(--bad);font-weight:600}
+.panneau{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical}
+.cp{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;margin-top:10px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600}
+@media(max-width:640px){.wrap{padding:18px 12px 48px}h1{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Fonds Polaris <span>— suivi quotidien</span></h1>
+    <div class="maj" id="maj"></div>
+  </header>
+  <div id="app"><p class="note">Chargement…</p></div>
+</div>
+
+<script>
+const E=(s,n=1)=>(s==null||isNaN(s))?"—":(s*100).toFixed(n)+" %";
+const S=(s,n=1)=>(s==null||isNaN(s))?"—":(s>=0?"+":"")+(s*100).toFixed(n)+" %";
+const N=(v,n=0)=>(v==null||isNaN(v))?"—":v.toLocaleString("fr-FR",{minimumFractionDigits:n,maximumFractionDigits:n});
+const cls=v=>v==null||isNaN(v)?"":(v>=0?"pos":"neg");
+const ZB={ok:["b-ok","OK"],surveillance:["b-surv","surveillance"],sortie:["b-sortie","sortie"]};
+const badge=z=>{const[c,t]=ZB[z]||["b-ok","—"];return `<span class="badge ${c}">${t}</span>`};
+const VIDE='<tr><td colspan="10" class="l">Aucun candidat &eacute;ligible '
+  +'aujourd&rsquo;hui. On attend qu&rsquo;un titre s&rsquo;am&eacute;liore ou entre '
+  +'dans la zone de s&eacute;lection.</td></tr>';
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* Blocages manuels.
+   StockTrak n'a pas d'API : c'est au gerant de constater qu'un titre n'est pas
+   achetable (volume insuffisant, symbole absent, cours aberrant). Le clic est
+   garde dans ce navigateur pour un effet immediat, et la zone du bas donne les
+   lignes a committer dans data/blocages.csv pour que ce soit partage et trace. */
+const KEY="polaris_blocages_v1";
+const lire=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}};
+const ecrire=o=>{try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}};
+let DATA=null;
+
+function basculer(t,societe){
+  const b=lire();
+  if(b[t]) delete b[t];
+  else b[t]={societe,motif:"non negociable sur StockTrak",date:(DATA&&DATA.date)||""};
+  ecrire(b); render(DATA);
+}
+window.basculer=basculer;
+
+function copier(){
+  const ta=document.getElementById("csv");
+  ta.select(); document.execCommand("copy");
+  const b=document.getElementById("btncopy"); const t=b.textContent;
+  b.textContent="Copié"; setTimeout(()=>b.textContent=t,1400);
+}
+window.copier=copier;
+
+fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render(d)}).catch(e=>{
+  document.getElementById("app").innerHTML=
+    `<div class="card err">Les données ne sont pas encore disponibles.<br>`+
+    `Lance le workflow « Mise a jour quotidienne » une première fois sur GitHub.<br><br>`+
+    `<small>${esc(e)}</small></div>`;
+});
+
+function render(d){
+  const bl=lire();
+  const serveur=new Set((d.blocages||[]).map(x=>x.Ticker));
+  const estBloque=t=>!!bl[t]||serveur.has(t);
+
+  document.getElementById("maj").textContent="Données du "+d.date;
+  const p=d.portefeuille,b=d.budget,lignes=p.lignes;
+  const surv=lignes.filter(l=>l.zone==="surveillance").length;
+  const sortie=lignes.filter(l=>l.zone==="sortie").length;
+  const perfRel=p.perf_moyenne-(d.benchmark.perf_depuis_lancement||0);
+
+  const tiles=`<div class="tiles">
+    <div class="tile"><div class="k">Valeur poche actions</div>
+      <div class="v">${N(p.valeur_eur)} €</div><div class="s">${p.nb_lignes} lignes</div></div>
+    <div class="tile"><div class="k">Performance moyenne</div>
+      <div class="v ${cls(p.perf_moyenne)}">${S(p.perf_moyenne,2)}</div>
+      <div class="s">depuis l'achat</div></div>
+    <div class="tile"><div class="k">${esc(d.benchmark.nom)}</div>
+      <div class="v ${cls(d.benchmark.perf_depuis_lancement)}">${S(d.benchmark.perf_depuis_lancement,2)}</div>
+      <div class="s">écart ${S(perfRel,2)}</div></div>
+    <div class="tile"><div class="k">À surveiller</div>
+      <div class="v">${surv}</div><div class="s">${sortie} en zone de sortie</div></div>
+    <div class="tile"><div class="k">Prochain comité</div>
+      <div class="v" style="font-size:19px">${b.prochain_comite||"—"}</div>
+      <div class="s">enveloppe ${N(b.enveloppe_par_comite,1)} transactions
+        · <strong>${b.echanges_max_par_comite} échanges max</strong></div></div>
+    <div class="tile"><div class="k">Transactions</div>
+      <div class="v">${b.faites} / 400</div>
+      <div class="s">${b.rotation} de rotation · rythme ${b.rythme} · ${b.comites_restants} comités restants</div>
+      <div class="bar ${b.etat==='vert'?'':b.etat}"><i style="width:${Math.min(100,b.faites/400*100)}%"></i></div></div>
+  </div>`;
+
+  const ordre={sortie:0,surveillance:1,ok:2};
+  const rows=lignes.slice().sort((a,c)=>ordre[a.zone]-ordre[c.zone]||(c.marge??-99)-(a.marge??-99))
+    .map(l=>{
+      const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
+        ? `<div class="rempl">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
+      const conf=l.zone==="sortie"
+        ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
+      return `<tr class="${estBloque(l.ticker)?"bloque":""}">
+        <td class="l"><span class="soc">${esc(l.societe)}</span><span class="tick">${esc(l.stocktrak||l.ticker)}</span>${r}${conf}</td>
+        <td class="l">${esc(l.secteur)}</td><td>${E(l.poids)}</td>
+        <td class="${cls(l.perf)}">${S(l.perf)}</td>
+        <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
+        <td class="${cls(l.perf_jour)}">${S(l.perf_jour)}</td>
+        <td class="${cls(l.perf_jour_secteur)}">${S(l.perf_jour_secteur)}</td>
+        <td>${N(l.rang)}</td><td>${E(l.g1,2)}</td><td>${E(l.seuil,2)}</td>
+        <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td>
+        <td>${badge(l.zone)}</td>
+        <td><button class="bl ${estBloque(l.ticker)?"on":""}"
+            onclick="basculer('${l.ticker}','${esc(l.societe).replace(/'/g,"")}')">
+            ${estBloque(l.ticker)?"bloqué":"bloquer"}</button></td></tr>`;
+    }).join("");
+
+  const tete=`<tr><th class="l">Titre</th><th class="l">Secteur</th><th>Poids</th>
+    <th>Perf.</th><th>vs indice</th><th>Jour</th><th>Jour secteur</th>
+    <th>Rang</th><th>g₁</th><th>Seuil</th><th>Marge</th><th>Zone</th><th>StockTrak</th></tr>`;
+
+  const cand=(d.remplacants||[]).filter(r=>!estBloque(r.Ticker));
+  const rempl=cand.map((r,i)=>`<tr>
+      <td class="l">${i===0?"<strong>1<sup>er</sup></strong>":i+1}</td>
+      <td class="l"><span class="soc">${esc(r.Societe)}</span><span class="tick">${esc(r.Ticker)}</span></td>
+      <td class="l">${esc(r.Secteur)}</td><td class="l">${esc(r.Pays)}</td>
+      <td>${N(r.rang)}</td><td class="l">${esc(r.verdict||"—")}</td>
+      <td>${E(r.g1,2)}</td><td>${E(r.seuil,2)}</td>
+      <td class="pos">${S(r.marge,2)}</td>
+      <td><button class="bl" onclick="basculer('${r.Ticker}','${esc(r.Societe).replace(/'/g,"")}')">bloquer</button></td></tr>`).join("");
+
+  const tousBloques=Object.entries(bl).map(([t,v])=>({Ticker:t,...v}))
+      .concat((d.blocages||[]).filter(x=>!bl[x.Ticker]));
+  const csv="Ticker,date,motif\n"+tousBloques
+      .map(x=>`${x.Ticker},${x.date||d.date},${x.motif||"non negociable sur StockTrak"}`).join("\n");
+  const panneau=tousBloques.length?`
+    <h2>Blocages</h2>
+    <div class="panneau">
+      <p class="note" style="margin-top:0">${tousBloques.length} titre${tousBloques.length>1?"s":""} marqué${tousBloques.length>1?"s":""}
+        comme non négociable${tousBloques.length>1?"s":""}. Le calcul reste fait et visible, mais le titre
+        n'est plus proposé comme remplaçant : le suivant dans le classement prend sa place.
+        Le clic ne vaut que dans ce navigateur — colle ces lignes dans
+        <code>data/blocages.csv</code> sur GitHub pour que ce soit partagé et tracé.</p>
+      <textarea id="csv">${esc(csv)}</textarea>
+      <button class="cp" id="btncopy" onclick="copier()">Copier pour GitHub</button>
+    </div>`:"";
+
+  document.getElementById("app").innerHTML=tiles+`
+    <h2>Portefeuille</h2>
+    <div class="card"><table><thead>${tete}</thead><tbody>${rows}</tbody></table></div>
+    <p class="note">Surveillance : rang &gt; ${d.parametres.rang_surveillance}, ou marge du DCF
+      au-dessus de ${E(d.parametres.marge_surveillance)}, ou décrochage de
+      ${E(d.parametres.decrochage_reexamen)} contre l'indice.
+      Sortie : rang &gt; ${d.parametres.rang_sortie}, marge positive confirmée sur
+      ${d.parametres.clotures_confirmation} clôtures, ou décrochage de
+      ${E(d.parametres.decrochage_sortie)}. Aucune sortie sans remplaçant.</p>
+
+    <h2>Remplaçants prêts</h2>
+    <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>
+      <th class="l">Secteur</th><th class="l">Pays</th><th>Rang</th><th class="l">Verdict</th>
+      <th>g₁</th><th>Seuil</th><th>Marge</th><th>StockTrak</th></tr></thead>
+      <tbody>${rempl||VIDE}</tbody></table></div>
+    ${panneau}
+    <h2>Journal d'exécution</h2>
+    <div class="card"><div class="jrn">${esc((d.journal||[]).join("\n"))}</div></div>`;
+}
+</script>
+</body>
+</html>

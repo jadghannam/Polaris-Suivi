@@ -1,0 +1,10 @@
+Secteur,Beta desendette,D/E de marche (mediane),Taux d'impot (mediane),Beta re-endette,Cout des fonds propres,Cout de la dette avant impot,Poids de la dette,WACC
+Consommation de base,0.619,0.2649,0.2589,0.74,0.07302,0.05,0.2094,0.06549
+Consommation discretionnaire,0.844,0.1982,0.256,0.968,0.0844,0.05,0.1654,0.0766
+Energie,0.541,0.2623,0.3996,0.626,0.0673,0.05,0.2078,0.05956
+Industrie,0.897,0.1294,0.2522,0.984,0.08521,0.05,0.1146,0.07974
+Materiaux,0.825,0.1492,0.289,0.913,0.08163,0.05,0.1299,0.07564
+Sante,0.925,0.1688,0.21,1.049,0.08843,0.05,0.1444,0.08137
+Services aux collectivites,0.305,0.704,0.2386,0.469,0.05945,0.05,0.4131,0.05062
+Services de communication,0.651,0.34,0.211,0.825,0.07727,0.05,0.2538,0.06767
+Technologies de l'information,1.129,0.01,0.2376,1.138,0.0929,0.05,0.0099,0.09236
