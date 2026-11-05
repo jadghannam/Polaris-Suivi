@@ -114,6 +114,11 @@ def main() -> None:
     # on garde celle du marche et on ecarte le doublon avant la fusion.
     pf = positions.drop(columns=["devise"]).merge(ev, on="Ticker", how="left")
     pf["devise"] = pf["devise"].fillna("EUR")
+    # Garde-fou : une devise que la table de change ne connait pas donnerait
+    # une valeur vide en silence, et la ligne disparaitrait du total.
+    inconnues = sorted(set(pf["devise"]) - set(taux))
+    if inconnues:
+        note(f"ATTENTION devises sans taux de change : {', '.join(inconnues)}")
     pf["cours_local"] = pf["cours"]
     pf["perf"] = pf["cours_local"] / pf["prix_paye_local"] - 1
     pf["perf_relative"] = pf["perf"] - perf_indice
