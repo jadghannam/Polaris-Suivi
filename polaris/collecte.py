@@ -25,6 +25,24 @@ from . import config as cfg
 from .journal import note
 
 
+# ------------------------------------------------------- sous-unites --------
+# Yahoo cote certaines places dans la SOUS-UNITE de la devise et le signale par
+# une minuscule : Londres en pence (GBp), Johannesburg en cents (ZAc),
+# Tel-Aviv en agorot (ILA). Si on ne ramene pas tout a l'unite principale des
+# la collecte, les valeurs britanniques ressortent avec un book-to-market cent
+# fois trop faible et sont toutes eliminees sans que rien ne le signale.
+# C'est exactement l'erreur de septembre.
+SOUS_UNITES = {"GBp": ("GBP", 100.0), "GBX": ("GBP", 100.0),
+               "ZAc": ("ZAR", 100.0), "ILA": ("ILS", 100.0)}
+
+
+def normaliser(devise: str | None) -> tuple[str, float]:
+    """Renvoie la devise principale et le diviseur a appliquer au prix."""
+    if devise in SOUS_UNITES:
+        return SOUS_UNITES[devise]
+    return (devise or "EUR"), 1.0
+
+
 # --------------------------------------------------------------- cours -------
 def cours_du_jour(tickers: list[str]) -> pd.DataFrame:
     """Dernier cours, volume et amplitude du jour, en devise de cotation.
@@ -44,15 +62,18 @@ def cours_du_jour(tickers: list[str]) -> pd.DataFrame:
                 continue
             d = h.iloc[-1]
             info = paquet.tickers[t].fast_info
+            devise, diviseur = normaliser(getattr(info, "currency", None))
+            if diviseur != 1.0:
+                note(f"{t} cote en sous-unite : prix divises par {diviseur:.0f}")
             lignes.append({
                 "Ticker": t,
                 "date": h.index[-1].date().isoformat(),
-                "cours": float(d["Close"]),
-                "ouverture": float(d["Open"]),
-                "haut": float(d["High"]),
-                "bas": float(d["Low"]),
+                "cours": float(d["Close"]) / diviseur,
+                "ouverture": float(d["Open"]) / diviseur,
+                "haut": float(d["High"]) / diviseur,
+                "bas": float(d["Low"]) / diviseur,
                 "volume": float(d["Volume"]),
-                "devise": getattr(info, "currency", None),
+                "devise": devise,
                 "actions_m": (getattr(info, "shares", None) or 0) / 1e6 or None,
             })
         except Exception as e:                      # noqa: BLE001
