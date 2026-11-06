@@ -83,6 +83,7 @@ textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 .depot .etat.ok{color:var(--ok)} .depot .etat.ko{color:var(--bad)}
 .depot details{margin-top:10px;font-size:13px;color:var(--ink2)}
 .depot summary{cursor:pointer}
+.depot label{font-size:13px;color:var(--ink2);display:flex;gap:6px;align-items:center}
 .depot input[type=password],.depot input[type=text]{font:inherit;font-size:13px;padding:6px 9px;
   border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);width:260px;max-width:100%}
 .depot .ligne{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
@@ -104,8 +105,13 @@ textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
     <div class="t">Déposer l'export StockTrak</div>
     <div class="note" style="margin-top:2px">Glisse ici <code>OpenPosition_JJ_MM_AAAA.csv</code>
       ou <span class="lien" id="choisir">choisis le fichier</span>.
-      La page recalcule positions, poids et performance, puis envoie le fichier dans
-      <code>data/</code> du dépôt.</div>
+      La page se met à jour tout de suite, puis le programme recalcule tout avec les cours
+      Yahoo du moment (quelques minutes).</div>
+    <div class="ligne">
+      <label>Transactions consommées <input type="text" id="cTrans" inputmode="numeric" style="width:90px"></label>
+      <label>Liquidités (€) <input type="text" id="cLiq" inputmode="decimal" style="width:130px" placeholder="ex. 152 340,50"></label>
+      <span class="note" style="margin:0">à lire dans StockTrak, à mettre à jour avant de déposer</span>
+    </div>
     <input type="file" id="fichier" accept=".csv,text/csv" hidden>
     <div class="etat" id="etatDepot"></div>
     <details id="cle">
@@ -206,7 +212,7 @@ function lireCsv(texte){
   return lignes.map(l=>Object.fromEntries(tete.map((h,i)=>[h,(l[i]??"").trim()])));
 }
 
-function apercu(nom,texte){
+function apercu(nom,texte,compte){
   const rows=lireCsv(texte);
   const req=["Symbol","Quantity","Currency","LastPrice","PricePaid"];
   const manque=req.filter(c=>!rows.length||!(c in rows[0]));
@@ -234,14 +240,21 @@ function apercu(nom,texte){
   }
   if(!actions.length&&!etf.length) throw new Error("aucune position lisible");
   const somme=a=>a.reduce((s,l)=>s+(isFinite(l.valeur_eur)?l.valeur_eur:0),0);
-  const tA=somme(actions),tE=somme(etf),liq=D.fonds?.liquidites_eur;
+  const liq=compte&&isFinite(compte.liquidites)?compte.liquidites:D.fonds?.liquidites_eur;
+  const tA=somme(actions),tE=somme(etf);
   const tF=tA+tE+(isFinite(liq)&&liq!=null?liq:0);
   actions.forEach(l=>{l.poids=l.valeur_eur/tF;l.poids_poche=l.valeur_eur/tA});
   etf.forEach(l=>l.poids=l.valeur_eur/tF);
   const perfs=actions.map(l=>l.perf).filter(isFinite);
   D.portefeuille={...D.portefeuille,lignes:actions,etf,valeur_eur:tA,nb_lignes:actions.length,
     perf_moyenne:perfs.reduce((a,b)=>a+b,0)/(perfs.length||1)};
-  D.fonds={...(D.fonds||{}),valeur_eur:tF,actions_eur:tA,etf_eur:tE};
+  D.fonds={...(D.fonds||{}),valeur_eur:tF,actions_eur:tA,etf_eur:tE,liquidites_eur:liq??null};
+  if(compte&&isFinite(compte.transactions)&&D.budget){
+    const b=D.budget, f=compte.transactions, rot=Math.max(f-b.initiales,0);
+    Object.assign(b,{faites:f,rotation:rot,restantes:400-f,echanges_possibles:Math.floor((400-f)/2),
+      rythme:b.attendu_a_ce_jour>0?Math.round(rot/b.attendu_a_ce_jour*100)/100:0});
+    b.etat=b.rythme<1?"vert":b.rythme<=1.2?"orange":"rouge";
+  }
   D.source_positions={type:"apercu",fichier:nom};
   D.apercu={fichier:nom,alertes,
     sorties:Object.keys(avant).filter(t=>!actions.some(l=>l.ticker===t))};
@@ -273,29 +286,86 @@ function base64(octets){
     s+=String.fromCharCode.apply(null,octets.subarray(i,i+0x8000));
   return btoa(s);
 }
+const utf8b64=s=>base64(new TextEncoder().encode(s));
+const b64utf8=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g,"")),c=>c.charCodeAt(0)));
+async function gh(chemin,opts={}){
+  const r=await fetch(`https://api.github.com/repos/${depot()}${chemin}`,{...opts,cache:"no-store",
+    headers:{Authorization:"Bearer "+cle(),Accept:"application/vnd.github+json",
+      "X-GitHub-Api-Version":"2022-11-28"}});
+  if(!r.ok){const e=new Error(raison(r.status));e.status=r.status;throw e}
+  return r.json();
+}
+/* Un seul commit pour l'export et la ligne de compte : un seul passage du
+   programme, et jamais un export sans les chiffres qui vont avec. */
+async function commiter(){
+  const br=(await gh("")).default_branch;
+  const parent=(await gh(`/git/ref/heads/${br}`)).object.sha;
+  const arbre=(await gh(`/git/commits/${parent}`)).tree.sha;
+  let compte;
+  try{ compte=b64utf8((await gh(`/contents/data/compte.csv?ref=${parent}`)).content); }
+  catch(e){ if(e.status!==404) throw e; compte="date,transactions_consommees,liquidites_eur,commentaire\n"; }
+  if(!compte.endsWith("\n")) compte+="\n";
+  const c=DEPOSE.compte, j=new Date().toISOString().slice(0,10);
+  compte+=`${j},${c.transactions},${isFinite(c.liquidites)?c.liquidites:""},depot ${DEPOSE.nom}\n`;
+  const blob=async b64=>(await gh("/git/blobs",{method:"POST",
+    body:JSON.stringify({content:b64,encoding:"base64"})})).sha;
+  const tree=(await gh("/git/trees",{method:"POST",body:JSON.stringify({base_tree:arbre,tree:[
+    {path:"data/"+DEPOSE.nom,mode:"100644",type:"blob",sha:await blob(base64(DEPOSE.octets))},
+    {path:"data/compte.csv",mode:"100644",type:"blob",sha:await blob(utf8b64(compte))}]})})).sha;
+  const commit=(await gh("/git/commits",{method:"POST",body:JSON.stringify({
+    message:`positions StockTrak ${DEPOSE.nom} · ${c.transactions} transactions`,
+    tree,parents:[parent]})})).sha;
+  await gh(`/git/refs/heads/${br}`,{method:"PATCH",body:JSON.stringify({sha:commit})});
+}
 async function envoyer(){
-  const tok=cle(), rep=depot();
   if(!DEPOSE) return;
-  if(!tok||!rep){ etat(`Aperçu calculé. Pour l'envoyer dans data/, colle ta clé GitHub ci-dessous`
-    +(rep?"":" et indique le dépôt")+", puis clique Envoyer.","",true); return; }
-  const chemin="data/"+DEPOSE.nom;
-  const url=`https://api.github.com/repos/${rep}/contents/${chemin}`;
-  const h={Authorization:"Bearer "+tok,Accept:"application/vnd.github+json",
-    "X-GitHub-Api-Version":"2022-11-28"};
-  etat("Envoi de "+DEPOSE.nom+" sur GitHub…");
+  if(!cle()||!depot()){ etat(`Aperçu calculé. Pour l'envoyer, colle ta clé GitHub ci-dessous`
+    +(depot()?"":" et indique le dépôt")+", puis clique Envoyer.","",true); return; }
+  etat("Envoi de "+DEPOSE.nom+" et des chiffres du compte sur GitHub…");
   try{
-    let sha;
-    const g=await fetch(url,{headers:h,cache:"no-store"});
-    if(g.ok) sha=(await g.json()).sha;
-    else if(g.status!==404) throw new Error(raison(g.status));
-    const corps={message:"positions StockTrak "+DEPOSE.nom,content:base64(DEPOSE.octets)};
-    if(sha) corps.sha=sha;
-    const p=await fetch(url,{method:"PUT",headers:h,body:JSON.stringify(corps)});
-    if(!p.ok) throw new Error(raison(p.status));
+    // 422 : le programme a publie entre-temps, on repart de son commit.
+    for(let essai=0;;essai++){
+      try{ await commiter(); break; }
+      catch(e){ if(e.status!==422||essai>=2) throw e; }
+    }
     DEPOSE.envoye=true;
-    etat(`${DEPOSE.nom} envoyé dans ${rep}/data/`+(sha?" (remplace l'export du même jour, l'ancien reste dans l'historique git)":"")
-      +". Il sera pris en compte au prochain passage du programme.","ok");
+    memoriser({nom:DEPOSE.nom,texte:DEPOSE.texte,compte:DEPOSE.compte,envoye_le:new Date().toISOString()});
+    etat(`${DEPOSE.nom} envoyé. Le programme recalcule tout avec les cours Yahoo du moment ;`
+      +" la page passera seule sur les données officielles d'ici quelques minutes.","ok");
+    surveiller();
   }catch(e){ etat("Envoi impossible : "+e.message,"ko",true); }
+}
+
+/* L'apercu survit au rechargement tant que le programme n'a pas publie des
+   donnees posterieures au depot ; la page les guette et bascule seule. */
+const KAP="polaris_apercu_v1";
+const memoriser=o=>{try{o?localStorage.setItem(KAP,JSON.stringify(o)):localStorage.removeItem(KAP)}catch(e){}};
+const memoire=()=>{try{return JSON.parse(localStorage.getItem(KAP)||"null")}catch(e){return null}};
+// Officiel = data.json porte ce fichier, ces transactions et ces liquidites :
+// le programme a bien lu ce depot. Ne depend pas de l'horloge du poste.
+const memeLiq=(a,b)=>(a==null||!isFinite(a))?(b==null||!isFinite(b)):(b!=null&&Math.abs(a-b)<0.01);
+const officiel=(d,m)=>d.source_positions?.fichier===m.nom
+  &&d.budget?.faites===m.compte.transactions&&memeLiq(d.fonds?.liquidites_eur,m.compte.liquidites);
+let guet=null;
+function surveiller(){
+  clearInterval(guet);
+  const debut=Date.now();
+  guet=setInterval(async()=>{
+    const m=memoire(); if(!m){clearInterval(guet);return}
+    try{
+      const d=await (await fetch("data.json?"+Date.now(),{cache:"no-store"})).json();
+      if(officiel(d,m)){
+        clearInterval(guet); memoriser(null); SERVEUR=d; DATA=d; DEPOSE=null; render(d); prerempli(d);
+        etat(`Données officielles à jour (${m.nom}, cours Yahoo du moment).`,"ok");
+        return;
+      }
+    }catch(e){}
+    if(Date.now()-debut>20*60e3){
+      clearInterval(guet);
+      etat("Toujours pas de données officielles après 20 minutes : regarde l'onglet Actions du dépôt"
+        +" (le passage a peut-être échoué). L'aperçu reste affiché.","ko");
+    }
+  },30e3);
 }
 const raison=s=>s===401?"clé refusée ou expirée (401)"
   :s===403?"la clé n'a pas la permission Contents : Read and write sur ce dépôt (403)"
@@ -308,15 +378,31 @@ function etat(msg,c="",bouton=false){
     ?' <button class="prim" id="renvoyer" style="margin-left:6px">Envoyer</button>':"");
   const b=document.getElementById("renvoyer"); if(b) b.onclick=envoyer;
 }
+function lireCompte(){
+  const t=nombreFr(document.getElementById("cTrans").value);
+  const l=nombreFr(document.getElementById("cLiq").value);
+  const avant=SERVEUR?.budget?.faites;
+  if(!Number.isInteger(t)||t<0) throw new Error("indique le nombre de transactions consommées (lu dans StockTrak)");
+  if(avant!=null&&t<avant) throw new Error(`${t} transactions, c'est moins que les ${avant} déjà enregistrées`);
+  return {transactions:t,liquidites:l};
+}
+function prerempli(d){
+  const m=memoire(), c=m?.compte;
+  document.getElementById("cTrans").value=c?.transactions??d?.budget?.faites??"";
+  const l=c?c.liquidites:d?.fonds?.liquidites_eur;
+  document.getElementById("cLiq").value=l!=null&&isFinite(l)?N(l,2):"";
+}
 async function deposer(f){
   if(!f) return;
   if(!SERVEUR){etat("Les données du programme ne sont pas encore chargées.","ko");return}
-  const octets=new Uint8Array(await f.arrayBuffer());
-  let D;
-  try{ D=apercu(nomCanonique(f.name),decoder(octets)); }
-  catch(e){ etat(`${f.name} n'a pas été lu : ${e.message}. Rien n'a été envoyé.`,"ko"); return; }
-  DEPOSE={nom:nomCanonique(f.name),octets,envoye:false};
+  const octets=new Uint8Array(await f.arrayBuffer()), nom=nomCanonique(f.name);
+  let D,compte,texte=decoder(octets);
+  try{ compte=lireCompte(); D=apercu(nom,texte,compte); }
+  catch(e){ etat(`${f.name} n'a pas été envoyé : ${e.message}.`,"ko"); return; }
+  DEPOSE={nom,octets,texte,compte,envoye:false};
   DATA=D; render(D);
+  if(!isFinite(compte.liquidites))
+    etat("Liquidités non saisies : la valeur du fonds ne comptera que les titres.");
   await envoyer();
 }
 function majCle(){
@@ -346,7 +432,20 @@ function majCle(){
   majCle();
 })();
 
-fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=>{SERVEUR=d;DATA=d;render(d)}).catch(e=>{
+fetch("data.json?"+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{
+  SERVEUR=d; DATA=d;
+  const m=memoire();
+  if(m&&!officiel(d,m)&&Date.now()-Date.parse(m.envoye_le)<36e5*24){
+    // Depot envoye, programme pas encore passe : on remontre l'apercu.
+    try{ DATA=apercu(m.nom,m.texte,m.compte); }catch(e){ memoriser(null); }
+    etat(`${m.nom} envoyé ; en attente du recalcul officiel par le programme.`,"");
+    surveiller();
+  } else if(m&&!officiel(d,m)){
+    memoriser(null);
+    etat(`Le dépôt de ${m.nom} n'a jamais été pris en compte : regarde l'onglet Actions du dépôt.`,"ko");
+  } else memoriser(null);
+  prerempli(d); render(DATA);
+}).catch(e=>{
   document.getElementById("app").innerHTML=
     `<div class="card err">Les données ne sont pas encore disponibles.<br>`+
     `Lance le workflow « Mise a jour quotidienne » une première fois sur GitHub.<br><br>`+
@@ -369,7 +468,8 @@ function render(d){
     ${esc(d.apercu.fichier)} : quantités, cours et prix payés de l'export. Rang, DCF et zones restent
     ceux du passage du ${esc(d.date)}.${d.apercu.sorties.length?" Lignes absentes de l'export : "
     +esc(d.apercu.sorties.join(", "))+".":""}${d.apercu.alertes.length?" Attention : "
-    +esc(d.apercu.alertes.join(" ; "))+".":""} Recharge la page pour revenir aux données publiées.</div>`:"";
+    +esc(d.apercu.alertes.join(" ; "))+".":""} La page passera seule sur les données officielles
+    dès que le programme aura recalculé.</div>`:"";
   const surv=lignes.filter(l=>l.zone==="surveillance").length;
   const sortie=lignes.filter(l=>l.zone==="sortie").length;
   const perfRel=p.perf_moyenne-(d.benchmark.perf_depuis_lancement||0);

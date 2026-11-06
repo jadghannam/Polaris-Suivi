@@ -4,6 +4,19 @@ on:
   schedule:
     - cron: "40 18 * * 1-5"
   workflow_dispatch:
+  # Un export StockTrak ou une ligne de compte deposes depuis la page :
+  # la plateforme se recalcule tout de suite, sans attendre le soir.
+  push:
+    branches: [main]
+    paths:
+      - "data/OpenPosition_*.csv"
+      - "data/compte.csv"
+
+# Une seule mise a jour a la fois : deux passages simultanes se disputeraient
+# l'ecriture de data/ et le second echouerait au push.
+concurrency:
+  group: maj
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -31,4 +44,7 @@ jobs:
           git config user.email "polaris-bot@users.noreply.github.com"
           git add docs/data.json data/
           git diff --staged --quiet || git commit -m "maj $(date -u +%Y-%m-%d)"
+          # Un depot a pu arriver pendant le calcul : on se recale avant de
+          # pousser. Il declenchera son propre passage.
+          git pull --rebase origin main
           git push
