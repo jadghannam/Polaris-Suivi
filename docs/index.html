@@ -74,6 +74,23 @@ textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
   background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical}
 .cp{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;margin-top:10px;
   border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600}
+.depot{border:2px dashed var(--line);border-radius:12px;padding:16px 18px;background:var(--card);
+  margin-bottom:18px;transition:border-color .15s,background .15s}
+.depot.survol{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--card))}
+.depot .t{font-weight:600}
+.depot .lien{color:var(--accent);cursor:pointer;text-decoration:underline}
+.depot .etat{font-size:13px;margin-top:8px}
+.depot .etat.ok{color:var(--ok)} .depot .etat.ko{color:var(--bad)}
+.depot details{margin-top:10px;font-size:13px;color:var(--ink2)}
+.depot summary{cursor:pointer}
+.depot input[type=password],.depot input[type=text]{font:inherit;font-size:13px;padding:6px 9px;
+  border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);width:260px;max-width:100%}
+.depot .ligne{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.depot button{font:inherit;font-size:12.5px;padding:5px 12px;border-radius:7px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--ink)}
+.depot button.prim{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:600}
+.apercu{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;
+  font-size:13px;margin-bottom:14px}
 @media(max-width:640px){.wrap{padding:18px 12px 48px}h1{font-size:19px}}
 </style>
 </head>
@@ -83,6 +100,29 @@ textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
     <h1>Fonds Polaris <span>— suivi quotidien</span></h1>
     <div class="maj" id="maj"></div>
   </header>
+  <div class="depot" id="depot">
+    <div class="t">Déposer l'export StockTrak</div>
+    <div class="note" style="margin-top:2px">Glisse ici <code>OpenPosition_JJ_MM_AAAA.csv</code>
+      ou <span class="lien" id="choisir">choisis le fichier</span>.
+      La page recalcule positions, poids et performance, puis envoie le fichier dans
+      <code>data/</code> du dépôt.</div>
+    <input type="file" id="fichier" accept=".csv,text/csv" hidden>
+    <div class="etat" id="etatDepot"></div>
+    <details id="cle">
+      <summary id="cleResume">Clé GitHub</summary>
+      <div class="ligne">
+        <input type="password" id="cleInput" placeholder="github_pat_…" autocomplete="off">
+        <button class="prim" id="cleOk">Enregistrer</button>
+        <button id="cleOubli">Oublier la clé</button>
+      </div>
+      <div class="ligne">Dépôt <input type="text" id="depotInput" placeholder="compte/depot"></div>
+      <p style="margin:8px 0 0">Créer la clé : github.com → Settings → Developer settings →
+        Personal access tokens → <strong>Fine-grained tokens</strong> → Generate new token,
+        accès au <strong>seul dépôt de la plateforme</strong>, permission
+        <strong>Contents : Read and write</strong> et rien d'autre, expiration au 31 mars 2027.
+        Elle reste dans ce navigateur et n'est jamais écrite dans la page.</p>
+    </details>
+  </div>
   <div id="app"><p class="note">Chargement…</p></div>
 </div>
 
@@ -124,7 +164,189 @@ function copier(){
 }
 window.copier=copier;
 
-fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render(d)}).catch(e=>{
+/* ------------------------------------------------ export StockTrak ------
+   Le fichier depose est lu ici, avec les memes regles que polaris/positions.py :
+   nombres a la francaise, symboles normalises des deux cotes, toute ligne hors
+   univers traitee comme un ETF (ni classement ni DCF). Les cours sont ceux de
+   l'export ; rang, DCF et zones restent ceux du dernier passage du programme. */
+let SERVEUR=null;          // data.json tel que publie, jamais modifie
+let DEPOSE=null;           // dernier fichier depose : {nom, octets}
+
+const nombreFr=v=>{
+  if(v==null) return NaN;
+  let s=String(v).trim().replace(/[    %€﻿]/g,"")
+    .replace(/[−–]/g,"-");
+  if(/^\(.*\)$/.test(s)) s="-"+s.slice(1,-1);
+  if(!s||s==="-"||s==="--") return NaN;
+  if(s.includes(",")) s=s.replace(/\./g,"").replace(",",".");
+  const n=Number(s); return isFinite(n)?n:NaN;
+};
+const normSym=s=>String(s??"").trim().toUpperCase()
+  .replace(/:[A-Z]{1,3}$/,"").replace(/[\s. ]/g,"");
+
+function decoder(octets){
+  try{return new TextDecoder("utf-8",{fatal:true}).decode(octets).replace(/^﻿/,"")}
+  catch(e){return new TextDecoder("windows-1252").decode(octets)}
+}
+function lireCsv(texte){
+  const l1=(texte.split(/\r?\n/)[0]||"");
+  const sep=[";","\t",","].reduce((a,c)=>l1.split(c).length>l1.split(a).length?c:a,";");
+  const lignes=[]; let ligne=[],champ="",q=false;
+  for(let i=0;i<texte.length;i++){
+    const c=texte[i];
+    if(q){ if(c==='"'){ if(texte[i+1]==='"'){champ+='"';i++} else q=false } else champ+=c; }
+    else if(c==='"') q=true;
+    else if(c===sep){ligne.push(champ);champ=""}
+    else if(c==="\n"||c==="\r"){ if(c==="\r"&&texte[i+1]==="\n") i++;
+      ligne.push(champ);champ=""; if(ligne.some(x=>x.trim()!=="")) lignes.push(ligne); ligne=[]; }
+    else champ+=c;
+  }
+  ligne.push(champ); if(ligne.some(x=>x.trim()!=="")) lignes.push(ligne);
+  const tete=(lignes.shift()||[]).map(x=>x.trim());
+  return lignes.map(l=>Object.fromEntries(tete.map((h,i)=>[h,(l[i]??"").trim()])));
+}
+
+function apercu(nom,texte){
+  const rows=lireCsv(texte);
+  const req=["Symbol","Quantity","Currency","LastPrice","PricePaid"];
+  const manque=req.filter(c=>!rows.length||!(c in rows[0]));
+  if(manque.length) throw new Error("colonnes absentes : "+manque.join(", "));
+  const D=JSON.parse(JSON.stringify(SERVEUR));
+  const taux=D.taux||{EUR:1}, bench=D.benchmark.perf_depuis_lancement||0;
+  const table={}; (D.univers||[]).forEach(u=>table[normSym(u["Symbole StockTrak"])]=u);
+  const avant={}; D.portefeuille.lignes.forEach(l=>avant[l.ticker]=l);
+  const actions=[],etf=[],alertes=[];
+  for(const r of rows){
+    const q=nombreFr(r.Quantity); if(!isFinite(q)||q===0||!r.Symbol) continue;
+    let dev=(r.Currency||"EUR").toUpperCase(),cours=nombreFr(r.LastPrice),paye=nombreFr(r.PricePaid);
+    if(dev==="GBX"){dev="GBP";cours/=100;paye/=100}
+    if(!(dev in taux)) alertes.push(`pas de taux de change pour ${dev} (${r.Symbol})`);
+    const valeur=q*cours/(taux[dev]??NaN), perf=cours/paye-1;
+    const commun={stocktrak:r.Symbol,quantite:q,devise:dev,prix_paye:paye,cours,
+      valeur_eur:valeur,perf,perf_relative:perf-bench};
+    const u=table[normSym(r.Symbol)];
+    if(u){
+      const base=avant[u.Ticker]||{ticker:u.Ticker,societe:u.Societe,secteur:u.Secteur,
+        pays:u.Pays,rang:u.rang,g1:u.g1,seuil:u.seuil,marge:u.marge,verdict:u.verdict,
+        zone:null,motifs:["nouvelle ligne : zones calculées au prochain passage du programme"]};
+      actions.push({...base,...commun,type:"action"});
+    } else etf.push({ticker:r.Symbol,description:r.Description||"",type:"etf",...commun});
+  }
+  if(!actions.length&&!etf.length) throw new Error("aucune position lisible");
+  const somme=a=>a.reduce((s,l)=>s+(isFinite(l.valeur_eur)?l.valeur_eur:0),0);
+  const tA=somme(actions),tE=somme(etf),liq=D.fonds?.liquidites_eur;
+  const tF=tA+tE+(isFinite(liq)&&liq!=null?liq:0);
+  actions.forEach(l=>{l.poids=l.valeur_eur/tF;l.poids_poche=l.valeur_eur/tA});
+  etf.forEach(l=>l.poids=l.valeur_eur/tF);
+  const perfs=actions.map(l=>l.perf).filter(isFinite);
+  D.portefeuille={...D.portefeuille,lignes:actions,etf,valeur_eur:tA,nb_lignes:actions.length,
+    perf_moyenne:perfs.reduce((a,b)=>a+b,0)/(perfs.length||1)};
+  D.fonds={...(D.fonds||{}),valeur_eur:tF,actions_eur:tA,etf_eur:tE};
+  D.source_positions={type:"apercu",fichier:nom};
+  D.apercu={fichier:nom,alertes,
+    sorties:Object.keys(avant).filter(t=>!actions.some(l=>l.ticker===t))};
+  return D;
+}
+
+/* ------------------------------------------------- envoi sur GitHub ------
+   La cle est collee une fois et gardee dans le localStorage de ce navigateur.
+   Elle n'apparait jamais dans le code de la page, qui est publique. */
+const KTOK="polaris_cle_github", KDEP="polaris_depot";
+const cle=()=>{try{return localStorage.getItem(KTOK)||""}catch(e){return""}};
+function depot(){
+  try{const d=localStorage.getItem(KDEP); if(d) return d}catch(e){}
+  const h=location.hostname;
+  if(h.endsWith(".github.io")){
+    const proprio=h.split(".")[0], rep=location.pathname.split("/").filter(Boolean)[0];
+    return proprio+"/"+(rep||h);
+  }
+  return "";
+}
+function nomCanonique(nom){
+  const m=/OpenPosition_(\d{1,2})_(\d{1,2})_(\d{4})/i.exec(nom||"");
+  const p=n=>String(n).padStart(2,"0");
+  if(m) return `OpenPosition_${p(m[1])}_${p(m[2])}_${m[3]}.csv`;
+  const j=new Date(); return `OpenPosition_${p(j.getDate())}_${p(j.getMonth()+1)}_${j.getFullYear()}.csv`;
+}
+function base64(octets){
+  let s=""; for(let i=0;i<octets.length;i+=0x8000)
+    s+=String.fromCharCode.apply(null,octets.subarray(i,i+0x8000));
+  return btoa(s);
+}
+async function envoyer(){
+  const tok=cle(), rep=depot();
+  if(!DEPOSE) return;
+  if(!tok||!rep){ etat(`Aperçu calculé. Pour l'envoyer dans data/, colle ta clé GitHub ci-dessous`
+    +(rep?"":" et indique le dépôt")+", puis clique Envoyer.","",true); return; }
+  const chemin="data/"+DEPOSE.nom;
+  const url=`https://api.github.com/repos/${rep}/contents/${chemin}`;
+  const h={Authorization:"Bearer "+tok,Accept:"application/vnd.github+json",
+    "X-GitHub-Api-Version":"2022-11-28"};
+  etat("Envoi de "+DEPOSE.nom+" sur GitHub…");
+  try{
+    let sha;
+    const g=await fetch(url,{headers:h,cache:"no-store"});
+    if(g.ok) sha=(await g.json()).sha;
+    else if(g.status!==404) throw new Error(raison(g.status));
+    const corps={message:"positions StockTrak "+DEPOSE.nom,content:base64(DEPOSE.octets)};
+    if(sha) corps.sha=sha;
+    const p=await fetch(url,{method:"PUT",headers:h,body:JSON.stringify(corps)});
+    if(!p.ok) throw new Error(raison(p.status));
+    DEPOSE.envoye=true;
+    etat(`${DEPOSE.nom} envoyé dans ${rep}/data/`+(sha?" (remplace l'export du même jour, l'ancien reste dans l'historique git)":"")
+      +". Il sera pris en compte au prochain passage du programme.","ok");
+  }catch(e){ etat("Envoi impossible : "+e.message,"ko",true); }
+}
+const raison=s=>s===401?"clé refusée ou expirée (401)"
+  :s===403?"la clé n'a pas la permission Contents : Read and write sur ce dépôt (403)"
+  :s===404?"dépôt introuvable, ou clé sans accès à ce dépôt (404)"
+  :s===409||s===422?`conflit d'écriture (${s}), réessaie`:"erreur GitHub "+s;
+function etat(msg,c="",bouton=false){
+  const el=document.getElementById("etatDepot");
+  el.className="etat "+c;
+  el.innerHTML=esc(msg)+(bouton&&DEPOSE&&!DEPOSE.envoye
+    ?' <button class="prim" id="renvoyer" style="margin-left:6px">Envoyer</button>':"");
+  const b=document.getElementById("renvoyer"); if(b) b.onclick=envoyer;
+}
+async function deposer(f){
+  if(!f) return;
+  if(!SERVEUR){etat("Les données du programme ne sont pas encore chargées.","ko");return}
+  const octets=new Uint8Array(await f.arrayBuffer());
+  let D;
+  try{ D=apercu(nomCanonique(f.name),decoder(octets)); }
+  catch(e){ etat(`${f.name} n'a pas été lu : ${e.message}. Rien n'a été envoyé.`,"ko"); return; }
+  DEPOSE={nom:nomCanonique(f.name),octets,envoye:false};
+  DATA=D; render(D);
+  await envoyer();
+}
+function majCle(){
+  const t=cle();
+  document.getElementById("cleResume").textContent=
+    t?`Clé GitHub enregistrée dans ce navigateur (…${t.slice(-4)}) · dépôt ${depot()||"à indiquer"}`
+     :"Clé GitHub : à coller une seule fois pour envoyer les exports";
+  document.getElementById("depotInput").value=depot();
+}
+(function initDepot(){
+  const z=document.getElementById("depot"), fi=document.getElementById("fichier");
+  ["dragenter","dragover"].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add("survol")}));
+  ["dragleave","drop"].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove("survol")}));
+  z.addEventListener("drop",e=>deposer(e.dataTransfer.files[0]));
+  document.getElementById("choisir").onclick=()=>fi.click();
+  fi.onchange=()=>{deposer(fi.files[0]);fi.value=""};
+  document.getElementById("cleOk").onclick=()=>{
+    const v=document.getElementById("cleInput").value.trim();
+    const d=document.getElementById("depotInput").value.trim().replace(/^https:\/\/github\.com\//,"").replace(/\/$/,"");
+    try{ if(v) localStorage.setItem(KTOK,v); if(d) localStorage.setItem(KDEP,d); }catch(e){}
+    document.getElementById("cleInput").value=""; majCle();
+    if(DEPOSE&&!DEPOSE.envoye) envoyer();
+  };
+  document.getElementById("cleOubli").onclick=()=>{
+    try{localStorage.removeItem(KTOK)}catch(e){} majCle();
+  };
+  majCle();
+})();
+
+fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=>{SERVEUR=d;DATA=d;render(d)}).catch(e=>{
   document.getElementById("app").innerHTML=
     `<div class="card err">Les données ne sont pas encore disponibles.<br>`+
     `Lance le workflow « Mise a jour quotidienne » une première fois sur GitHub.<br><br>`+
@@ -136,13 +358,27 @@ function render(d){
   const serveur=new Set((d.blocages||[]).map(x=>x.Ticker));
   const estBloque=t=>!!bl[t]||serveur.has(t);
 
-  document.getElementById("maj").textContent="Données du "+d.date;
-  const p=d.portefeuille,b=d.budget,lignes=p.lignes;
+  const src=d.source_positions||{};
+  const fr=iso=>iso?iso.split("-").reverse().join("/"):"";
+  document.getElementById("maj").textContent="Données du "+d.date+" · positions : "+(
+    src.type==="export"?"export StockTrak du "+fr(src.date)
+    :src.type==="apercu"?src.fichier+" (aperçu)":"saisie initiale positions.csv");
+  const p=d.portefeuille,b=d.budget,lignes=p.lignes,etfs=p.etf||[],f=d.fonds||{};
+  const part=v=>f.valeur_eur&&v!=null?E(v/f.valeur_eur,0):"—";
+  const ap=d.apercu?`<div class="apercu"><strong>Aperçu calculé dans ce navigateur</strong> à partir de
+    ${esc(d.apercu.fichier)} : quantités, cours et prix payés de l'export. Rang, DCF et zones restent
+    ceux du passage du ${esc(d.date)}.${d.apercu.sorties.length?" Lignes absentes de l'export : "
+    +esc(d.apercu.sorties.join(", "))+".":""}${d.apercu.alertes.length?" Attention : "
+    +esc(d.apercu.alertes.join(" ; "))+".":""} Recharge la page pour revenir aux données publiées.</div>`:"";
   const surv=lignes.filter(l=>l.zone==="surveillance").length;
   const sortie=lignes.filter(l=>l.zone==="sortie").length;
   const perfRel=p.perf_moyenne-(d.benchmark.perf_depuis_lancement||0);
 
-  const tiles=`<div class="tiles">
+  const tiles=ap+`<div class="tiles">
+    <div class="tile"><div class="k">Valeur du fonds</div>
+      <div class="v">${N(f.valeur_eur)} €</div>
+      <div class="s">actions ${part(f.actions_eur)} · ETF ${part(f.etf_eur)} ·
+        liquidités ${f.liquidites_eur==null?"non saisies":part(f.liquidites_eur)}</div></div>
     <div class="tile"><div class="k">Valeur poche actions</div>
       <div class="v">${N(p.valeur_eur)} €</div><div class="s">${p.nb_lignes} lignes</div></div>
     <div class="tile"><div class="k">Performance moyenne</div>
@@ -164,7 +400,7 @@ function render(d){
   </div>`;
 
   const ordre={sortie:0,surveillance:1,ok:2};
-  const rows=lignes.slice().sort((a,c)=>ordre[a.zone]-ordre[c.zone]||(c.marge??-99)-(a.marge??-99))
+  const rows=lignes.slice().sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3)||(c.marge??-99)-(a.marge??-99))
     .map(l=>{
       const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
         ? `<div class="rempl">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
@@ -225,7 +461,19 @@ function render(d){
       ${E(d.parametres.decrochage_reexamen)} contre l'indice.
       Sortie : rang &gt; ${d.parametres.rang_sortie}, marge positive confirmée sur
       ${d.parametres.clotures_confirmation} clôtures, ou décrochage de
-      ${E(d.parametres.decrochage_sortie)}. Aucune sortie sans remplaçant.</p>
+      ${E(d.parametres.decrochage_sortie)}. Aucune sortie sans remplaçant.
+      Poids exprimés en part du fonds entier (actions, ETF, liquidités).</p>
+    ${etfs.length?`<h2>ETF — hors classement et DCF</h2>
+    <div class="card"><table><thead><tr><th class="l">Symbole</th><th class="l">Description</th>
+      <th>Quantité</th><th>Devise</th><th>Prix payé</th><th>Cours</th><th>Valeur €</th>
+      <th>Poids</th><th>Perf.</th><th>vs indice</th></tr></thead><tbody>${etfs.map(l=>`<tr>
+      <td class="l"><span class="soc">${esc(l.stocktrak||l.ticker)}</span></td>
+      <td class="l">${esc(l.description)}</td><td>${N(l.quantite)}</td><td>${esc(l.devise)}</td>
+      <td>${N(l.prix_paye,2)}</td><td>${N(l.cours,2)}</td><td>${N(l.valeur_eur)}</td>
+      <td>${E(l.poids)}</td><td class="${cls(l.perf)}">${S(l.perf)}</td>
+      <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td></tr>`).join("")}</tbody></table></div>
+    <p class="note">Toute ligne de l'export absente de l'univers est traitée comme un ETF : elle compte
+      dans la valeur du fonds et l'allocation, sans classement ni DCF.</p>`:""}
 
     <h2>Remplaçants prêts</h2>
     <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>

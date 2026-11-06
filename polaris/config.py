@@ -79,6 +79,12 @@ BUDGET_TOTAL = 400
 BUDGET_ACTIONS = 300              # 150 echanges possibles
 BUDGET_ALLOCATION = 50            # mouvements de bandes macro sur les ETF
 BUDGET_RESERVE = 20               # erreurs et corrections
+# Cout de construction : 26 lignes actions + 1 part test de CBE3, exclu du
+# calcul de rythme (voir signaux.budget). Fige le 06/11/2026 : il etait deduit
+# du nombre de lignes de positions.csv, ce qui ne tient plus des que les
+# positions viennent de l'export StockTrak (ETF compris, lignes qui changent).
+# Les transactions consommees vivent dans data/compte.csv.
+TRANSACTIONS_CONSTRUCTION = 27
 DATE_LANCEMENT = "2026-11-02"
 DATE_CLOTURE = "2027-03-31"
 

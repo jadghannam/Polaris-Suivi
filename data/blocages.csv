@@ -1,1 +1,4 @@
 Ticker,date,motif
+CPG.L,2026-11-06,cours du flux a 33.9 traite comme des pence par Yahoo ET par StockTrak (StockTrak affiche 0.33 GBP) - ligne non negociable au prix affiche
+IHG.L,2026-11-06,meme anomalie que CPG : cours du flux autour de 176 traite comme des pence
+MTLN.L,2026-11-06,cotation en euros a Londres traitee comme des pence par la regle de suffixe

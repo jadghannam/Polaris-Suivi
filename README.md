@@ -31,6 +31,25 @@ ordres sont passés à la main sur StockTrak.
 Ensuite il n'y a plus rien à faire : le programme tourne tout seul du lundi au
 vendredi à 18h40 UTC, après la clôture européenne.
 
+## Après chaque passage d'ordres
+
+1. Exporter les positions depuis StockTrak (fichier `OpenPosition_JJ_MM_AAAA.csv`).
+2. Le glisser dans la zone « Déposer l'export StockTrak » en haut de la page.
+   La page recalcule tout de suite positions, poids et performance avec les
+   cours de l'export, puis envoie le fichier dans `data/` par l'API GitHub.
+   La première fois, coller une clé GitHub *fine-grained* limitée à ce dépôt,
+   permission **Contents : Read and write** seulement. Elle reste dans le
+   navigateur, jamais dans la page.
+3. Ajouter une ligne à `data/compte.csv` : date, transactions consommées
+   (compteur StockTrak) et solde de liquidités en euros.
+
+Le programme prend toujours l'export le plus récent d'après la date du nom ;
+les anciens restent dans `data/` comme trace. Sans export, il se rabat sur
+`data/positions.csv`. Une ligne de l'export sans correspondance dans
+`data/univers.csv` (colonne `Symbole StockTrak`) est traitée comme un ETF :
+elle compte dans la valeur du fonds et l'allocation, mais pas dans le
+classement ni le DCF, et le journal la nomme.
+
 ## Ce qui tourne, et à quel rythme
 
 | Donnée | Rythme | Pourquoi |
@@ -111,6 +130,7 @@ polaris/
   classement.py   GP/A ajusté du secteur, book-to-market, planchers
   dcf.py          FCFF, valeur d'entreprise, résolution de g₁, verdicts
   signaux.py      zones, persistance, remplaçants, budget de transactions
+  positions.py    export StockTrak, actions / ETF, data/compte.csv
   maj.py          point d'entrée, écrit docs/data.json
 docs/
   index.html      la page de suivi, lit data.json

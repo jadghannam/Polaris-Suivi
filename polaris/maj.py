@@ -20,6 +20,7 @@ import pandas as pd
 
 from . import classement as cl
 from . import collecte, config as cfg, dcf, signaux as sg
+from . import positions as ps
 from .journal import note, lignes, vider
 
 
@@ -60,7 +61,13 @@ def main() -> None:
     if bloques:
         note(f"blocages manuels actifs : {len(bloques)} "
              f"-> {', '.join(sorted(bloques))}")
-    positions = _lire("positions.csv")
+    # Positions : dernier export StockTrak de data/, sinon positions.csv.
+    # Les ETF sont separes ici et ne passent ni par le classement ni par le
+    # DCF ; ils ne reviennent que dans la valeur du fonds et l'allocation.
+    toutes, source = ps.charger(univers)
+    positions = toutes[toutes["type"] == "action"].copy()
+    etf = toutes[toutes["type"] == "etf"].copy()
+    etat = ps.compte()
     hist_ca = _lire("historique_ca.csv")
     wacc = _lire("wacc_secteurs.csv")
 
@@ -141,10 +148,34 @@ def main() -> None:
     pf["cours_local"] = pf["cours"]
     pf["perf"] = pf["cours_local"] / pf["prix_paye_local"] - 1
     pf["perf_relative"] = pf["perf"] - perf_indice
+    # Cours StockTrak et cours Yahoo doivent dire la meme chose : un ecart de
+    # plus de 10 % est le symptome des lignes fantomes (HIGH cote au centieme).
+    ecart = pf["cours_stocktrak"] / pf["cours_local"] - 1
+    for r in pf[ecart.abs() > 0.10].itertuples():
+        note(f"ATTENTION cours StockTrak {r.cours_stocktrak:.4g} contre Yahoo "
+             f"{r.cours_local:.4g} pour {r.Ticker} ({r.cours_stocktrak / r.cours_local - 1:+.0%})")
     pf["valeur_eur"] = pf["quantite"] * pf["cours_local"] / \
         pf["devise"].map(lambda d: taux.get(d, np.nan))
     total = pf["valeur_eur"].sum()
-    pf["poids"] = pf["valeur_eur"] / total
+
+    # ETF : cours de l'export (Yahoo ne les suit pas), convertis en euros.
+    inconnues = sorted(set(etf["devise"]) - set(taux))
+    if inconnues:
+        note(f"ATTENTION devises d'ETF sans taux de change : {', '.join(inconnues)}")
+    etf["cours_local"] = etf["cours_stocktrak"]
+    etf["perf"] = etf["cours_local"] / etf["prix_paye_local"] - 1
+    etf["perf_relative"] = etf["perf"] - perf_indice
+    etf["valeur_eur"] = etf["quantite"] * etf["cours_local"] / \
+        etf["devise"].map(lambda d: taux.get(d, np.nan))
+    total_etf = float(pd.to_numeric(etf["valeur_eur"]).sum()) if len(etf) else 0.0
+    liquidites = etat["liquidites_eur"]
+    total_fonds = float(total) + total_etf + (liquidites if np.isfinite(liquidites) else 0.0)
+    # Poids dans le fonds entier (actions, ETF, liquidites) pour l'affichage ;
+    # poids dans la poche actions pour l'ecart sectoriel, qui compare la poche
+    # actions a son indice.
+    pf["poids"] = pf["valeur_eur"] / total_fonds
+    pf["poids_poche"] = pf["valeur_eur"] / total
+    etf["poids"] = etf["valeur_eur"] / total_fonds
 
     # Performance mediane du secteur, calculee sur notre propre univers : elle
     # dit si la baisse d'un titre suit son secteur ou lui est propre. Faute
@@ -188,7 +219,7 @@ def main() -> None:
     detenus = set(positions["Ticker"])
     ecarts = {}
     for s, bloc in pf.groupby("Secteur"):
-        ecarts[s] = float(bloc["poids"].sum())
+        ecarts[s] = float(bloc["poids_poche"].sum())
     candidats = sg.remplacants_eligibles(ev[ev["liste_suivi"].fillna(False)], detenus)
 
     portefeuille = []
@@ -240,6 +271,7 @@ def main() -> None:
             "quantite": r.quantite, "devise": r.devise,
             "prix_paye": r.prix_paye_local, "cours": r.cours_local,
             "valeur_eur": r.valeur_eur, "poids": r.poids,
+            "poids_poche": r.poids_poche, "type": "action",
             "perf": r.perf, "perf_relative": r.perf_relative,
             "perf_jour": r.perf_jour, "perf_jour_secteur": r.perf_jour_secteur,
             "rang": r.rang, "g1": r.g1, "seuil": r.seuil, "marge": r.marge,
@@ -255,20 +287,49 @@ def main() -> None:
             "remplacant": remp,
         }))
 
-    # 26 lignes actions + 1 part test de CBE3 : c'est le cout de construction,
-    # exclu du calcul de rythme (voir signaux.budget).
-    transactions_initiales = len(positions) + 1
-    transactions = transactions_initiales
+    lignes_etf = [_propre({
+        "ticker": r.Ticker, "stocktrak": r.symbole_stocktrak,
+        "description": r.description, "type": "etf",
+        "quantite": r.quantite, "devise": r.devise,
+        "prix_paye": r.prix_paye_local, "cours": r.cours_local,
+        "valeur_eur": r.valeur_eur, "poids": r.poids,
+        "perf": r.perf, "perf_relative": r.perf_relative,
+    }) for r in etf.itertuples()]
+
+    # Transactions consommees : saisies dans data/compte.csv avec l'export.
+    transactions_initiales = cfg.TRANSACTIONS_CONSTRUCTION
+    transactions = etat["transactions"]
+    note(f"transactions consommees : {transactions} "
+         f"(data/compte.csv au {etat['date']})")
+
+    # Table compacte de l'univers : la page s'en sert pour relire un export
+    # depose dans le navigateur avant le passage du programme.
+    cols_u = ["Ticker", "Symbole StockTrak", "Societe", "Pays", "Secteur",
+              "devise", "cours", "rang", "g1", "seuil", "marge", "verdict"]
+    table_univers = [_propre(x) for x in
+                     ev.reindex(columns=cols_u).to_dict("records")]
+
     sortie = {
         "date": aujourdhui.isoformat(),
         "benchmark": {"nom": cfg.BENCHMARK_NOM,
                       "perf_depuis_lancement": _nan(perf_indice)},
+        "source_positions": source,
+        "fonds": {
+            "valeur_eur": _nan(total_fonds),
+            "actions_eur": _nan(float(total)),
+            "etf_eur": _nan(total_etf),
+            "liquidites_eur": _nan(liquidites),
+            "date_compte": etat["date"],
+        },
         "portefeuille": {
             "valeur_eur": _nan(float(total)),
             "nb_lignes": int(len(pf)),
             "perf_moyenne": _nan(float(pf["perf"].mean())),
             "lignes": portefeuille,
+            "etf": lignes_etf,
         },
+        "taux": taux,
+        "univers": table_univers,
         "remplacants": [_propre(x) for x in candidats.head(20)[
             ["Ticker", "Societe", "Secteur", "Pays", "rang", "verdict",
              "g1", "seuil", "marge"]].to_dict("records")],
