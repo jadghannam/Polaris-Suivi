@@ -3,114 +3,198 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Polaris — Suivi</title>
+<meta name="color-scheme" content="dark">
+<title>Polaris — Suivi du fonds</title>
 <style>
+/* Palette Polaris : anthracite #414141, vert fonce #5D6E58, sauge #B1BCAA,
+   menthe #C8E2CF, bleu-gris #B8CCD6. Le bleu-gris est l'accent ; la menthe
+   dit ce qui va bien. Hors palette, un rose et un sable tres adoucis ne servent
+   qu'aux baisses et aux alertes. */
 :root{
-  --bg:#f6f7f9; --card:#fff; --ink:#15181d; --ink2:#5b636e; --line:#e3e6ea;
-  --accent:#1f3864; --ok:#2f8a4e; --warn:#b4770c; --bad:#c0392b;
-  --okbg:#eaf5ee; --warnbg:#fdf4e3; --badbg:#fbeceb;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#101317; --card:#171b21; --ink:#e8ecf1; --ink2:#9aa4b1; --line:#262c34;
-    --accent:#9bb7e8; --ok:#5fcc87; --warn:#e0a94a; --bad:#ef6b5e;
-    --okbg:#13251a; --warnbg:#2a2113; --badbg:#2c1715;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#101317; --card:#171b21; --ink:#e8ecf1; --ink2:#9aa4b1; --line:#262c34;
-  --accent:#9bb7e8; --ok:#5fcc87; --warn:#e0a94a; --bad:#ef6b5e;
-  --okbg:#13251a; --warnbg:#2a2113; --badbg:#2c1715;
+  --bg:#1f201f; --surf:#2a2b2a; --surf2:#333433; --line:#3a3c3a; --line2:#4a4d49;
+  --ink:#f3f5f2; --ink2:#b1bcaa; --ink3:#8b9387;
+  --accent:#b8ccd6; --accentbg:rgba(184,204,214,.12);
+  --menthe:#c8e2cf; --sauge:#b1bcaa; --vert:#5d6e58;
+  --ok:#c8e2cf; --warn:#d8c393; --bad:#dba39c;
+  --okbg:rgba(200,226,207,.10); --warnbg:rgba(216,195,147,.12); --badbg:rgba(219,163,156,.13);
+  --r:14px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased}
-.wrap{max-width:1320px;margin:0 auto;padding:28px 16px 64px}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:22px}
-h1{font-size:22px;margin:0;letter-spacing:-.01em}
-h1 span{color:var(--ink2);font-weight:400}
-h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin:34px 0 12px}
-.maj{color:var(--ink2);font-size:13px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.tile .k{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
-.tile .v{font-size:24px;font-weight:600;margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.tile .s{font-size:12px;color:var(--ink2);margin-top:2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+html{background:var(--bg)}
+body{margin:0;color:var(--ink);background:
+  radial-gradient(1200px 500px at 15% -10%,rgba(93,110,88,.22),transparent 60%),var(--bg);
+  font:14.5px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+::selection{background:rgba(184,204,214,.3)}
+.wrap{max-width:1360px;margin:0 auto;padding:30px 24px 72px}
+code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surf2);
+  border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink2)}
+
+/* ---------------------------------------------------------------- en-tete */
+header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+  padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--line)}
+.marque{display:flex;align-items:center;gap:14px}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:var(--vert);border:1px solid rgba(200,226,207,.25);color:var(--menthe);font-size:17px}
+h1{font-size:19px;margin:0;font-weight:650;letter-spacing:.14em}
+.sous{color:var(--ink3);font-size:12.5px;letter-spacing:.02em;margin-top:1px}
+.maj{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:12px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-radius:999px;padding:4px 11px;white-space:nowrap}
+.pill b{color:var(--ink);font-weight:600}
+
+/* ------------------------------------------------------------- sections */
+h2{display:flex;align-items:baseline;gap:10px;font-size:12px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--ink2);margin:40px 0 12px}
+h2 .n{color:var(--ink3);font-weight:500;letter-spacing:.04em;text-transform:none;font-size:12.5px}
+.note{color:var(--ink3);font-size:12.5px;margin:10px 2px 0;line-height:1.55}
+
+/* ---------------------------------------------------------------- tuiles */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;
+  display:flex;flex-direction:column;min-width:0}
+.tile.large{grid-column:span 2}
+.tile .k{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.tile .v{font-size:26px;font-weight:600;margin-top:8px;letter-spacing:-.02em;color:var(--ink);
+  font-variant-numeric:tabular-nums;line-height:1.15}
+.tile.large .v{font-size:34px}
+.tile .v small{font-size:15px;color:var(--ink3);font-weight:500;margin-left:3px}
+.tile .s{font-size:12.5px;color:var(--ink2);margin-top:6px}
+.tile .s b{color:var(--ink);font-weight:600}
+.alloc{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--line);margin-top:18px;gap:2px}
+.alloc i{display:block;height:100%}
+.alloc .a1{background:var(--accent)} .alloc .a2{background:var(--menthe)} .alloc .a3{background:var(--vert)}
+.legende{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:12.5px;color:var(--ink2)}
+.legende span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:7px;
+  vertical-align:0;background:var(--c)}
+.legende b{color:var(--ink);font-weight:600;margin-left:4px;font-variant-numeric:tabular-nums}
+.duo{display:flex;gap:22px;margin-top:8px}
+.duo .v{margin-top:0}
+.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:auto}
+.tile .bar{margin-top:14px}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.bar.orange>i{background:var(--warn)} .bar.rouge>i{background:var(--bad)}
+.points{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--ink2)}
+.points span{display:flex;align-items:center;gap:7px}
+.points i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+/* ---------------------------------------------------------------- tables */
+.card{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{padding:9px 11px;text-align:right;white-space:nowrap;
+th,td{padding:11px 14px;text-align:right;white-space:nowrap;
   border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);
-  font-weight:600;position:sticky;top:0;background:var(--card)}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);
+  font-weight:600;position:sticky;top:0;background:var(--surf);z-index:1}
+td{color:var(--ink2)}
 th:first-child,td:first-child,th.l,td.l{text-align:left}
 tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
-tr.bloque td{opacity:.45}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--surf2)}
+tr.bloque td{opacity:.4}
 tr.bloque .soc{text-decoration:line-through}
-.pos{color:var(--ok)} .neg{color:var(--bad)}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600}
+.pos{color:var(--ok)!important} .neg{color:var(--bad)!important}
+.soc{font-weight:600;color:var(--ink)}
+.tick{color:var(--ink3);font-size:11px;margin-left:8px;letter-spacing:.03em}
+.rempl{font-size:12px;color:var(--ink3);margin-top:2px}
+.rempl.vers{color:var(--accent)}
+td.zc{white-space:normal;min-width:160px;max-width:220px;text-align:left}
+th.zc{text-align:left}
+.card th,.card td{padding:11px 11px}
+.card th:first-child,.card td:first-child{padding-left:18px}
+.card th:last-child,.card td:last-child{padding-right:18px}
+td.zc .rempl{margin-top:5px;line-height:1.4;font-size:11.5px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .b-ok{background:var(--okbg);color:var(--ok)}
 .b-surv{background:var(--warnbg);color:var(--warn)}
 .b-sortie{background:var(--badbg);color:var(--bad)}
-.soc{font-weight:600}
-.tick{color:var(--ink2);font-size:11.5px;margin-left:6px}
-.note{color:var(--ink2);font-size:13px;margin:8px 2px 0}
-.jrn{font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2);
-  white-space:pre-wrap;padding:14px 16px}
-.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:8px}
-.bar>i{display:block;height:100%;background:var(--ok)}
-.bar.orange>i{background:var(--warn)} .bar.rouge>i{background:var(--bad)}
-.rempl{font-size:12px;color:var(--ink2)}
-td.zc{white-space:normal;min-width:168px;max-width:230px}
-td.zc .rempl{margin-top:3px;line-height:1.35;font-size:11.5px}
-.err{padding:18px;color:var(--bad)}
-button.bl{font:inherit;font-size:12px;padding:3px 10px;border-radius:7px;cursor:pointer;
-  border:1px solid var(--line);background:transparent;color:var(--ink2)}
+.b-na{background:var(--surf2);color:var(--ink3)}
+.jrn{font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink3);
+  white-space:pre-wrap;padding:16px 18px;max-height:340px;overflow:auto}
+.err{padding:20px;color:var(--bad)}
+
+/* --------------------------------------------------------------- boutons */
+button{font:inherit;cursor:pointer}
+button.bl{font-size:12px;padding:4px 11px;border-radius:8px;
+  border:1px solid var(--line2);background:transparent;color:var(--ink3)}
 button.bl:hover{border-color:var(--bad);color:var(--bad)}
-button.bl.on{background:var(--badbg);border-color:var(--bad);color:var(--bad);font-weight:600}
-.panneau{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
-  background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical}
-.cp{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;margin-top:10px;
-  border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600}
-.depot{border:2px dashed var(--line);border-radius:12px;padding:16px 18px;background:var(--card);
-  margin-bottom:18px;transition:border-color .15s,background .15s}
-.depot.survol{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--card))}
-.depot .t{font-weight:600}
-.depot .lien{color:var(--accent);cursor:pointer;text-decoration:underline}
-.depot .etat{font-size:13px;margin-top:8px}
+button.bl.on{background:var(--badbg);border-color:transparent;color:var(--bad);font-weight:600}
+.btn{font-size:13px;padding:7px 15px;border-radius:9px;border:1px solid var(--line2);
+  background:var(--surf2);color:var(--ink)}
+.btn:hover{border-color:var(--ink3)}
+.btn.prim,.cp{background:var(--accent);border-color:var(--accent);color:#1f201f;font-weight:600}
+.btn.prim:hover,.cp:hover{filter:brightness(1.08)}
+.cp{font-size:13px;padding:7px 15px;border-radius:9px;margin-top:12px;border:1px solid var(--accent)}
+input[type=text],input[type=password]{font:inherit;font-size:13.5px;padding:8px 11px;
+  border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;
+  font-variant-numeric:tabular-nums}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentbg)}
+textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--bg);color:var(--ink2);border:1px solid var(--line2);border-radius:9px;padding:11px;
+  resize:vertical;outline:none}
+.panneau{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+
+/* ------------------------------------------------------- zone de depot */
+.depot{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:22px;
+  background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:26px}
+.depot .t{font-weight:600;font-size:15px;color:var(--ink)}
+.depot .d{color:var(--ink3);font-size:12.5px;margin-top:4px;max-width:560px}
+.depot .champs{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px}
+.depot label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--ink3);
+  text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+.cible{border:1.5px dashed var(--line2);border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;gap:6px;padding:18px;cursor:pointer;
+  color:var(--ink2);transition:border-color .15s,background .15s;min-height:132px}
+.cible:hover{border-color:var(--ink3)}
+.depot.survol .cible{border-color:var(--accent);background:var(--accentbg);color:var(--ink)}
+.cible .ico{font-size:22px;color:var(--accent);line-height:1}
+.cible .lien{color:var(--accent)}
+.cible small{color:var(--ink3);font-size:11.5px}
+.depot .etat{grid-column:1/-1;font-size:13px;color:var(--ink2);margin-top:-6px}
+.depot .etat:empty{display:none}
 .depot .etat.ok{color:var(--ok)} .depot .etat.ko{color:var(--bad)}
-.depot details{margin-top:10px;font-size:13px;color:var(--ink2)}
-.depot summary{cursor:pointer}
-.depot label{font-size:13px;color:var(--ink2);display:flex;gap:6px;align-items:center}
-.depot input[type=password],.depot input[type=text]{font:inherit;font-size:13px;padding:6px 9px;
-  border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);width:260px;max-width:100%}
-.depot .ligne{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
-.depot button{font:inherit;font-size:12.5px;padding:5px 12px;border-radius:7px;cursor:pointer;
-  border:1px solid var(--line);background:transparent;color:var(--ink)}
-.depot button.prim{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:600}
-.apercu{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;
-  font-size:13px;margin-bottom:14px}
-@media(max-width:640px){.wrap{padding:18px 12px 48px}h1{font-size:19px}}
+.depot details{grid-column:1/-1;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line);
+  padding-top:12px;margin-top:-4px}
+.depot summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.depot summary::-webkit-details-marker{display:none}
+.depot summary::before{content:"›";font-size:15px;transition:transform .15s;color:var(--ink3)}
+.depot details[open] summary::before{transform:rotate(90deg)}
+.depot .ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.depot .ligne input{width:280px;max-width:100%}
+.apercu{border:1px solid rgba(216,195,147,.3);background:var(--warnbg);color:#e6d9b8;border-radius:12px;
+  padding:12px 16px;font-size:13px;margin-bottom:16px;line-height:1.55}
+.apercu strong{color:var(--warn)}
+
+@media(max-width:1000px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.depot{grid-template-columns:1fr}}
+@media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
+  .tile.large .v{font-size:28px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Fonds Polaris <span>— suivi quotidien</span></h1>
+    <div class="marque">
+      <div class="logo">✦</div>
+      <div><h1>POLARIS</h1><div class="sous">Suivi du fonds · groupe G2 · Master 222</div></div>
+    </div>
     <div class="maj" id="maj"></div>
   </header>
   <div class="depot" id="depot">
-    <div class="t">Déposer l'export StockTrak</div>
-    <div class="note" style="margin-top:2px">Glisse ici <code>OpenPosition_JJ_MM_AAAA.csv</code>
-      ou <span class="lien" id="choisir">choisis le fichier</span>.
-      La page se met à jour tout de suite, puis le programme recalcule tout avec les cours
-      Yahoo du moment (quelques minutes).</div>
-    <div class="ligne">
-      <label>Transactions consommées <input type="text" id="cTrans" inputmode="numeric" style="width:90px"></label>
-      <label>Liquidités (€) <input type="text" id="cLiq" inputmode="decimal" style="width:130px" placeholder="ex. 152 340,50"></label>
-      <span class="note" style="margin:0">à lire dans StockTrak, à mettre à jour avant de déposer</span>
+    <div>
+      <div class="t">Mettre à jour les positions</div>
+      <div class="d">Après chaque passage d'ordres : corrige les deux chiffres lus dans StockTrak, puis dépose
+        l'export. La page se met à jour tout de suite, puis le programme recalcule tout avec les cours
+        Yahoo du moment, en quelques minutes.</div>
+      <div class="champs">
+        <label>Transactions consommées <input type="text" id="cTrans" inputmode="numeric" style="width:120px"></label>
+        <label>Liquidités (€) <input type="text" id="cLiq" inputmode="decimal" style="width:170px" placeholder="152 340,50"></label>
+      </div>
+    </div>
+    <div class="cible" id="choisir" role="button" tabindex="0">
+      <div class="ico">⇪</div>
+      <div>Glisse l'export ici ou <span class="lien">parcours</span></div>
+      <small>OpenPosition_JJ_MM_AAAA.csv</small>
     </div>
     <input type="file" id="fichier" accept=".csv,text/csv" hidden>
     <div class="etat" id="etatDepot"></div>
@@ -118,11 +202,11 @@ textarea{width:100%;min-height:82px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
       <summary id="cleResume">Clé GitHub</summary>
       <div class="ligne">
         <input type="password" id="cleInput" placeholder="github_pat_…" autocomplete="off">
-        <button class="prim" id="cleOk">Enregistrer</button>
-        <button id="cleOubli">Oublier la clé</button>
+        <button class="btn prim" id="cleOk">Enregistrer</button>
+        <button class="btn" id="cleOubli">Oublier la clé</button>
       </div>
       <div class="ligne">Dépôt <input type="text" id="depotInput" placeholder="compte/depot"></div>
-      <p style="margin:8px 0 0">Créer la clé : github.com → Settings → Developer settings →
+      <p style="margin:10px 0 0;line-height:1.6">Créer la clé : github.com → Settings → Developer settings →
         Personal access tokens → <strong>Fine-grained tokens</strong> → Generate new token,
         accès au <strong>seul dépôt de la plateforme</strong>, permission
         <strong>Contents : Read and write</strong> et rien d'autre, expiration au 31 mars 2027.
@@ -138,7 +222,9 @@ const S=(s,n=1)=>(s==null||isNaN(s))?"—":(s>=0?"+":"")+(s*100).toFixed(n)+" %"
 const N=(v,n=0)=>(v==null||isNaN(v))?"—":v.toLocaleString("fr-FR",{minimumFractionDigits:n,maximumFractionDigits:n});
 const cls=v=>v==null||isNaN(v)?"":(v>=0?"pos":"neg");
 const ZB={ok:["b-ok","OK"],surveillance:["b-surv","surveillance"],sortie:["b-sortie","sortie"]};
-const badge=z=>{const[c,t]=ZB[z]||["b-ok","—"];return `<span class="badge ${c}">${t}</span>`};
+const badge=z=>{const[c,t]=ZB[z]||["b-na","en attente"];return `<span class="badge ${c}">${t}</span>`};
+const jour=iso=>{if(!iso)return"";const d=new Date(iso+"T12:00:00");
+  return isNaN(d)?iso:d.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short",year:"numeric"})};
 const VIDE='<tr><td colspan="10" class="l">Aucun candidat &eacute;ligible '
   +'aujourd&rsquo;hui. On attend qu&rsquo;un titre s&rsquo;am&eacute;liore ou entre '
   +'dans la zone de s&eacute;lection.</td></tr>';
@@ -375,7 +461,7 @@ function etat(msg,c="",bouton=false){
   const el=document.getElementById("etatDepot");
   el.className="etat "+c;
   el.innerHTML=esc(msg)+(bouton&&DEPOSE&&!DEPOSE.envoye
-    ?' <button class="prim" id="renvoyer" style="margin-left:6px">Envoyer</button>':"");
+    ?' <button class="btn prim" id="renvoyer" style="margin-left:6px">Envoyer</button>':"");
   const b=document.getElementById("renvoyer"); if(b) b.onclick=envoyer;
 }
 function lireCompte(){
@@ -417,7 +503,8 @@ function majCle(){
   ["dragenter","dragover"].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add("survol")}));
   ["dragleave","drop"].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove("survol")}));
   z.addEventListener("drop",e=>deposer(e.dataTransfer.files[0]));
-  document.getElementById("choisir").onclick=()=>fi.click();
+  const ch=document.getElementById("choisir"); ch.onclick=()=>fi.click();
+  ch.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fi.click()}};
   fi.onchange=()=>{deposer(fi.files[0]);fi.value=""};
   document.getElementById("cleOk").onclick=()=>{
     const v=document.getElementById("cleInput").value.trim();
@@ -459,9 +546,10 @@ function render(d){
 
   const src=d.source_positions||{};
   const fr=iso=>iso?iso.split("-").reverse().join("/"):"";
-  document.getElementById("maj").textContent="Données du "+d.date+" · positions : "+(
-    src.type==="export"?"export StockTrak du "+fr(src.date)
-    :src.type==="apercu"?src.fichier+" (aperçu)":"saisie initiale positions.csv");
+  document.getElementById("maj").innerHTML=
+    `<span class="pill">Données du <b>${esc(jour(d.date))}</b></span>`+
+    `<span class="pill">Positions : <b>${esc(src.type==="export"?"export StockTrak du "+jour(src.date)
+      :src.type==="apercu"?"aperçu "+src.fichier:"saisie initiale")}</b></span>`;
   const p=d.portefeuille,b=d.budget,lignes=p.lignes,etfs=p.etf||[],f=d.fonds||{};
   const part=v=>f.valeur_eur&&v!=null?E(v/f.valeur_eur,0):"—";
   const ap=d.apercu?`<div class="apercu"><strong>Aperçu calculé dans ce navigateur</strong> à partir de
@@ -474,36 +562,44 @@ function render(d){
   const sortie=lignes.filter(l=>l.zone==="sortie").length;
   const perfRel=p.perf_moyenne-(d.benchmark.perf_depuis_lancement||0);
 
+  const tot=f.valeur_eur||0, pc=v=>tot&&v?Math.max(0,v/tot*100):0;
+  const liqOk=f.liquidites_eur!=null&&isFinite(f.liquidites_eur);
   const tiles=ap+`<div class="tiles">
-    <div class="tile"><div class="k">Valeur du fonds</div>
-      <div class="v">${N(f.valeur_eur)} €</div>
-      <div class="s">actions ${part(f.actions_eur)} · ETF ${part(f.etf_eur)} ·
-        liquidités ${f.liquidites_eur==null?"non saisies":part(f.liquidites_eur)}</div></div>
-    <div class="tile"><div class="k">Valeur poche actions</div>
-      <div class="v">${N(p.valeur_eur)} €</div><div class="s">${p.nb_lignes} lignes</div></div>
-    <div class="tile"><div class="k">Performance moyenne</div>
+    <div class="tile large"><div class="k">Valeur du fonds</div>
+      <div class="v">${N(f.valeur_eur)}<small>€</small></div>
+      <div class="alloc"><i class="a1" style="width:${pc(f.actions_eur)}%"></i><i class="a2"
+        style="width:${pc(f.etf_eur)}%"></i><i class="a3" style="width:${pc(f.liquidites_eur)}%"></i></div>
+      <div class="legende">
+        <span style="--c:var(--accent)">Actions<b>${part(f.actions_eur)}</b></span>
+        <span style="--c:var(--menthe)">ETF<b>${part(f.etf_eur)}</b></span>
+        <span style="--c:var(--vert)">Liquidités<b>${liqOk?part(f.liquidites_eur):"non saisies"}</b></span>
+      </div></div>
+    <div class="tile"><div class="k">Performance des lignes</div>
       <div class="v ${cls(p.perf_moyenne)}">${S(p.perf_moyenne,2)}</div>
-      <div class="s">depuis l'achat</div></div>
-    <div class="tile"><div class="k">${esc(d.benchmark.nom)}</div>
-      <div class="v ${cls(d.benchmark.perf_depuis_lancement)}">${S(d.benchmark.perf_depuis_lancement,2)}</div>
-      <div class="s">écart ${S(perfRel,2)}</div></div>
-    <div class="tile"><div class="k">À surveiller</div>
-      <div class="v">${surv}</div><div class="s">${sortie} en zone de sortie</div></div>
-    <div class="tile"><div class="k">Prochain comité</div>
-      <div class="v" style="font-size:19px">${b.prochain_comite||"—"}</div>
-      <div class="s">enveloppe ${N(b.enveloppe_par_comite,1)} transactions
-        · <strong>${b.echanges_max_par_comite} échanges max</strong></div></div>
-    <div class="tile"><div class="k">Transactions</div>
-      <div class="v">${b.faites} / 400</div>
-      <div class="s">${b.rotation} de rotation · rythme ${b.rythme} · ${b.comites_restants} comités restants</div>
+      <div class="s">${esc(d.benchmark.nom)} <b>${S(d.benchmark.perf_depuis_lancement,2)}</b>
+        · écart <b class="${cls(perfRel)}">${S(perfRel,2)}</b></div></div>
+    <div class="tile"><div class="k">Signaux</div>
+      <div class="v">${surv+sortie}<small>ligne${surv+sortie>1?"s":""}</small></div>
+      <div class="points"><span><i style="background:var(--warn)"></i>${surv} surveillance</span>
+        <span><i style="background:var(--bad)"></i>${sortie} sortie</span></div></div>
+    <div class="tile"><div class="k">Poche actions</div>
+      <div class="v">${N(p.valeur_eur)}<small>€</small></div>
+      <div class="s">${p.nb_lignes} lignes${etfs.length?` · ${etfs.length} ETF à part`:""}</div></div>
+    <div class="tile large"><div class="k">Transactions</div>
+      <div class="v">${b.faites}<small>/ 400</small></div>
+      <div class="s"><b>${b.rotation}</b> de rotation · rythme <b>${b.rythme}</b> ·
+        <b>${b.restantes}</b> restantes</div>
       <div class="bar ${b.etat==='vert'?'':b.etat}"><i style="width:${Math.min(100,b.faites/400*100)}%"></i></div></div>
+    <div class="tile"><div class="k">Prochain comité</div>
+      <div class="v" style="font-size:22px">${b.prochain_comite?esc(jour(b.prochain_comite)):"—"}</div>
+      <div class="s"><b>${b.echanges_max_par_comite}</b> échanges max · ${b.comites_restants} comités restants</div></div>
   </div>`;
 
   const ordre={sortie:0,surveillance:1,ok:2};
   const rows=lignes.slice().sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3)||(c.marge??-99)-(a.marge??-99))
     .map(l=>{
       const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
-        ? `<div class="rempl">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
+        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
       const conf=l.zone==="sortie"
         ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
       const mot=(l.motifs&&l.motifs.length)
@@ -513,8 +609,8 @@ function render(d){
         <td class="l">${esc(l.secteur)}</td><td>${E(l.poids)}</td>
         <td class="${cls(l.perf)}">${S(l.perf)}</td>
         <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
-        <td class="${cls(l.perf_jour)}">${S(l.perf_jour)}</td>
-        <td class="${cls(l.perf_jour_secteur)}">${S(l.perf_jour_secteur)}</td>
+        <td>${S(l.perf_jour)}</td>
+        <td>${S(l.perf_jour_secteur)}</td>
         <td>${N(l.rang)}</td><td>${E(l.g1,2)}</td><td>${E(l.seuil,2)}</td>
         <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td>
         <td class="zc">${badge(l.zone)}${mot}</td>
@@ -524,8 +620,8 @@ function render(d){
     }).join("");
 
   const tete=`<tr><th class="l">Titre</th><th class="l">Secteur</th><th>Poids</th>
-    <th>Perf.</th><th>vs indice</th><th>Jour</th><th>Jour secteur</th>
-    <th>Rang</th><th>g₁</th><th>Seuil</th><th>Marge</th><th>Zone</th><th>StockTrak</th></tr>`;
+    <th>Perf.</th><th>vs indice</th><th>Jour</th><th>Secteur jour</th>
+    <th>Rang</th><th>g₁</th><th>Seuil</th><th>Marge</th><th class="zc">Zone</th><th>StockTrak</th></tr>`;
 
   const cand=(d.remplacants||[]).filter(r=>!estBloque(r.Ticker));
   const rempl=cand.map((r,i)=>`<tr>
@@ -534,7 +630,7 @@ function render(d){
       <td class="l">${esc(r.Secteur)}</td><td class="l">${esc(r.Pays)}</td>
       <td>${N(r.rang)}</td><td class="l">${esc(r.verdict||"—")}</td>
       <td>${E(r.g1,2)}</td><td>${E(r.seuil,2)}</td>
-      <td class="pos">${S(r.marge,2)}</td>
+      <td class="${r.marge>0?"neg":"pos"}">${S(r.marge,2)}</td>
       <td><button class="bl" onclick="basculer('${r.Ticker}','${esc(r.Societe).replace(/'/g,"")}')">bloquer</button></td></tr>`).join("");
 
   const tousBloques=Object.entries(bl).map(([t,v])=>({Ticker:t,...v}))
@@ -554,7 +650,7 @@ function render(d){
     </div>`:"";
 
   document.getElementById("app").innerHTML=tiles+`
-    <h2>Portefeuille</h2>
+    <h2>Portefeuille <span class="n">${lignes.length} lignes · triées par urgence</span></h2>
     <div class="card"><table><thead>${tete}</thead><tbody>${rows}</tbody></table></div>
     <p class="note">Surveillance : rang &gt; ${d.parametres.rang_surveillance}, ou marge du DCF
       au-dessus de ${E(d.parametres.marge_surveillance)}, ou décrochage de
@@ -563,7 +659,7 @@ function render(d){
       ${d.parametres.clotures_confirmation} clôtures, ou décrochage de
       ${E(d.parametres.decrochage_sortie)}. Aucune sortie sans remplaçant.
       Poids exprimés en part du fonds entier (actions, ETF, liquidités).</p>
-    ${etfs.length?`<h2>ETF — hors classement et DCF</h2>
+    ${etfs.length?`<h2>ETF <span class="n">hors classement et DCF</span></h2>
     <div class="card"><table><thead><tr><th class="l">Symbole</th><th class="l">Description</th>
       <th>Quantité</th><th>Devise</th><th>Prix payé</th><th>Cours</th><th>Valeur €</th>
       <th>Poids</th><th>Perf.</th><th>vs indice</th></tr></thead><tbody>${etfs.map(l=>`<tr>
@@ -575,13 +671,13 @@ function render(d){
     <p class="note">Toute ligne de l'export absente de l'univers est traitée comme un ETF : elle compte
       dans la valeur du fonds et l'allocation, sans classement ni DCF.</p>`:""}
 
-    <h2>Remplaçants prêts</h2>
+    <h2>Remplaçants prêts <span class="n">${cand.length} éligibles</span></h2>
     <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>
       <th class="l">Secteur</th><th class="l">Pays</th><th>Rang</th><th class="l">Verdict</th>
       <th>g₁</th><th>Seuil</th><th>Marge</th><th>StockTrak</th></tr></thead>
       <tbody>${rempl||VIDE}</tbody></table></div>
     ${panneau}
-    <h2>Journal d'exécution</h2>
+    <h2>Journal d'exécution <span class="n">dernier passage du programme</span></h2>
     <div class="card"><div class="jrn">${esc((d.journal||[]).join("\n"))}</div></div>`;
 }
 </script>
