@@ -124,9 +124,7 @@ def main() -> None:
     if "actions_m" in dcf_in.columns:
         rang_in = rang_in.merge(dcf_in[["Ticker", "actions_m"]], on="Ticker",
                                 how="left")
-    clt = cl.classer(univers, rang_in, cours, taux)
-    clt["bloque"] = clt["Ticker"].isin(bloques)
-    clt.loc[clt["bloque"], "negociable"] = False
+    clt = cl.classer(univers, rang_in, cours, taux, bloques)
     ev = dcf.evaluer(clt, dcf_in, hist_ca, wacc)
 
     # ----------------------------------------------------- indice et perf ---
@@ -196,14 +194,37 @@ def main() -> None:
 
     gpa = dict(zip(pf["Ticker"], pf["GP/A ajuste"]))
     med = dict(zip(pf["Ticker"], pf["mediane_secteur"]))
-    lignes_hist = []
-    for r in pf.itertuples():
+
+    def zones(r) -> tuple[dict, list[str]]:
+        """Zones d'une ligne detenue, et le motif d'une donnee douteuse.
+
+        Une ligne sans rang tombe d'ordinaire en sortie immediate. Quand ce
+        rang manque a cause d'une donnee suspecte ou d'un blocage, ce serait
+        une donnee qui ressemble a un signal de vente : la ligne passe en
+        surveillance, avec le motif, et le comite tranche.
+        """
         z = {
             "rang": sg.zone_rang(r.rang),
             "dcf": sg.zone_dcf(r.marge),
             "decrochage": sg.zone_decrochage(r.perf_relative),
             "degradation": sg.zone_degradation(gpa.get(r.Ticker), med.get(r.Ticker)),
         }
+        motifs = []
+        if bool(getattr(r, "bm_implausible", False)):
+            # Cours dans la mauvaise unite : rang, DCF et decrochage reposent
+            # tous sur ce cours. Seule la jambe comptable reste lisible.
+            z.update(rang=sg.SURVEILLANCE, dcf=sg.OK, decrochage=sg.OK)
+            motifs.append(f"book-to-market implausible ({bm.get(r.Ticker, np.nan):.3g}) : "
+                          "donnee a verifier, aucun signal tire du cours")
+        elif bool(getattr(r, "bloque", False)) and not np.isfinite(r.rang):
+            z["rang"] = sg.SURVEILLANCE
+            motifs.append("bloque dans StockTrak, donc sans rang : a arbitrer en comite")
+        return z, motifs
+
+    bm = dict(zip(pf["Ticker"], pf["B/M"]))
+    lignes_hist = []
+    for r in pf.itertuples():
+        z, _ = zones(r)
         lignes_hist.append({
             "date": aujourdhui.isoformat(), "Ticker": r.Ticker,
             "rang": r.rang, "g1": r.g1, "seuil": r.seuil, "marge": r.marge,
@@ -226,16 +247,11 @@ def main() -> None:
     for r in pf.itertuples():
         donnees = bool(np.isfinite(r.cours_local)) and not bool(getattr(r, "perime", False))
         if donnees:
-            z = {
-                "rang": sg.zone_rang(r.rang),
-                "dcf": sg.zone_dcf(r.marge),
-                "decrochage": sg.zone_decrochage(r.perf_relative),
-                "degradation": sg.zone_degradation(gpa.get(r.Ticker),
-                                                   med.get(r.Ticker)),
-            }
+            z, motifs_donnees = zones(r)
         else:
             # Pas de cours frais : on ne sait rien, donc on ne signale rien.
             z = {k: sg.OK for k in ("rang", "dcf", "decrochage", "degradation")}
+            motifs_donnees = []
         globale = sg.zone_globale(z)
         clotures = sg.compter_clotures(hist, r.Ticker, "zone_dcf")
         clotures_deg = sg.compter_clotures(hist, r.Ticker, "zone_degradation")
@@ -246,10 +262,10 @@ def main() -> None:
         # Un titre doit savoir dire POURQUOI il est la ou il est : sans ca,
         # une ligne en sortie dont les trois zones visibles affichent "ok"
         # est incomprehensible.
-        motifs = []
+        motifs = list(motifs_donnees)
         if not donnees:
             motifs.append("cours indisponible aujourd'hui")
-        if z["rang"] != sg.OK:
+        if z["rang"] != sg.OK and not motifs_donnees:
             motifs.append("rang " + ("introuvable (plancher ou liquidite)"
                                      if not np.isfinite(r.rang) else f"{int(r.rang)}"))
         if z["dcf"] != sg.OK:

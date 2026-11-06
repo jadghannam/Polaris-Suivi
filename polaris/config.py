@@ -39,6 +39,26 @@ PLANCHER_RENTABILITE = 0.40  # percentile minimal, correction du professeur
 PLANCHER_VALORISATION = 0.30
 TAILLE_LISTE_SUIVI = 60
 
+# Book-to-market plausible. Ajoute le 06/11/2026, apres Compass Group,
+# InterContinental et Metlen : une cotation en livres (ou en euros) traitee
+# comme des pence divise le cours par 100 et multiplie le B/M par 100, et le
+# titre remonte en tete du classement. Une erreur d'unite deplace le B/M de deux
+# ordres de grandeur, ce qui le sort de toute plage economique :
+#   - au-dessus de 3, le marche valoriserait une societe non financiere a moins
+#     d'un tiers de ses fonds propres. Cela n'arrive qu'en detresse, et une
+#     detresse se verifie a la main avant d'entrer en liste de suivi ;
+#   - en dessous de 0,01, il la valoriserait a plus de cent fois ses fonds
+#     propres. Les plus chers de l'univers (Rolls-Royce, ASML, RELX) sont entre
+#     0,025 et 0,045.
+# Un titre hors plage n'a ni rang ni place en liste de suivi, et le journal le
+# nomme. Les fonds propres negatifs (InterContinental) ne sont pas concernes :
+# ils sont reels, et le classement les met deja en queue.
+BM_PLAUSIBLE = (0.01, 3.0)
+# Exceptions verifiees a la main : Ticker -> "date : source de la verification".
+# Un titre n'y entre que si son B/M hors plage a ete confirme (cours ET fonds
+# propres), jamais pour le garder dans le classement.
+BM_VERIFIES: dict[str, str] = {}
+
 # ------------------------------------------------- seuils de surveillance -----
 # Deux niveaux par axe. Le premier met le titre sous surveillance, le second
 # declenche la procedure de sortie. Rien n'est automatique : la plateforme

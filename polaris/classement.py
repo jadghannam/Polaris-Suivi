@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from . import config as cfg
+from .journal import note
 
 
 def percentile(serie: pd.Series) -> pd.Series:
@@ -30,7 +31,8 @@ def percentile(serie: pd.Series) -> pd.Series:
 
 
 def classer(univers: pd.DataFrame, fonda: pd.DataFrame,
-            cours: pd.DataFrame, taux: dict[str, float]) -> pd.DataFrame:
+            cours: pd.DataFrame, taux: dict[str, float],
+            bloques: set[str] | None = None) -> pd.DataFrame:
     """Construit le classement du jour.
 
     `fonda` porte les comptes en devise de publication, `cours` le prix du jour
@@ -60,8 +62,22 @@ def classer(univers: pd.DataFrame, fonda: pd.DataFrame,
     df["mediane_secteur"] = mediane
     df["GP/A ajuste"] = df["GP/A"] - mediane
 
+    # Garde-fou sur les unites. Un B/M hors de toute plage economique est le
+    # symptome d'un cours dans la mauvaise unite (Compass Group, InterContinental,
+    # Metlen) ou de comptes mal collectes. Le titre est retire du calcul des
+    # centiles et du rang AVANT le classement : sinon il prend la premiere place
+    # et decale tous les autres. Le B/M brut reste visible pour le diagnostic.
+    bas, haut = cfg.BM_PLAUSIBLE
+    bm = df["B/M"]
+    df["bm_implausible"] = (bm.notna() & (bm > 0) & ((bm < bas) | (bm > haut))
+                            & ~df["Ticker"].isin(cfg.BM_VERIFIES))
+    for t, s, v in df.loc[df["bm_implausible"], ["Ticker", "Societe", "B/M"]].itertuples(index=False):
+        note(f"ATTENTION book-to-market implausible {v:.3g} pour {t} ({s}) : "
+             f"cours ou fonds propres dans la mauvaise unite ? "
+             f"Retire du classement et de la liste de suivi")
+
     df["rang_rentabilite"] = percentile(df["GP/A ajuste"])
-    df["rang_valorisation"] = percentile(df["B/M"])
+    df["rang_valorisation"] = percentile(bm.where(~df["bm_implausible"]))
     df["rang_combine"] = (df["rang_rentabilite"] * cfg.POIDS_RENTABILITE
                           + df["rang_valorisation"] * cfg.POIDS_VALORISATION)
 
@@ -85,10 +101,15 @@ def classer(univers: pd.DataFrame, fonda: pd.DataFrame,
     #    verifie n'est pas proposable.
     df["liquide"] = df.get("negociable", True).fillna(False)
     df["verifie"] = df.get("verifie_stocktrak", pd.Series(dtype=object)).notna()
-    df["negociable"] = df["liquide"] & df["verifie"]
+    # 3. Les blocages manuels (data/blocages.csv) : StockTrak ne permet pas de
+    #    traiter le titre au prix affiche. Appliques ici, avant le rang, depuis
+    #    le 06/11/2026 : appliques apres, Compass Group bloque gardait le rang 1
+    #    et decalait d'une place tout le reste du classement.
+    df["bloque"] = df["Ticker"].isin(bloques or set())
+    df["negociable"] = df["liquide"] & df["verifie"] & ~df["bloque"]
 
     df = df.sort_values("rang_combine", ascending=False).reset_index(drop=True)
-    eligibles = df["plancher_ok"] & df["negociable"]
+    eligibles = df["plancher_ok"] & df["negociable"] & ~df["bm_implausible"]
     df["rang"] = np.nan
     df.loc[eligibles, "rang"] = range(1, int(eligibles.sum()) + 1)
     df["liste_suivi"] = df["rang"] <= cfg.TAILLE_LISTE_SUIVI

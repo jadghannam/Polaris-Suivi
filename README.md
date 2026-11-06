@@ -100,6 +100,14 @@ Ils sont dans le code parce qu'ils nous ont déjà coûté cher.
 valeurs britanniques affichaient un book-to-market cent fois trop faible et
 auraient toutes été éliminées sans que rien ne le signale.
 
+**Les cotations dans une autre unité que celle de leur place.** Compass Group,
+InterContinental et Metlen sortent de Yahoo en livres ou en euros, traités
+comme des pence. Garde-fou générique depuis le 6 novembre : tout book-to-market
+hors de [0,01 ; 3] (`BM_PLAUSIBLE` dans `config.py`) est nommé dans le journal
+et retiré du classement avant le calcul des rangs. Si c'est une ligne détenue,
+elle passe en surveillance, jamais en sortie : une donnée suspecte ne doit pas
+ressembler à un signal de vente.
+
 **Les lignes fantômes.** Deux tests, qui ne détectent pas la même chose.
 
 *Liquidité, automatique.* Une cotation sans volume et sans amplitude du jour
