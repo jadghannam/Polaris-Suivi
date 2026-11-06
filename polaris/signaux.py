@@ -129,7 +129,11 @@ def remplacants_eligibles(suivi: pd.DataFrame, detenus: set[str]) -> pd.DataFram
         & (suivi["rang"] <= cfg.REMPLACANT_RANG_MAX)
         & (suivi["plancher_ok"])
         & (suivi["negociable"])
-        & (suivi["verdict"].str[0].isin(cfg.REMPLACANT_VERDICTS))
+        # Le code du verdict est ce qui precede " - ", compare en entier.
+        # Corrige le 06/11/2026 : le test portait sur la premiere lettre, et
+        # "ABSTENTION - modele non discriminant" passait pour un verdict A.
+        & (suivi["verdict"].fillna("").str.split(" - ").str[0].str.strip()
+           .isin(cfg.REMPLACANT_VERDICTS))
     ].copy()
     return r.sort_values("rang")
 
