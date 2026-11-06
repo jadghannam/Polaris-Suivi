@@ -67,8 +67,19 @@ def main() -> None:
     # ---------------------------------------------------------- collecte ----
     taux = collecte.taux_de_change()
     note(f"taux de change : {', '.join(f'{k} {v:.4f}' for k, v in taux.items())}")
-    cours = collecte.cours_du_jour(univers["Ticker"].tolist())
-    note(f"cours recuperes : {cours['cours'].notna().sum()} / {len(univers)}")
+    chemin_cours = cfg.DATA / "cours.csv"
+    derniers = pd.read_csv(chemin_cours) if chemin_cours.exists() else None
+    cours = collecte.cours_du_jour(univers["Ticker"].tolist(), derniers)
+    if not cours.empty:
+        # On garde les cours du jour : ils serviront de repli si Yahoo nous
+        # coupe demain. Une donnee manquante ne doit jamais ressembler a un
+        # signal de vente.
+        cours[~cours["perime"].fillna(True).astype(bool)].to_csv(chemin_cours, index=False)
+    frais = int((~cours["perime"].fillna(True).astype(bool)).sum()) if not cours.empty else 0
+    note(f"cours frais : {frais} / {len(univers)}")
+    if frais < 0.8 * len(univers):
+        note("ATTENTION moins de 80 % de cours frais : classement peu fiable, "
+             "aucune decision ne devrait etre prise sur cette execution")
     fantomes = cours.loc[~cours["negociable"].fillna(False), "Ticker"].tolist()
     if fantomes:
         note(f"lignes sans volume du jour (test de liquidite) : {len(fantomes)} "
@@ -85,8 +96,13 @@ def main() -> None:
         neufs = collecte.fondamentaux(univers["Ticker"].tolist())
         if not neufs.empty:
             for cible, colonnes in (
+                # La devise voyage avec les montants : sans elle, les chiffres
+                # fraichement collectes (en devise de publication) se
+                # melangeraient aux valeurs de depart (en euros) et le
+                # book-to-market des britanniques et des nordiques serait faux.
                 ("fondamentaux_rang.csv", ["ca", "cogs", "profit_brut",
-                                           "actif", "fonds_propres"]),
+                                           "actif", "fonds_propres",
+                                           "devise_etats"]),
                 ("fondamentaux_dcf.csv", ["dette_nette", "minoritaires",
                                           "mises_en_equivalence"]),
             ):
@@ -98,6 +114,9 @@ def main() -> None:
             note(f"fondamentaux mis a jour pour {len(neufs)} titres")
 
     # ------------------------------------------------- classement et DCF ----
+    if "actions_m" in dcf_in.columns:
+        rang_in = rang_in.merge(dcf_in[["Ticker", "actions_m"]], on="Ticker",
+                                how="left")
     clt = cl.classer(univers, rang_in, cours, taux)
     clt["bloque"] = clt["Ticker"].isin(bloques)
     clt.loc[clt["bloque"], "negociable"] = False
@@ -145,19 +164,21 @@ def main() -> None:
                  "zone_rang", "zone_dcf", "zone_decrochage", "zone"])
 
     gpa = dict(zip(pf["Ticker"], pf["GP/A ajuste"]))
+    med = dict(zip(pf["Ticker"], pf["mediane_secteur"]))
     lignes_hist = []
     for r in pf.itertuples():
         z = {
             "rang": sg.zone_rang(r.rang),
             "dcf": sg.zone_dcf(r.marge),
             "decrochage": sg.zone_decrochage(r.perf_relative),
-            "degradation": sg.zone_degradation(gpa.get(r.Ticker)),
+            "degradation": sg.zone_degradation(gpa.get(r.Ticker), med.get(r.Ticker)),
         }
         lignes_hist.append({
             "date": aujourdhui.isoformat(), "Ticker": r.Ticker,
             "rang": r.rang, "g1": r.g1, "seuil": r.seuil, "marge": r.marge,
             "zone_rang": z["rang"], "zone_dcf": z["dcf"],
-            "zone_decrochage": z["decrochage"], "zone": sg.zone_globale(z),
+            "zone_decrochage": z["decrochage"],
+            "zone_degradation": z["degradation"], "zone": sg.zone_globale(z),
         })
     hist = pd.concat([hist, pd.DataFrame(lignes_hist)], ignore_index=True)
     hist = hist.drop_duplicates(subset=["date", "Ticker"], keep="last")
@@ -172,15 +193,40 @@ def main() -> None:
 
     portefeuille = []
     for r in pf.itertuples():
-        z = {
-            "rang": sg.zone_rang(r.rang),
-            "dcf": sg.zone_dcf(r.marge),
-            "decrochage": sg.zone_decrochage(r.perf_relative),
-            "degradation": sg.zone_degradation(gpa.get(r.Ticker)),
-        }
+        donnees = bool(np.isfinite(r.cours_local)) and not bool(getattr(r, "perime", False))
+        if donnees:
+            z = {
+                "rang": sg.zone_rang(r.rang),
+                "dcf": sg.zone_dcf(r.marge),
+                "decrochage": sg.zone_decrochage(r.perf_relative),
+                "degradation": sg.zone_degradation(gpa.get(r.Ticker),
+                                                   med.get(r.Ticker)),
+            }
+        else:
+            # Pas de cours frais : on ne sait rien, donc on ne signale rien.
+            z = {k: sg.OK for k in ("rang", "dcf", "decrochage", "degradation")}
         globale = sg.zone_globale(z)
         clotures = sg.compter_clotures(hist, r.Ticker, "zone_dcf")
-        confirme = clotures >= cfg.CLOTURES_CONFIRMATION
+        clotures_deg = sg.compter_clotures(hist, r.Ticker, "zone_degradation")
+        confirme = (clotures >= cfg.CLOTURES_CONFIRMATION
+                    or clotures_deg >= cfg.CLOTURES_CONFIRMATION
+                    or z["rang"] == sg.SORTIE
+                    or z["decrochage"] == sg.SORTIE)
+        # Un titre doit savoir dire POURQUOI il est la ou il est : sans ca,
+        # une ligne en sortie dont les trois zones visibles affichent "ok"
+        # est incomprehensible.
+        motifs = []
+        if not donnees:
+            motifs.append("cours indisponible aujourd'hui")
+        if z["rang"] != sg.OK:
+            motifs.append("rang " + ("introuvable (plancher ou liquidite)"
+                                     if not np.isfinite(r.rang) else f"{int(r.rang)}"))
+        if z["dcf"] != sg.OK:
+            motifs.append(f"marge DCF {r.marge:+.2%}")
+        if z["decrochage"] != sg.OK:
+            motifs.append(f"decrochage {r.perf_relative:+.1%} vs indice")
+        if z["degradation"] != sg.OK:
+            motifs.append(f"GP/A ajuste {gpa.get(r.Ticker):+.4f}")
         remp = None
         if globale == sg.SORTIE:
             m = sg.meilleur_remplacant(candidats, r.Secteur, ecarts)
@@ -199,8 +245,12 @@ def main() -> None:
             "rang": r.rang, "g1": r.g1, "seuil": r.seuil, "marge": r.marge,
             "verdict": r.verdict, "dispersion": r.dispersion,
             "zone_rang": z["rang"], "zone_dcf": z["dcf"],
-            "zone_decrochage": z["decrochage"], "zone": globale,
-            "clotures_consecutives": clotures,
+            "zone_decrochage": z["decrochage"],
+            "zone_degradation": z["degradation"], "zone": globale,
+            "motifs": motifs, "donnees_fraiches": donnees,
+            "gpa_ajuste": gpa.get(r.Ticker),
+            "mediane_secteur": med.get(r.Ticker),
+            "clotures_consecutives": max(clotures, clotures_deg),
             "sortie_confirmee": bool(confirme and globale == sg.SORTIE),
             "remplacant": remp,
         }))

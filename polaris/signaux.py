@@ -70,11 +70,24 @@ def zone_decrochage(perf_relative) -> str:
     return OK
 
 
-def zone_degradation(gpa_ajuste) -> str:
-    """La jambe Novy-Marx casse : c'est la raison meme de detenir le titre."""
-    if gpa_ajuste is not None and np.isfinite(gpa_ajuste) and gpa_ajuste < 0:
+def zone_degradation(gpa_ajuste, mediane_secteur) -> str:
+    """La jambe Novy-Marx s'affaisse : c'est la raison meme de detenir le titre.
+
+    Deux niveaux, comme sur les autres axes. Passer legerement sous la mediane
+    de son secteur met le titre sous surveillance ; il ne sort que s'il
+    s'enfonce nettement en dessous, et seulement apres confirmation. Un ecart
+    de quelques points de base n'est pas un signal : la mediane elle-meme se
+    deplace des qu'un titre entre ou sort de l'univers.
+    """
+    if gpa_ajuste is None or not np.isfinite(gpa_ajuste):
+        return OK
+    if gpa_ajuste >= cfg.DEGRADATION_SURVEILLANCE:
+        return OK
+    if mediane_secteur is None or not np.isfinite(mediane_secteur) or mediane_secteur <= 0:
+        return SURVEILLANCE
+    if gpa_ajuste <= cfg.DEGRADATION_SORTIE * mediane_secteur:
         return SORTIE
-    return OK
+    return SURVEILLANCE
 
 
 ORDRE = {OK: 0, SURVEILLANCE: 1, SORTIE: 2}

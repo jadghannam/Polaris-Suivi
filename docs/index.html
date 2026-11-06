@@ -62,6 +62,8 @@ tr.bloque .soc{text-decoration:line-through}
 .bar>i{display:block;height:100%;background:var(--ok)}
 .bar.orange>i{background:var(--warn)} .bar.rouge>i{background:var(--bad)}
 .rempl{font-size:12px;color:var(--ink2)}
+td.zc{white-space:normal;min-width:168px;max-width:230px}
+td.zc .rempl{margin-top:3px;line-height:1.35;font-size:11.5px}
 .err{padding:18px;color:var(--bad)}
 button.bl{font:inherit;font-size:12px;padding:3px 10px;border-radius:7px;cursor:pointer;
   border:1px solid var(--line);background:transparent;color:var(--ink2)}
@@ -168,6 +170,8 @@ function render(d){
         ? `<div class="rempl">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
       const conf=l.zone==="sortie"
         ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
+      const mot=(l.motifs&&l.motifs.length)
+        ? `<div class="rempl">${esc(l.motifs.join(" · "))}</div>`:"";
       return `<tr class="${estBloque(l.ticker)?"bloque":""}">
         <td class="l"><span class="soc">${esc(l.societe)}</span><span class="tick">${esc(l.stocktrak||l.ticker)}</span>${r}${conf}</td>
         <td class="l">${esc(l.secteur)}</td><td>${E(l.poids)}</td>
@@ -177,7 +181,7 @@ function render(d){
         <td class="${cls(l.perf_jour_secteur)}">${S(l.perf_jour_secteur)}</td>
         <td>${N(l.rang)}</td><td>${E(l.g1,2)}</td><td>${E(l.seuil,2)}</td>
         <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td>
-        <td>${badge(l.zone)}</td>
+        <td class="zc">${badge(l.zone)}${mot}</td>
         <td><button class="bl ${estBloque(l.ticker)?"on":""}"
             onclick="basculer('${l.ticker}','${esc(l.societe).replace(/'/g,"")}')">
             ${estBloque(l.ticker)?"bloqué":"bloquer"}</button></td></tr>`;

@@ -50,7 +50,17 @@ MARGE_DCF_SURVEILLANCE = -0.015   # marge (g1 - seuil) entre -1,5 pt et 0
 MARGE_DCF_SORTIE = 0.0
 CLOTURES_CONFIRMATION = 5         # un franchissement doit tenir 5 clotures
 
-# Degradation. Pas de stop-loss en absolu : une baisse ameliore le
+# Degradation de la rentabilite. Deux niveaux, comme partout ailleurs.
+# Corrige le 05/11/2026 : la regle d'origine sortait un titre des que le GP/A
+# ajuste passait sous zero, sans surveillance ni confirmation. Teleperformance
+# en est sortie pour 43 points de base sous la mediane de son secteur, alors
+# que son rang etait 21 et que son DCF lui laissait 34 points de marge. Or
+# cette mediane bouge des qu'un titre entre ou sort de l'univers : on vendait
+# sur le deplacement d'une mediane, pas sur la societe.
+DEGRADATION_SURVEILLANCE = 0.0    # GP/A ajuste sous la mediane du secteur
+DEGRADATION_SORTIE = -0.10        # ... et 10 % en dessous de cette mediane
+
+# Pas de stop-loss en absolu : une baisse ameliore le
 # book-to-market, donc un stop absolu vendrait systematiquement les titres les
 # moins chers du portefeuille, exactement l'inverse de la philosophie.
 # On mesure donc le decrochage RELATIF a l'indice.
