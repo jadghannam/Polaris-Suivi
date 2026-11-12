@@ -66,7 +66,8 @@ def main() -> None:
     # DCF ; ils ne reviennent que dans la valeur du fonds et l'allocation.
     toutes, source = ps.charger(univers)
     positions = toutes[toutes["type"] == "action"].copy()
-    etf = toutes[toutes["type"] == "etf"].copy()
+    # ETF et obligations : hors classement et DCF, mais dans la valeur du fonds.
+    etf = toutes[toutes["type"].isin(["etf", "obligation"])].copy()
     etat = ps.compte()
     hist_ca = _lire("historique_ca.csv")
     wacc = _lire("wacc_secteurs.csv")
@@ -82,7 +83,10 @@ def main() -> None:
         # coupe demain. Une donnee manquante ne doit jamais ressembler a un
         # signal de vente.
         cours[~cours["perime"].fillna(True).astype(bool)].to_csv(chemin_cours, index=False)
-    frais = int((~cours["perime"].fillna(True).astype(bool)).sum()) if not cours.empty else 0
+    # Un cours "frais" doit exister : un perime=False avec un cours vide a deja
+    # affiche 192/192 alors que 17 lignes detenues n'avaient pas de prix.
+    frais = int(((~cours["perime"].fillna(True).astype(bool))
+                 & cours["cours"].notna()).sum()) if not cours.empty else 0
     note(f"cours frais : {frais} / {len(univers)}")
     if frais < 0.8 * len(univers):
         note("ATTENTION moins de 80 % de cours frais : classement peu fiable, "
@@ -144,6 +148,18 @@ def main() -> None:
     if inconnues:
         note(f"ATTENTION devises sans taux de change : {', '.join(inconnues)}")
     pf["cours_local"] = pf["cours"]
+    # Sans cours Yahoo, on garde le dernier cours de l'export StockTrak plutot
+    # que de laisser la ligne sortir de la valeur du fonds en silence.
+    sans_yahoo = pf["cours_local"].isna() & pf["cours_stocktrak"].notna()
+    pf["cours_source"] = np.where(sans_yahoo, "stocktrak", "yahoo")
+    pf.loc[sans_yahoo, "cours_local"] = pf.loc[sans_yahoo, "cours_stocktrak"]
+    if sans_yahoo.any():
+        note(f"ATTENTION cours Yahoo absent, cours de l'export StockTrak utilise : "
+             f"{', '.join(pf.loc[sans_yahoo, 'Ticker'])}")
+    sans_cours = pf.loc[pf["cours_local"].isna(), "Ticker"].tolist()
+    if sans_cours:
+        note(f"ATTENTION aucun cours pour des lignes detenues, valeur du fonds "
+             f"incomplete : {', '.join(sans_cours)}")
     pf["perf"] = pf["cours_local"] / pf["prix_paye_local"] - 1
     pf["perf_relative"] = pf["perf"] - perf_indice
     # Cours StockTrak et cours Yahoo doivent dire la meme chose : un ecart de
@@ -167,6 +183,19 @@ def main() -> None:
         etf["devise"].map(lambda d: taux.get(d, np.nan))
     total_etf = float(pd.to_numeric(etf["valeur_eur"]).sum()) if len(etf) else 0.0
     liquidites = etat["liquidites_eur"]
+    # Controle des liquidites saisies : capital - cout des positions, cout tel
+    # que StockTrak le compte en euros (valeur de marche - P/L). Exact tant
+    # qu'aucune vente n'a realise de gain ou de perte ; au-dela, indicatif.
+    mv, pl = toutes["valeur_marche_stocktrak"], toutes["pl_stocktrak"]
+    liq_estimees = (cfg.CAPITAL_INITIAL - float((mv - pl).sum())
+                    if len(toutes) and mv.notna().all() and pl.notna().all() else np.nan)
+    if np.isfinite(liq_estimees):
+        if not np.isfinite(liquidites):
+            note(f"liquidites non saisies ; d'apres l'export : {liq_estimees:,.0f} EUR")
+        elif abs(liquidites - liq_estimees) > 0.01 * max(liq_estimees, 1.0):
+            note(f"ATTENTION liquidites saisies {liquidites:,.0f} EUR, l'export en "
+                 f"implique {liq_estimees:,.0f} (capital - cout des positions) : "
+                 f"a verifier dans StockTrak")
     total_fonds = float(total) + total_etf + (liquidites if np.isfinite(liquidites) else 0.0)
     # Poids dans le fonds entier (actions, ETF, liquidites) pour l'affichage ;
     # poids dans la poche actions pour l'ecart sectoriel, qui compare la poche
@@ -265,6 +294,8 @@ def main() -> None:
         motifs = list(motifs_donnees)
         if not donnees:
             motifs.append("cours indisponible aujourd'hui")
+        elif r.cours_source == "stocktrak":
+            motifs.append("cours de l'export StockTrak (Yahoo indisponible)")
         if z["rang"] != sg.OK and not motifs_donnees:
             motifs.append("rang " + ("introuvable (plancher ou liquidite)"
                                      if not np.isfinite(r.rang) else f"{int(r.rang)}"))
@@ -286,6 +317,7 @@ def main() -> None:
             "societe": r.Societe, "pays": r.Pays, "secteur": r.Secteur,
             "quantite": r.quantite, "devise": r.devise,
             "prix_paye": r.prix_paye_local, "cours": r.cours_local,
+            "cours_source": r.cours_source, "cours_stocktrak": r.cours_stocktrak,
             "valeur_eur": r.valeur_eur, "poids": r.poids,
             "poids_poche": r.poids_poche, "type": "action",
             "perf": r.perf, "perf_relative": r.perf_relative,
@@ -305,7 +337,7 @@ def main() -> None:
 
     lignes_etf = [_propre({
         "ticker": r.Ticker, "stocktrak": r.symbole_stocktrak,
-        "description": r.description, "type": "etf",
+        "description": r.description, "type": r.type,
         "quantite": r.quantite, "devise": r.devise,
         "prix_paye": r.prix_paye_local, "cours": r.cours_local,
         "valeur_eur": r.valeur_eur, "poids": r.poids,
@@ -335,6 +367,9 @@ def main() -> None:
             "actions_eur": _nan(float(total)),
             "etf_eur": _nan(total_etf),
             "liquidites_eur": _nan(liquidites),
+            "liquidites_estimees_eur": _nan(liq_estimees),
+            "capital_eur": cfg.CAPITAL_INITIAL,
+            "perf": _nan(total_fonds / cfg.CAPITAL_INITIAL - 1),
             "date_compte": etat["date"],
         },
         "portefeuille": {

@@ -162,6 +162,9 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 .depot details[open] summary::before{transform:rotate(90deg)}
 .depot .ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
 .depot .ligne input{width:280px;max-width:100%}
+.depot .aide{font-size:12.5px;color:var(--ink2);margin-top:10px;line-height:1.6}
+.depot .aide b{color:var(--ink)}
+.depot .aide .lien{color:var(--accent);margin-left:4px}
 .apercu{border:1px solid rgba(216,195,147,.3);background:var(--warnbg);color:#e6d9b8;border-radius:12px;
   padding:12px 16px;font-size:13px;margin-bottom:16px;line-height:1.55}
 .apercu strong{color:var(--warn)}
@@ -189,7 +192,9 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
       <div class="champs">
         <label>Transactions consommées <input type="text" id="cTrans" inputmode="numeric" style="width:120px"></label>
         <label>Liquidités (€) <input type="text" id="cLiq" inputmode="decimal" style="width:170px" placeholder="152 340,50"></label>
+        <button class="btn prim" id="envoyer" style="align-self:flex-end">Envoyer le compte</button>
       </div>
+      <div class="aide" id="aideCompte"></div>
     </div>
     <div class="cible" id="choisir" role="button" tabindex="0">
       <div class="ico">⇪</div>
@@ -298,52 +303,74 @@ function lireCsv(texte){
   return lignes.map(l=>Object.fromEntries(tete.map((h,i)=>[h,(l[i]??"").trim()])));
 }
 
+const OBLIG=/^[A-Z]{2}-[A-Z0-9.]+-\d+(?:\.\d+)?-\d{8}$/;
+const capital=()=>SERVEUR?.fonds?.capital_eur||1e6;
+
+/* Applique un export (texte, facultatif) et/ou les chiffres du compte aux
+   donnees publiees. Sans export, seules liquidites et transactions changent. */
 function apercu(nom,texte,compte){
-  const rows=lireCsv(texte);
-  const req=["Symbol","Quantity","Currency","LastPrice","PricePaid"];
-  const manque=req.filter(c=>!rows.length||!(c in rows[0]));
-  if(manque.length) throw new Error("colonnes absentes : "+manque.join(", "));
   const D=JSON.parse(JSON.stringify(SERVEUR));
   const taux=D.taux||{EUR:1}, bench=D.benchmark.perf_depuis_lancement||0;
-  const table={}; (D.univers||[]).forEach(u=>table[normSym(u["Symbole StockTrak"])]=u);
-  const avant={}; D.portefeuille.lignes.forEach(l=>avant[l.ticker]=l);
-  const actions=[],etf=[],alertes=[];
-  for(const r of rows){
-    const q=nombreFr(r.Quantity); if(!isFinite(q)||q===0||!r.Symbol) continue;
-    let dev=(r.Currency||"EUR").toUpperCase(),cours=nombreFr(r.LastPrice),paye=nombreFr(r.PricePaid);
-    if(dev==="GBX"){dev="GBP";cours/=100;paye/=100}
-    if(!(dev in taux)) alertes.push(`pas de taux de change pour ${dev} (${r.Symbol})`);
-    const valeur=q*cours/(taux[dev]??NaN), perf=cours/paye-1;
-    const commun={stocktrak:r.Symbol,quantite:q,devise:dev,prix_paye:paye,cours,
-      valeur_eur:valeur,perf,perf_relative:perf-bench};
-    const u=table[normSym(r.Symbol)];
-    if(u){
-      const base=avant[u.Ticker]||{ticker:u.Ticker,societe:u.Societe,secteur:u.Secteur,
-        pays:u.Pays,rang:u.rang,g1:u.g1,seuil:u.seuil,marge:u.marge,verdict:u.verdict,
-        zone:null,motifs:["nouvelle ligne : zones calculées au prochain passage du programme"]};
-      actions.push({...base,...commun,type:"action"});
-    } else etf.push({ticker:r.Symbol,description:r.Description||"",type:"etf",...commun});
+  let actions=D.portefeuille.lignes, etf=D.portefeuille.etf||[], alertes=[], sorties=[], estim=null;
+  if(texte!=null){
+    const rows=lireCsv(texte);
+    const req=["Symbol","Quantity","Currency","LastPrice","PricePaid"];
+    const manque=req.filter(c=>!rows.length||!(c in rows[0]));
+    if(manque.length) throw new Error("colonnes absentes : "+manque.join(", "));
+    const table={}; (D.univers||[]).forEach(u=>table[normSym(u["Symbole StockTrak"])]=u);
+    const avant={}; D.portefeuille.lignes.forEach(l=>avant[l.ticker]=l);
+    // Quantites detenues avant ce depot, par symbole StockTrak normalise.
+    const qAvant={}; D.portefeuille.lignes.concat(D.portefeuille.etf||[])
+      .forEach(l=>qAvant[normSym(l.stocktrak||l.ticker)]=l.quantite);
+    actions=[]; etf=[];
+    let cout=0, coutOk=true, changements=0; const vus=new Set();
+    for(const r of rows){
+      const q=nombreFr(r.Quantity); if(!isFinite(q)||q===0||!r.Symbol) continue;
+      let dev=(r.Currency||"EUR").toUpperCase(),cours=nombreFr(r.LastPrice),paye=nombreFr(r.PricePaid);
+      if(dev==="GBX"){dev="GBP";cours/=100;paye/=100}
+      if(!(dev in taux)) alertes.push(`pas de taux de change pour ${dev} (${r.Symbol})`);
+      // Cout en euros tel que StockTrak le compte : valeur de marche - P/L.
+      const mv=nombreFr(r.MarketValue), pl=nombreFr(r.ProfitLoss);
+      if(isFinite(mv)&&isFinite(pl)) cout+=mv-pl; else coutOk=false;
+      const k=normSym(r.Symbol); vus.add(k);
+      if(qAvant[k]==null||Math.abs(qAvant[k]-q)>1e-9) changements++;
+      const valeur=q*cours/(taux[dev]??NaN), perf=cours/paye-1;
+      const commun={stocktrak:r.Symbol,quantite:q,devise:dev,prix_paye:paye,cours,cours_source:"stocktrak",
+        valeur_eur:valeur,perf,perf_relative:perf-bench};
+      const u=table[k];
+      if(u){
+        const base=avant[u.Ticker]||{ticker:u.Ticker,societe:u.Societe,secteur:u.Secteur,
+          pays:u.Pays,rang:u.rang,g1:u.g1,seuil:u.seuil,marge:u.marge,verdict:u.verdict,
+          zone:null,motifs:["nouvelle ligne : zones calculées au prochain passage du programme"]};
+        actions.push({...base,...commun,type:"action"});
+      } else etf.push({ticker:r.Symbol,description:r.Description||"",
+        type:OBLIG.test(String(r.Symbol).trim().toUpperCase())?"obligation":"etf",...commun});
+    }
+    if(!actions.length&&!etf.length) throw new Error("aucune position lisible");
+    changements+=Object.keys(qAvant).filter(k=>!vus.has(k)).length;
+    sorties=Object.keys(avant).filter(t=>!actions.some(l=>l.ticker===t));
+    estim={liquidites:coutOk?capital()-cout:NaN, transactions_min:(SERVEUR.budget?.faites||0)+changements,
+      changements};
+    D.source_positions={type:"apercu",fichier:nom};
   }
-  if(!actions.length&&!etf.length) throw new Error("aucune position lisible");
   const somme=a=>a.reduce((s,l)=>s+(isFinite(l.valeur_eur)?l.valeur_eur:0),0);
   const liq=compte&&isFinite(compte.liquidites)?compte.liquidites:D.fonds?.liquidites_eur;
   const tA=somme(actions),tE=somme(etf);
-  const tF=tA+tE+(isFinite(liq)&&liq!=null?liq:0);
+  const tF=tA+tE+(liq!=null&&isFinite(liq)?liq:0);
   actions.forEach(l=>{l.poids=l.valeur_eur/tF;l.poids_poche=l.valeur_eur/tA});
   etf.forEach(l=>l.poids=l.valeur_eur/tF);
   const perfs=actions.map(l=>l.perf).filter(isFinite);
   D.portefeuille={...D.portefeuille,lignes:actions,etf,valeur_eur:tA,nb_lignes:actions.length,
     perf_moyenne:perfs.reduce((a,b)=>a+b,0)/(perfs.length||1)};
-  D.fonds={...(D.fonds||{}),valeur_eur:tF,actions_eur:tA,etf_eur:tE,liquidites_eur:liq??null};
+  D.fonds={...(D.fonds||{}),valeur_eur:tF,actions_eur:tA,etf_eur:tE,liquidites_eur:liq??null,
+    perf:tF/capital()-1};
   if(compte&&isFinite(compte.transactions)&&D.budget){
     const b=D.budget, f=compte.transactions, rot=Math.max(f-b.initiales,0);
     Object.assign(b,{faites:f,rotation:rot,restantes:400-f,echanges_possibles:Math.floor((400-f)/2),
       rythme:b.attendu_a_ce_jour>0?Math.round(rot/b.attendu_a_ce_jour*100)/100:0});
     b.etat=b.rythme<1?"vert":b.rythme<=1.2?"orange":"rouge";
   }
-  D.source_positions={type:"apercu",fichier:nom};
-  D.apercu={fichier:nom,alertes,
-    sorties:Object.keys(avant).filter(t=>!actions.some(l=>l.ticker===t))};
+  D.apercu={fichier:texte!=null?nom:null,alertes,sorties,estim};
   return D;
 }
 
@@ -381,9 +408,9 @@ async function gh(chemin,opts={}){
   if(!r.ok){const e=new Error(raison(r.status));e.status=r.status;throw e}
   return r.json();
 }
-/* Un seul commit pour l'export et la ligne de compte : un seul passage du
-   programme, et jamais un export sans les chiffres qui vont avec. */
-async function commiter(){
+/* Un seul commit : la ligne de compte, et l'export s'il y en a un. Un seul
+   passage du programme, et jamais un export sans les chiffres qui vont avec. */
+async function commiter(c){
   const br=(await gh("")).default_branch;
   const parent=(await gh(`/git/ref/heads/${br}`)).object.sha;
   const arbre=(await gh(`/git/commits/${parent}`)).tree.sha;
@@ -391,40 +418,47 @@ async function commiter(){
   try{ compte=b64utf8((await gh(`/contents/data/compte.csv?ref=${parent}`)).content); }
   catch(e){ if(e.status!==404) throw e; compte="date,transactions_consommees,liquidites_eur,commentaire\n"; }
   if(!compte.endsWith("\n")) compte+="\n";
-  const c=DEPOSE.compte, j=new Date().toISOString().slice(0,10);
-  compte+=`${j},${c.transactions},${isFinite(c.liquidites)?c.liquidites:""},depot ${DEPOSE.nom}\n`;
+  const j=new Date().toISOString().slice(0,10);
+  compte+=`${j},${c.transactions},${isFinite(c.liquidites)?c.liquidites:""},`
+    +(DEPOSE?`depot ${DEPOSE.nom}`:"mise a jour du compte")+"\n";
   const blob=async b64=>(await gh("/git/blobs",{method:"POST",
     body:JSON.stringify({content:b64,encoding:"base64"})})).sha;
-  const tree=(await gh("/git/trees",{method:"POST",body:JSON.stringify({base_tree:arbre,tree:[
-    {path:"data/"+DEPOSE.nom,mode:"100644",type:"blob",sha:await blob(base64(DEPOSE.octets))},
-    {path:"data/compte.csv",mode:"100644",type:"blob",sha:await blob(utf8b64(compte))}]})})).sha;
+  const fichiers=[{path:"data/compte.csv",mode:"100644",type:"blob",sha:await blob(utf8b64(compte))}];
+  if(DEPOSE) fichiers.push({path:"data/"+DEPOSE.nom,mode:"100644",type:"blob",
+    sha:await blob(base64(DEPOSE.octets))});
+  const tree=(await gh("/git/trees",{method:"POST",body:JSON.stringify({base_tree:arbre,tree:fichiers})})).sha;
   const commit=(await gh("/git/commits",{method:"POST",body:JSON.stringify({
-    message:`positions StockTrak ${DEPOSE.nom} · ${c.transactions} transactions`,
+    message:(DEPOSE?`positions StockTrak ${DEPOSE.nom}`:"compte")
+      +` · ${c.transactions} transactions · liquidites ${isFinite(c.liquidites)?c.liquidites:"?"}`,
     tree,parents:[parent]})})).sha;
   await gh(`/git/refs/heads/${br}`,{method:"PATCH",body:JSON.stringify({sha:commit})});
 }
 async function envoyer(){
-  if(!DEPOSE) return;
-  if(!cle()||!depot()){ etat(`Aperçu calculé. Pour l'envoyer, colle ta clé GitHub ci-dessous`
-    +(depot()?"":" et indique le dépôt")+", puis clique Envoyer.","",true); return; }
-  etat("Envoi de "+DEPOSE.nom+" et des chiffres du compte sur GitHub…");
+  if(!SERVEUR) return;
+  let c;
+  try{ c=lireCompte(); }catch(e){ etat(e.message+".","ko"); return; }
+  if(!cle()||!depot()){ etat(`Pour envoyer, colle d'abord ta clé GitHub ci-dessous`
+    +(depot()?"":" et indique le dépôt")+".","ko"); document.getElementById("cle").open=true; return; }
+  const quoi=DEPOSE?DEPOSE.nom+" et les chiffres du compte":"les chiffres du compte";
+  etat("Envoi de "+quoi+" sur GitHub…");
   try{
     // 422 : le programme a publie entre-temps, on repart de son commit.
     for(let essai=0;;essai++){
-      try{ await commiter(); break; }
+      try{ await commiter(c); break; }
       catch(e){ if(e.status!==422||essai>=2) throw e; }
     }
-    DEPOSE.envoye=true;
-    memoriser({nom:DEPOSE.nom,texte:DEPOSE.texte,compte:DEPOSE.compte,envoye_le:new Date().toISOString()});
-    etat(`${DEPOSE.nom} envoyé. Le programme recalcule tout avec les cours Yahoo du moment ;`
+    memoriser({nom:DEPOSE?DEPOSE.nom:SERVEUR.source_positions?.fichier,texte:DEPOSE?DEPOSE.texte:null,
+      compte:c,envoye_le:new Date().toISOString()});
+    DEPOSE=null; majBouton();
+    etat(`Envoyé : ${quoi}. Le programme recalcule tout avec les cours Yahoo du moment ;`
       +" la page passera seule sur les données officielles d'ici quelques minutes.","ok");
     surveiller();
-  }catch(e){ etat("Envoi impossible : "+e.message,"ko",true); }
+  }catch(e){ etat("Envoi impossible : "+e.message,"ko"); }
 }
 
 /* L'apercu survit au rechargement tant que le programme n'a pas publie des
-   donnees posterieures au depot ; la page les guette et bascule seule. */
-const KAP="polaris_apercu_v1";
+   donnees qui portent ce depot ; la page les guette et bascule seule. */
+const KAP="polaris_apercu_v2";
 const memoriser=o=>{try{o?localStorage.setItem(KAP,JSON.stringify(o)):localStorage.removeItem(KAP)}catch(e){}};
 const memoire=()=>{try{return JSON.parse(localStorage.getItem(KAP)||"null")}catch(e){return null}};
 // Officiel = data.json porte ce fichier, ces transactions et ces liquidites :
@@ -441,8 +475,8 @@ function surveiller(){
     try{
       const d=await (await fetch("data.json?"+Date.now(),{cache:"no-store"})).json();
       if(officiel(d,m)){
-        clearInterval(guet); memoriser(null); SERVEUR=d; DATA=d; DEPOSE=null; render(d); prerempli(d);
-        etat(`Données officielles à jour (${m.nom}, cours Yahoo du moment).`,"ok");
+        clearInterval(guet); memoriser(null); SERVEUR=d; DATA=d; DEPOSE=null; render(d); prerempli(d); majBouton();
+        etat("Données officielles à jour.","ok");
         return;
       }
     }catch(e){}
@@ -457,18 +491,15 @@ const raison=s=>s===401?"clé refusée ou expirée (401)"
   :s===403?"la clé n'a pas la permission Contents : Read and write sur ce dépôt (403)"
   :s===404?"dépôt introuvable, ou clé sans accès à ce dépôt (404)"
   :s===409||s===422?`conflit d'écriture (${s}), réessaie`:"erreur GitHub "+s;
-function etat(msg,c="",bouton=false){
+function etat(msg,c=""){
   const el=document.getElementById("etatDepot");
-  el.className="etat "+c;
-  el.innerHTML=esc(msg)+(bouton&&DEPOSE&&!DEPOSE.envoye
-    ?' <button class="btn prim" id="renvoyer" style="margin-left:6px">Envoyer</button>':"");
-  const b=document.getElementById("renvoyer"); if(b) b.onclick=envoyer;
+  el.className="etat "+c; el.textContent=msg;
 }
 function lireCompte(){
   const t=nombreFr(document.getElementById("cTrans").value);
   const l=nombreFr(document.getElementById("cLiq").value);
   const avant=SERVEUR?.budget?.faites;
-  if(!Number.isInteger(t)||t<0) throw new Error("indique le nombre de transactions consommées (lu dans StockTrak)");
+  if(!Number.isInteger(t)||t<0) throw new Error("Indique le nombre de transactions consommées (lu dans StockTrak)");
   if(avant!=null&&t<avant) throw new Error(`${t} transactions, c'est moins que les ${avant} déjà enregistrées`);
   return {transactions:t,liquidites:l};
 }
@@ -478,18 +509,45 @@ function prerempli(d){
   const l=c?c.liquidites:d?.fonds?.liquidites_eur;
   document.getElementById("cLiq").value=l!=null&&isFinite(l)?N(l,2):"";
 }
+/* Controle des deux chiffres contre l'export : on ne bloque pas, on montre. */
+function aide(D){
+  const el=document.getElementById("aideCompte"), e=D?.apercu?.estim;
+  if(!e){el.innerHTML="";return}
+  const t=nombreFr(document.getElementById("cTrans").value), l=nombreFr(document.getElementById("cLiq").value);
+  const bouts=[];
+  if(e.changements) bouts.push(`${e.changements} ligne${e.changements>1?"s":""} ont changé depuis le dernier export :
+    au moins <b>${e.transactions_min}</b> transactions`+(t<e.transactions_min?' <span class="neg">— à corriger</span>':""));
+  if(isFinite(e.liquidites)){
+    const ecart=isFinite(l)?Math.abs(l-e.liquidites)/Math.max(e.liquidites,1):1;
+    bouts.push(`liquidités d'après l'export (capital − coût des positions, si aucune vente) : <b>${N(e.liquidites,2)} €</b>`
+      +(ecart>0.01?` <span class="neg">— ta saisie s'en écarte</span> <a href="#" id="prendreLiq" class="lien">utiliser</a>`:""));
+  }
+  el.innerHTML=bouts.map(b=>`<div>${b}</div>`).join("");
+  const a=document.getElementById("prendreLiq");
+  if(a) a.onclick=ev=>{ev.preventDefault();document.getElementById("cLiq").value=N(e.liquidites,2);recalculer()};
+}
+function majBouton(){
+  document.getElementById("envoyer").textContent=DEPOSE?"Envoyer l'export et le compte":"Envoyer le compte";
+}
+/* Toute saisie recalcule la page tout de suite ; rien ne part sans le bouton. */
+function recalculer(){
+  if(!SERVEUR) return;
+  let c=null; try{ c=lireCompte(); }catch(e){}
+  try{ DATA=apercu(DEPOSE?.nom,DEPOSE?.texte??null,c||undefined); render(DATA); aide(DATA); }catch(e){}
+}
 async function deposer(f){
   if(!f) return;
   if(!SERVEUR){etat("Les données du programme ne sont pas encore chargées.","ko");return}
-  const octets=new Uint8Array(await f.arrayBuffer()), nom=nomCanonique(f.name);
-  let D,compte,texte=decoder(octets);
-  try{ compte=lireCompte(); D=apercu(nom,texte,compte); }
-  catch(e){ etat(`${f.name} n'a pas été envoyé : ${e.message}.`,"ko"); return; }
-  DEPOSE={nom,octets,texte,compte,envoye:false};
-  DATA=D; render(D);
-  if(!isFinite(compte.liquidites))
-    etat("Liquidités non saisies : la valeur du fonds ne comptera que les titres.");
-  await envoyer();
+  const octets=new Uint8Array(await f.arrayBuffer()), nom=nomCanonique(f.name), texte=decoder(octets);
+  let D;
+  try{ D=apercu(nom,texte,null); }
+  catch(e){ etat(`${f.name} n'a pas été lu : ${e.message}.`,"ko"); return; }
+  DEPOSE={nom,octets,texte};
+  // Transactions : jamais moins que ce que l'export prouve.
+  const t=nombreFr(document.getElementById("cTrans").value), e=D.apercu.estim;
+  if(!(t>=e.transactions_min)) document.getElementById("cTrans").value=e.transactions_min;
+  majBouton(); recalculer();
+  etat(`${nom} lu. Vérifie les deux chiffres ci-dessus, puis clique « Envoyer l'export et le compte ».`);
 }
 function majCle(){
   const t=cle();
@@ -506,30 +564,31 @@ function majCle(){
   const ch=document.getElementById("choisir"); ch.onclick=()=>fi.click();
   ch.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fi.click()}};
   fi.onchange=()=>{deposer(fi.files[0]);fi.value=""};
+  ["cTrans","cLiq"].forEach(id=>document.getElementById(id).addEventListener("input",recalculer));
+  document.getElementById("envoyer").onclick=envoyer;
   document.getElementById("cleOk").onclick=()=>{
     const v=document.getElementById("cleInput").value.trim();
     const d=document.getElementById("depotInput").value.trim().replace(/^https:\/\/github\.com\//,"").replace(/\/$/,"");
     try{ if(v) localStorage.setItem(KTOK,v); if(d) localStorage.setItem(KDEP,d); }catch(e){}
     document.getElementById("cleInput").value=""; majCle();
-    if(DEPOSE&&!DEPOSE.envoye) envoyer();
   };
   document.getElementById("cleOubli").onclick=()=>{
     try{localStorage.removeItem(KTOK)}catch(e){} majCle();
   };
-  majCle();
+  majCle(); majBouton();
 })();
 
 fetch("data.json?"+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{
   SERVEUR=d; DATA=d;
   const m=memoire();
   if(m&&!officiel(d,m)&&Date.now()-Date.parse(m.envoye_le)<36e5*24){
-    // Depot envoye, programme pas encore passe : on remontre l'apercu.
+    // Envoye, programme pas encore passe : on remontre l'apercu.
     try{ DATA=apercu(m.nom,m.texte,m.compte); }catch(e){ memoriser(null); }
-    etat(`${m.nom} envoyé ; en attente du recalcul officiel par le programme.`,"");
+    etat("Envoi reçu ; en attente du recalcul officiel par le programme.","");
     surveiller();
   } else if(m&&!officiel(d,m)){
     memoriser(null);
-    etat(`Le dépôt de ${m.nom} n'a jamais été pris en compte : regarde l'onglet Actions du dépôt.`,"ko");
+    etat("Le dernier envoi n'a jamais été pris en compte : regarde l'onglet Actions du dépôt.","ko");
   } else memoriser(null);
   prerempli(d); render(DATA);
 }).catch(e=>{
@@ -552,9 +611,9 @@ function render(d){
       :src.type==="apercu"?"aperçu "+src.fichier:"saisie initiale")}</b></span>`;
   const p=d.portefeuille,b=d.budget,lignes=p.lignes,etfs=p.etf||[],f=d.fonds||{};
   const part=v=>f.valeur_eur&&v!=null?E(v/f.valeur_eur,0):"—";
-  const ap=d.apercu?`<div class="apercu"><strong>Aperçu calculé dans ce navigateur</strong> à partir de
-    ${esc(d.apercu.fichier)} : quantités, cours et prix payés de l'export. Rang, DCF et zones restent
-    ceux du passage du ${esc(d.date)}.${d.apercu.sorties.length?" Lignes absentes de l'export : "
+  const ap=d.apercu?`<div class="apercu"><strong>Aperçu calculé dans ce navigateur</strong> ${d.apercu.fichier
+    ?`à partir de ${esc(d.apercu.fichier)} : quantités, cours et prix payés de l'export. Rang, DCF et zones restent
+    ceux du passage du ${esc(d.date)}.`:": transactions et liquidités saisies, pas encore envoyées ou pas encore recalculées."}${d.apercu.sorties.length?" Lignes absentes de l'export : "
     +esc(d.apercu.sorties.join(", "))+".":""}${d.apercu.alertes.length?" Attention : "
     +esc(d.apercu.alertes.join(" ; "))+".":""} La page passera seule sur les données officielles
     dès que le programme aura recalculé.</div>`:"";
@@ -566,12 +625,14 @@ function render(d){
   const liqOk=f.liquidites_eur!=null&&isFinite(f.liquidites_eur);
   const tiles=ap+`<div class="tiles">
     <div class="tile large"><div class="k">Valeur du fonds</div>
-      <div class="v">${N(f.valeur_eur)}<small>€</small></div>
+      <div class="v">${N(f.valeur_eur)}<small>€</small>
+        <span class="${cls(f.perf)}" style="font-size:16px;margin-left:12px">${S(f.perf,2)}</span></div>
+      <div class="s">depuis le lancement, sur un capital de ${N(f.capital_eur||1e6)} €</div>
       <div class="alloc"><i class="a1" style="width:${pc(f.actions_eur)}%"></i><i class="a2"
         style="width:${pc(f.etf_eur)}%"></i><i class="a3" style="width:${pc(f.liquidites_eur)}%"></i></div>
       <div class="legende">
         <span style="--c:var(--accent)">Actions<b>${part(f.actions_eur)}</b></span>
-        <span style="--c:var(--menthe)">ETF<b>${part(f.etf_eur)}</b></span>
+        <span style="--c:var(--menthe)">Obligations et ETF<b>${part(f.etf_eur)}</b></span>
         <span style="--c:var(--vert)">Liquidités<b>${liqOk?part(f.liquidites_eur):"non saisies"}</b></span>
       </div></div>
     <div class="tile"><div class="k">Performance des lignes</div>
@@ -659,11 +720,11 @@ function render(d){
       ${d.parametres.clotures_confirmation} clôtures, ou décrochage de
       ${E(d.parametres.decrochage_sortie)}. Aucune sortie sans remplaçant.
       Poids exprimés en part du fonds entier (actions, ETF, liquidités).</p>
-    ${etfs.length?`<h2>ETF <span class="n">hors classement et DCF</span></h2>
-    <div class="card"><table><thead><tr><th class="l">Symbole</th><th class="l">Description</th>
+    ${etfs.length?`<h2>Obligations et ETF <span class="n">hors classement et DCF</span></h2>
+    <div class="card"><table><thead><tr><th class="l">Symbole</th><th class="l">Type</th><th class="l">Description</th>
       <th>Quantité</th><th>Devise</th><th>Prix payé</th><th>Cours</th><th>Valeur €</th>
       <th>Poids</th><th>Perf.</th><th>vs indice</th></tr></thead><tbody>${etfs.map(l=>`<tr>
-      <td class="l"><span class="soc">${esc(l.stocktrak||l.ticker)}</span></td>
+      <td class="l"><span class="soc">${esc(l.stocktrak||l.ticker)}</span></td><td class="l">${l.type==="obligation"?"obligation":"ETF"}</td>
       <td class="l">${esc(l.description)}</td><td>${N(l.quantite)}</td><td>${esc(l.devise)}</td>
       <td>${N(l.prix_paye,2)}</td><td>${N(l.cours,2)}</td><td>${N(l.valeur_eur)}</td>
       <td>${E(l.poids)}</td><td class="${cls(l.perf)}">${S(l.perf)}</td>

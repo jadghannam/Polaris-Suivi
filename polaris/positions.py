@@ -43,7 +43,10 @@ COLONNES_EXPORT = ["Symbol", "Description", "Quantity", "Currency", "LastPrice",
 # Mots qui disent qu'une ligne hors univers est bien un fonds indiciel. Une
 # ligne hors univers qui n'en contient aucun reste traitee comme un ETF, mais
 # le journal le signale : c'est peut-etre une action absente de l'univers.
-MOTS_ETF = ("ETF", "UCITS", "ISHARES", "XTRACKERS", "AMUNDI", "LYXOR", "SPDR",
+# Obligations : StockTrak les nomme PAYS-EMETTEUR-COUPON-ECHEANCE
+# (FR-HO-4.250-18102031 = Thales 4,25 % octobre 2031), prix pour 1 000 de nominal.
+MOTIF_OBLIGATION = re.compile(r"^[A-Z]{2}-[A-Z0-9.]+-\d+(?:\.\d+)?-\d{8}$")
+MOTS_ETF = ("ETF", "UCITS", "ISHARES", "BLACKROCK", "XTRACKERS", "AMUNDI", "LYXOR", "SPDR",
             "VANGUARD", "INVESCO", "WISDOMTREE", "INDEX", "FUND", "BOND", "TRACKER")
 
 
@@ -178,6 +181,7 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
             "quantite": float(q), "devise": devise,
             "prix_paye_local": paye, "cours_stocktrak": cours,
             "valeur_marche_stocktrak": getattr(r, "MarketValue", np.nan),
+            "pl_stocktrak": getattr(r, "ProfitLoss", np.nan),
         }
         if ticker:
             attendue = place(ticker)[0]
@@ -185,6 +189,8 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
                 note(f"ATTENTION {r.Symbol} -> {ticker} : devise {devise} dans "
                      f"l'export, {attendue} attendue sur sa place")
             ligne.update(Ticker=ticker, type="action")
+        elif MOTIF_OBLIGATION.match(str(r.Symbol).strip().upper()):
+            ligne.update(Ticker=r.Symbol, type="obligation")
         else:
             ligne.update(Ticker=r.Symbol, type="etf")
         lignes.append(ligne)
@@ -199,7 +205,7 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
         pos = pos.groupby("Ticker", as_index=False).agg(
             {"symbole_stocktrak": "first", "description": "first", "quantite": "sum",
              "devise": "first", "cout": "sum", "cours_stocktrak": "first",
-             "valeur_marche_stocktrak": "sum", "type": "first"})
+             "valeur_marche_stocktrak": "sum", "pl_stocktrak": "sum", "type": "first"})
         pos["prix_paye_local"] = pos["cout"] / pos["quantite"]
         pos = pos.drop(columns="cout")
 
@@ -212,8 +218,13 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
              + ("" if ressemble else
                 "  ATTENTION la description ne ressemble pas a un ETF : "
                 "action absente de data/univers.csv ?"))
+    oblig = pos[pos["type"] == "obligation"]
+    if len(oblig):
+        note(f"obligations (ni classement ni DCF) : {len(oblig)} -> "
+             f"{', '.join(oblig['symbole_stocktrak'])}")
     note(f"positions lues dans {chemin.name} : "
-         f"{int((pos['type'] == 'action').sum())} actions, {len(etf)} ETF")
+         f"{int((pos['type'] == 'action').sum())} actions, {len(oblig)} obligations, "
+         f"{len(etf)} ETF")
     return pos
 
 
@@ -223,6 +234,7 @@ def _depuis_photo() -> pd.DataFrame:
     pos["description"] = ""
     pos["cours_stocktrak"] = np.nan
     pos["valeur_marche_stocktrak"] = np.nan
+    pos["pl_stocktrak"] = np.nan
     return pos
 
 

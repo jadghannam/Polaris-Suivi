@@ -66,6 +66,13 @@ def _extraire(data, t: str) -> pd.DataFrame | None:
             h = data[t].dropna(how="all")
         else:
             h = data.dropna(how="all")
+        # Lecon du 10/11/2026 : en soiree, Yahoo renvoie pour les places
+        # continentales une ligne du jour avec ouverture, plus haut, plus bas et
+        # volume, mais SANS cloture. Prise pour la derniere ligne, elle donnait
+        # un cours vide compte comme frais : 17 lignes sur 26 sortaient de la
+        # valeur du fonds. Une ligne sans cloture n'est pas un cours.
+        if "Close" in h.columns:
+            h = h[h["Close"].notna()]
         return h if not h.empty else None
     except Exception:                                   # noqa: BLE001
         return None

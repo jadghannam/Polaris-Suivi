@@ -95,6 +95,7 @@ REMPLACANT_VERDICTS = ("A", "B")  # pas de C : on ne remplace pas un titre
 PART_MAX_VOLUME = 0.05            # notre ligne sous 5 % du volume quotidien
 
 # ---------------------------------------------------- budget de transactions --
+CAPITAL_INITIAL = 1_000_000       # euros, au 02/11/2026
 BUDGET_TOTAL = 400
 BUDGET_ACTIONS = 300              # 150 echanges possibles
 BUDGET_ALLOCATION = 50            # mouvements de bandes macro sur les ETF
