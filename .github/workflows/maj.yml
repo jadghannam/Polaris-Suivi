@@ -11,6 +11,7 @@ on:
     paths:
       - "data/OpenPosition_*.csv"
       - "data/compte.csv"
+      - "data/blocages.csv"
 
 # Une seule mise a jour a la fois : deux passages simultanes se disputeraient
 # l'ecriture de data/ et le second echouerait au push.

@@ -165,6 +165,10 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 .depot .aide{font-size:12.5px;color:var(--ink2);margin-top:10px;line-height:1.6}
 .depot .aide b{color:var(--ink)}
 .depot .aide .lien{color:var(--accent);margin-left:4px}
+.toast{position:fixed;right:20px;bottom:20px;max-width:380px;background:var(--surf2);color:var(--ink);
+  border:1px solid var(--line2);border-radius:12px;padding:12px 16px;font-size:13px;z-index:10;
+  box-shadow:0 8px 30px rgba(0,0,0,.35);transition:opacity .3s;opacity:0;pointer-events:none}
+.toast.ok{border-color:rgba(200,226,207,.4)} .toast.ko{border-color:rgba(219,163,156,.5);color:var(--bad)}
 .apercu{border:1px solid rgba(216,195,147,.3);background:var(--warnbg);color:#e6d9b8;border-radius:12px;
   padding:12px 16px;font-size:13px;margin-bottom:16px;line-height:1.55}
 .apercu strong{color:var(--warn)}
@@ -237,29 +241,93 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 
 /* Blocages manuels.
    StockTrak n'a pas d'API : c'est au gerant de constater qu'un titre n'est pas
-   achetable (volume insuffisant, symbole absent, cours aberrant). Le clic est
-   garde dans ce navigateur pour un effet immediat, et la zone du bas donne les
-   lignes a committer dans data/blocages.csv pour que ce soit partage et trace. */
-const KEY="polaris_blocages_v1";
+   achetable (volume insuffisant, symbole absent, cours aberrant). Un clic sur
+   "bloquer" ecrit directement dans data/blocages.csv (cle GitHub), ce qui
+   relance le programme : le remplacant suivant prend la place. En attendant
+   son passage, la page garde le changement en memoire pour l'afficher. */
+const KEY="polaris_blocages_v2";
 const lire=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}};
 const ecrire=o=>{try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}};
 let DATA=null;
 
-function basculer(t,societe){
-  const b=lire();
-  if(b[t]) delete b[t];
-  else b[t]={societe,motif:"non negociable sur StockTrak",date:(DATA&&DATA.date)||""};
-  ecrire(b); render(DATA);
+const csvChamp=v=>/[",\n]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':String(v);
+function toast(msg,c=""){
+  let t=document.getElementById("toast");
+  if(!t){t=document.createElement("div");t.id="toast";document.body.appendChild(t)}
+  t.className="toast "+c; t.textContent=msg; t.style.opacity=1;
+  clearTimeout(toast.h); toast.h=setTimeout(()=>t.style.opacity=0,c==="ko"?9000:5000);
+}
+/* Ecrit data/blocages.csv : ajoute ou retire la ligne du titre, un commit. */
+async function ecrireBlocage(t,bloquer,motif){
+  for(let essai=0;;essai++){
+    try{
+      const br=(await gh("")).default_branch;
+      let texte="Ticker,date,motif\n",sha;
+      try{ const f=await gh(`/contents/data/blocages.csv?ref=${br}`); texte=b64utf8(f.content); sha=f.sha; }
+      catch(e){ if(e.status!==404) throw e; }
+      const lignes=texte.replace(/\r/g,"").split("\n").filter(l=>l.trim()!=="");
+      const tete=lignes.shift()||"Ticker,date,motif";
+      const reste=lignes.filter(l=>l.split(",")[0].trim()!==t);
+      if(bloquer) reste.push([t,new Date().toISOString().slice(0,10),motif].map(csvChamp).join(","));
+      const corps={message:(bloquer?"blocage ":"deblocage ")+t+(bloquer?" : "+motif:""),
+        content:utf8b64([tete,...reste].join("\n")+"\n"),branch:br};
+      if(sha) corps.sha=sha;
+      await gh("/contents/data/blocages.csv",{method:"PUT",body:JSON.stringify(corps)});
+      return;
+    }catch(e){ if(!(e.status===409||e.status===422)||essai>=2) throw e; }
+  }
+}
+async function basculer(t,societe){
+  if(!SERVEUR) return;
+  if(!cle()||!depot()){
+    document.getElementById("cle").open=true;
+    toast("Pour bloquer un titre, colle d'abord ta clé GitHub (en haut de la page).","ko");
+    window.scrollTo({top:0,behavior:"smooth"}); return;
+  }
+  const bloquer=!estBloqueGlobal(t);
+  let motif="";
+  if(bloquer){
+    motif=prompt(`Pourquoi ${societe} n'est-il pas négociable sur StockTrak ?`,"non negociable sur StockTrak");
+    if(motif===null) return;
+    motif=motif.trim()||"non negociable sur StockTrak";
+  }
+  toast((bloquer?"Blocage":"Déblocage")+" de "+societe+"…");
+  try{
+    await ecrireBlocage(t,bloquer,motif);
+    const b=lire(); b[t]={etat:bloquer?"bloque":"debloque",societe,motif,date:new Date().toISOString().slice(0,10)};
+    ecrire(b); render(DATA); guetterBlocages();
+    toast(`${societe} ${bloquer?"bloqué":"débloqué"}. Le programme recalcule les remplaçants (quelques minutes).`,"ok");
+  }catch(e){ toast("Impossible d'enregistrer : "+e.message,"ko"); }
 }
 window.basculer=basculer;
-
-function copier(){
-  const ta=document.getElementById("csv");
-  ta.select(); document.execCommand("copy");
-  const b=document.getElementById("btncopy"); const t=b.textContent;
-  b.textContent="Copié"; setTimeout(()=>b.textContent=t,1400);
+// Etat d'un titre : le changement en attente l'emporte sur les donnees publiees.
+function estBloqueGlobal(t,d=DATA){
+  const o=lire()[t]; if(o) return o.etat==="bloque";
+  return (d?.blocages||[]).some(x=>x.Ticker===t);
 }
-window.copier=copier;
+// La page guette le passage du programme, puis affiche ses remplacants.
+let guetBl=null;
+function guetterBlocages(){
+  clearInterval(guetBl); const debut=Date.now();
+  guetBl=setInterval(async()=>{
+    if(!Object.keys(lire()).length||Date.now()-debut>20*60e3){clearInterval(guetBl);return}
+    try{
+      const d=await (await fetch("data.json?"+Date.now(),{cache:"no-store"})).json();
+      purgerBlocages(d);
+      if(!Object.keys(lire()).length){
+        clearInterval(guetBl);
+        if(!memoire()){ SERVEUR=d; DATA=d; render(d); }
+        toast("Remplaçants recalculés par le programme.","ok");
+      }
+    }catch(e){}
+  },30e3);
+}
+// Un changement que le programme a publie n'a plus besoin d'etre garde.
+function purgerBlocages(d){
+  const b=lire(), serveur=new Set((d.blocages||[]).map(x=>x.Ticker));
+  for(const t of Object.keys(b)) if((b[t].etat==="bloque")===serveur.has(t)) delete b[t];
+  ecrire(b);
+}
 
 /* ------------------------------------------------ export StockTrak ------
    Le fichier depose est lu ici, avec les memes regles que polaris/positions.py :
@@ -579,7 +647,7 @@ function majCle(){
 })();
 
 fetch("data.json?"+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{
-  SERVEUR=d; DATA=d;
+  SERVEUR=d; DATA=d; purgerBlocages(d); if(Object.keys(lire()).length) guetterBlocages();
   const m=memoire();
   if(m&&!officiel(d,m)&&Date.now()-Date.parse(m.envoye_le)<36e5*24){
     // Envoye, programme pas encore passe : on remontre l'apercu.
@@ -600,8 +668,7 @@ fetch("data.json?"+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{
 
 function render(d){
   const bl=lire();
-  const serveur=new Set((d.blocages||[]).map(x=>x.Ticker));
-  const estBloque=t=>!!bl[t]||serveur.has(t);
+  const estBloque=t=>estBloqueGlobal(t,d);
 
   const src=d.source_positions||{};
   const fr=iso=>iso?iso.split("-").reverse().join("/"):"";
@@ -694,21 +761,22 @@ function render(d){
       <td class="${r.marge>0?"neg":"pos"}">${S(r.marge,2)}</td>
       <td><button class="bl" onclick="basculer('${r.Ticker}','${esc(r.Societe).replace(/'/g,"")}')">bloquer</button></td></tr>`).join("");
 
-  const tousBloques=Object.entries(bl).map(([t,v])=>({Ticker:t,...v}))
-      .concat((d.blocages||[]).filter(x=>!bl[x.Ticker]));
-  const csv="Ticker,date,motif\n"+tousBloques
-      .map(x=>`${x.Ticker},${x.date||d.date},${x.motif||"non negociable sur StockTrak"}`).join("\n");
+  // Titres bloques : publies par le programme, plus les changements en attente.
+  const tousBloques=(d.blocages||[]).filter(x=>!bl[x.Ticker]||bl[x.Ticker].etat==="bloque")
+    .map(x=>({...x,attente:false}))
+    .concat(Object.entries(bl).filter(([t,v])=>v.etat==="bloque"&&!(d.blocages||[]).some(x=>x.Ticker===t))
+      .map(([t,v])=>({Ticker:t,date:v.date,motif:v.motif,attente:true})));
+  const nomDe=t=>{const u=(d.univers||[]).find(x=>x.Ticker===t);return u?u.Societe:t};
   const panneau=tousBloques.length?`
-    <h2>Blocages</h2>
-    <div class="panneau">
-      <p class="note" style="margin-top:0">${tousBloques.length} titre${tousBloques.length>1?"s":""} marqué${tousBloques.length>1?"s":""}
-        comme non négociable${tousBloques.length>1?"s":""}. Le calcul reste fait et visible, mais le titre
-        n'est plus proposé comme remplaçant : le suivant dans le classement prend sa place.
-        Le clic ne vaut que dans ce navigateur — colle ces lignes dans
-        <code>data/blocages.csv</code> sur GitHub pour que ce soit partagé et tracé.</p>
-      <textarea id="csv">${esc(csv)}</textarea>
-      <button class="cp" id="btncopy" onclick="copier()">Copier pour GitHub</button>
-    </div>`:"";
+    <h2>Blocages <span class="n">${tousBloques.length} titre${tousBloques.length>1?"s":""} non négociable${tousBloques.length>1?"s":""} sur StockTrak</span></h2>
+    <div class="card"><table><thead><tr><th class="l">Titre</th><th class="l">Motif</th><th class="l">Depuis</th><th></th></tr></thead>
+      <tbody>${tousBloques.map(x=>`<tr><td class="l"><span class="soc">${esc(nomDe(x.Ticker))}</span><span class="tick">${esc(x.Ticker)}</span></td>
+        <td class="l" style="white-space:normal">${esc(x.motif||"")}</td>
+        <td class="l">${esc(x.date||"")}${x.attente?' <span class="tick">en attente du programme</span>':""}</td>
+        <td><button class="bl on" onclick="basculer('${esc(x.Ticker)}','${esc(nomDe(x.Ticker)).replace(/'/g,"")}')">débloquer</button></td></tr>`).join("")}
+      </tbody></table></div>
+    <p class="note">Un titre bloqué reste calculé et visible, mais n'est plus proposé comme remplaçant : le suivant
+      dans le classement prend sa place. Le clic écrit directement dans <code>data/blocages.csv</code>.</p>`:"";
 
   document.getElementById("app").innerHTML=tiles+`
     <h2>Portefeuille <span class="n">${lignes.length} lignes · triées par urgence</span></h2>
