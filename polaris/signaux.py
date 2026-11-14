@@ -117,15 +117,22 @@ def sortie_confirmee(historique: pd.DataFrame, ticker: str, colonne: str) -> boo
 
 
 # ------------------------------------------------------- remplacants ---------
-def remplacants_eligibles(suivi: pd.DataFrame, detenus: set[str]) -> pd.DataFrame:
+def remplacants_eligibles(suivi: pd.DataFrame, detenus: set[str],
+                          vetos: set[str] = frozenset()) -> pd.DataFrame:
     """Titres prets a entrer, classes du meilleur au moins bon.
 
     Verdict A ou B exige, pas C : on ne remplace pas un titre marginal par un
     autre titre marginal. Et la ligne doit rester sous 5 % du volume quotidien,
     sinon on ne saura pas la construire ni la defaire.
+
+    Aucun veto qualitatif (data/vetos.csv). Ajoute le 14/11/2026 : la regle
+    etait ecrite dans le README mais pas dans le code, et la page proposait
+    AkzoNobel, ecartee le 23/10 pour sa fusion avec Axalta, en remplacement de
+    chaque sortie.
     """
     r = suivi[
         (~suivi["Ticker"].isin(detenus))
+        & (~suivi["Ticker"].isin(vetos))
         & (suivi["rang"] <= cfg.REMPLACANT_RANG_MAX)
         & (suivi["plancher_ok"])
         & (suivi["negociable"])

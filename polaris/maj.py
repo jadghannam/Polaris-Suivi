@@ -62,13 +62,24 @@ def main() -> None:
     if bloques:
         note(f"blocages manuels actifs : {len(bloques)} "
              f"-> {', '.join(sorted(bloques))}")
+    # Vetos qualitatifs : exclusions decidees sur un fait etabli (fusion,
+    # offre, contentieux), datees. Le titre reste classe et visible, mais il
+    # n'est jamais propose en remplacement. On retire la ligne du fichier le
+    # jour ou le fait qui la justifie a disparu, en le datant dans le commit.
+    chemin_veto = cfg.DATA / "vetos.csv"
+    vetos_df = pd.read_csv(chemin_veto) if chemin_veto.exists() else pd.DataFrame(
+        columns=["Ticker", "date", "motif"])
+    vetos = set(vetos_df["Ticker"].dropna())
+    if vetos:
+        note(f"vetos qualitatifs actifs : {len(vetos)} -> {', '.join(sorted(vetos))}")
     # Positions : dernier export StockTrak de data/, sinon positions.csv.
     # Les ETF sont separes ici et ne passent ni par le classement ni par le
     # DCF ; ils ne reviennent que dans la valeur du fonds et l'allocation.
     toutes, source = ps.charger(univers)
     positions = toutes[toutes["type"] == "action"].copy()
     # ETF et obligations : hors classement et DCF, mais dans la valeur du fonds.
-    etf = toutes[toutes["type"].isin(["etf", "obligation"])].copy()
+    # Les futures y sont aussi, pour leur seul P/L (voir plus bas).
+    etf = toutes[toutes["type"].isin(["etf", "obligation", "future"])].copy()
     etat = ps.compte()
     hist_ca = _lire("historique_ca.csv")
     wacc = _lire("wacc_secteurs.csv")
@@ -182,21 +193,32 @@ def main() -> None:
     etf["perf_relative"] = etf["perf"] - perf_indice
     etf["valeur_eur"] = etf["quantite"] * etf["cours_local"] / \
         etf["devise"].map(lambda d: taux.get(d, np.nan))
+    # Un future ne vaut pas son nominal : il vaut son gain ou sa perte latente
+    # (P/L de l'export, deja en euros). Le nominal reste affiche a part.
+    est_future = etf["type"] == "future"
+    etf["notionnel_eur"] = np.where(est_future, etf["valeur_marche_stocktrak"], np.nan)
+    etf.loc[est_future, "valeur_eur"] = etf.loc[est_future, "pl_stocktrak"].fillna(0.0)
     total_etf = float(pd.to_numeric(etf["valeur_eur"]).sum()) if len(etf) else 0.0
     liquidites = etat["liquidites_eur"]
     # Controle des liquidites saisies : capital - cout des positions, cout tel
     # que StockTrak le compte en euros (valeur de marche - P/L). Exact tant
     # qu'aucune vente n'a realise de gain ou de perte ; au-dela, indicatif.
-    mv, pl = toutes["valeur_marche_stocktrak"], toutes["pl_stocktrak"]
+    # Les futures n'ont pas de cout d'achat : seul leur depot de garantie sort
+    # des liquidites, et l'export ne le donne pas. D'ou un ecart residuel
+    # possible quand le fonds en detient.
+    payes = toutes[toutes["type"] != "future"]
+    a_terme = int((toutes["type"] == "future").sum())
+    mv, pl = payes["valeur_marche_stocktrak"], payes["pl_stocktrak"]
     liq_estimees = (cfg.CAPITAL_INITIAL - float((mv - pl).sum())
-                    if len(toutes) and mv.notna().all() and pl.notna().all() else np.nan)
+                    if len(payes) and mv.notna().all() and pl.notna().all() else np.nan)
     if np.isfinite(liq_estimees):
         if not np.isfinite(liquidites):
             note(f"liquidites non saisies ; d'apres l'export : {liq_estimees:,.0f} EUR")
         elif abs(liquidites - liq_estimees) > 0.01 * max(liq_estimees, 1.0):
             note(f"ATTENTION liquidites saisies {liquidites:,.0f} EUR, l'export en "
-                 f"implique {liq_estimees:,.0f} (capital - cout des positions) : "
-                 f"a verifier dans StockTrak")
+                 f"implique {liq_estimees:,.0f} (capital - cout des positions"
+                 + (f", hors depot de garantie de {a_terme} future(s)" if a_terme else "")
+                 + ") : a verifier dans StockTrak")
     total_fonds = float(total) + total_etf + (liquidites if np.isfinite(liquidites) else 0.0)
     # Poids dans le fonds entier (actions, ETF, liquidites) pour l'affichage ;
     # poids dans la poche actions pour l'ecart sectoriel, qui compare la poche
@@ -271,7 +293,8 @@ def main() -> None:
     ecarts = {}
     for s, bloc in pf.groupby("Secteur"):
         ecarts[s] = float(bloc["poids_poche"].sum())
-    candidats = sg.remplacants_eligibles(ev[ev["liste_suivi"].fillna(False)], detenus)
+    candidats = sg.remplacants_eligibles(ev[ev["liste_suivi"].fillna(False)], detenus,
+                                         vetos)
 
     portefeuille = []
     for r in pf.itertuples():
@@ -348,6 +371,7 @@ def main() -> None:
         "prix_paye": r.prix_paye_local, "cours": r.cours_local,
         "valeur_eur": r.valeur_eur, "poids": r.poids,
         "perf": r.perf, "perf_relative": r.perf_relative,
+        "notionnel_eur": r.notionnel_eur,
     }) for r in etf.itertuples()]
 
     # Transactions consommees : saisies dans data/compte.csv avec l'export.
@@ -410,6 +434,7 @@ def main() -> None:
             "decrochage_sortie": cfg.DECROCHAGE_SORTIE,
         },
         "blocages": blocages.to_dict("records"),
+        "vetos": vetos_df.to_dict("records"),
         "journal": lignes(),
     }
 

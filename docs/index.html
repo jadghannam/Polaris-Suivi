@@ -372,6 +372,7 @@ function lireCsv(texte){
 }
 
 const OBLIG=/^[A-Z]{2}-[A-Z0-9.]+-\d+(?:\.\d+)?-\d{8}$/;
+const FUTURE=/^[A-Z0-9]{1,6}\/[FGHJKMNQUVXZ]\d{1,2}$/;
 const capital=()=>SERVEUR?.fonds?.capital_eur||1e6;
 
 /* Applique un export (texte, facultatif) et/ou les chiffres du compte aux
@@ -398,11 +399,14 @@ function apercu(nom,texte,compte){
       if(dev==="GBX"){dev="GBP";cours/=100;paye/=100}
       if(!(dev in taux)) alertes.push(`pas de taux de change pour ${dev} (${r.Symbol})`);
       // Cout en euros tel que StockTrak le compte : valeur de marche - P/L.
+      // Un future n'a pas de cout (seul le depot de garantie sort) et vaut son
+      // P/L, pas son nominal : meme regle que polaris/positions.py.
       const mv=nombreFr(r.MarketValue), pl=nombreFr(r.ProfitLoss);
-      if(isFinite(mv)&&isFinite(pl)) cout+=mv-pl; else coutOk=false;
+      const fut=FUTURE.test(String(r.Symbol).trim().toUpperCase())||/FUTURE/i.test(r.Description||"");
+      if(!fut){ if(isFinite(mv)&&isFinite(pl)) cout+=mv-pl; else coutOk=false; }
       const k=normSym(r.Symbol); vus.add(k);
       if(qAvant[k]==null||Math.abs(qAvant[k]-q)>1e-9) changements++;
-      const valeur=q*cours/(taux[dev]??NaN), perf=cours/paye-1;
+      const valeur=fut?(isFinite(pl)?pl:0):q*cours/(taux[dev]??NaN), perf=cours/paye-1;
       const commun={stocktrak:r.Symbol,quantite:q,devise:dev,prix_paye:paye,cours,cours_source:"stocktrak",
         valeur_eur:valeur,perf,perf_relative:perf-bench};
       const u=table[k];
@@ -412,7 +416,8 @@ function apercu(nom,texte,compte){
           zone:null,motifs:["nouvelle ligne : zones calculées au prochain passage du programme"]};
         actions.push({...base,...commun,type:"action"});
       } else etf.push({ticker:r.Symbol,description:r.Description||"",
-        type:OBLIG.test(String(r.Symbol).trim().toUpperCase())?"obligation":"etf",...commun});
+        type:fut?"future":OBLIG.test(String(r.Symbol).trim().toUpperCase())?"obligation":"etf",
+        notionnel_eur:fut?mv:null,...commun});
     }
     if(!actions.length&&!etf.length) throw new Error("aucune position lisible");
     changements+=Object.keys(qAvant).filter(k=>!vus.has(k)).length;
@@ -820,8 +825,9 @@ function render(d){
     <div class="card"><table><thead><tr><th class="l">Symbole</th><th class="l">Type</th><th class="l">Description</th>
       <th>Quantité</th><th>Devise</th><th>Prix payé</th><th>Cours</th><th>Valeur €</th>
       <th>Poids</th><th>Perf.</th><th>vs indice</th></tr></thead><tbody>${etfs.map(l=>`<tr>
-      <td class="l"><span class="soc">${esc(l.stocktrak||l.ticker)}</span></td><td class="l">${l.type==="obligation"?"obligation":"ETF"}</td>
-      <td class="l">${esc(l.description)}</td><td>${N(l.quantite)}</td><td>${esc(l.devise)}</td>
+      <td class="l"><span class="soc">${esc(l.stocktrak||l.ticker)}</span></td><td class="l">${l.type==="obligation"?"obligation":l.type==="future"?"future":"ETF"}</td>
+      <td class="l">${esc(l.description)}${l.type==="future"&&l.notionnel_eur!=null?
+        `<br><span class="note">nominal ${N(l.notionnel_eur)} € · valeur comptée = P/L latent</span>`:""}</td><td>${N(l.quantite)}</td><td>${esc(l.devise)}</td>
       <td>${N(l.prix_paye,2)}</td><td>${N(l.cours,2)}</td><td>${N(l.valeur_eur)}</td>
       <td>${E(l.poids)}</td><td class="${cls(l.perf)}">${S(l.perf)}</td>
       <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td></tr>`).join("")}</tbody></table></div>

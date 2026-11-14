@@ -46,6 +46,11 @@ COLONNES_EXPORT = ["Symbol", "Description", "Quantity", "Currency", "LastPrice",
 # Obligations : StockTrak les nomme PAYS-EMETTEUR-COUPON-ECHEANCE
 # (FR-HO-4.250-18102031 = Thales 4,25 % octobre 2031), prix pour 1 000 de nominal.
 MOTIF_OBLIGATION = re.compile(r"^[A-Z]{2}-[A-Z0-9.]+-\d+(?:\.\d+)?-\d{8}$")
+# Contrats a terme : SOUS-JACENT/MOIS-ANNEE (ZN/H7 = T-Note 10 ans mars 2027).
+# Leur MarketValue est le NOMINAL ; StockTrak ne debite que le depot de
+# garantie. Compte comme un ETF, le ZN/H7 faisait croire le 14/11/2026 a
+# 95 000 EUR de positions de plus, et le controle des liquidites criait faux.
+MOTIF_FUTURE = re.compile(r"^[A-Z0-9]{1,6}/[FGHJKMNQUVXZ]\d{1,2}$")
 MOTS_ETF = ("ETF", "UCITS", "ISHARES", "BLACKROCK", "XTRACKERS", "AMUNDI", "LYXOR", "SPDR",
             "VANGUARD", "INVESCO", "WISDOMTREE", "INDEX", "FUND", "BOND", "TRACKER")
 
@@ -189,6 +194,9 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
                 note(f"ATTENTION {r.Symbol} -> {ticker} : devise {devise} dans "
                      f"l'export, {attendue} attendue sur sa place")
             ligne.update(Ticker=ticker, type="action")
+        elif (MOTIF_FUTURE.match(str(r.Symbol).strip().upper())
+              or "FUTURE" in str(r.Description or "").upper()):
+            ligne.update(Ticker=r.Symbol, type="future")
         elif MOTIF_OBLIGATION.match(str(r.Symbol).strip().upper()):
             ligne.update(Ticker=r.Symbol, type="obligation")
         else:
@@ -222,9 +230,14 @@ def _depuis_export(chemin: Path, univers: pd.DataFrame) -> pd.DataFrame:
     if len(oblig):
         note(f"obligations (ni classement ni DCF) : {len(oblig)} -> "
              f"{', '.join(oblig['symbole_stocktrak'])}")
+    fut = pos[pos["type"] == "future"]
+    for r in fut.itertuples():
+        note(f"contrat a terme (valeur = P/L, nominal hors valeur du fonds) : "
+             f"{r.symbole_stocktrak} - {r.description} - nominal "
+             f"{r.valeur_marche_stocktrak:,.0f} EUR")
     note(f"positions lues dans {chemin.name} : "
          f"{int((pos['type'] == 'action').sum())} actions, {len(oblig)} obligations, "
-         f"{len(etf)} ETF")
+         f"{len(etf)} ETF, {len(fut)} futures")
     return pos
 
 
