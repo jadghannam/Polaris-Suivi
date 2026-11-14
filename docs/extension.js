@@ -142,7 +142,7 @@ async function vueUnivers(){
         `<option ${FU.region===r?"selected":""}>${esc(r)}</option>`).join("")}</select>
       <label><input type="checkbox" id="fCl" ${FU.classes?"checked":""}> Classés seulement</label>
       <input type="text" id="fQ" placeholder="Rechercher un titre" value="${esc(FU.q)}" style="width:220px">
-      <span class="compte">${u.nb_titres} titres · ${u.nb_classes} classés · ${tot} affichés</span></div>
+      <span class="compte">${u.nb_titres} titres · ${u.nb_classes} classés · ${Math.min(tot,FU.lim)} affichés sur ${tot}</span></div>
     <div class="card"><table><thead><tr><th>Rang</th><th class="l">Titre</th><th class="l">Pays</th><th class="l">Secteur</th>
       <th>GP/A ajusté</th><th>B/M</th><th>Pct rentab.</th><th>Pct valo.</th><th>Score</th>
       <th class="l">Verdict DCF</th><th>g₁</th><th>Seuil</th><th>Marge</th></tr></thead><tbody>${l.map(x=>`<tr class="clic" data-f="${esc(x.Ticker)}" data-u="${esc(k)}">
@@ -346,7 +346,7 @@ async function fiche(t,cu){
   const [ton,lect]=lectureVerdict(x);
   const ex=(etats&&etats[t])||[];
   const dev=ex.length?ex[ex.length-1].devise_etats:"";
-  const hist=ex.slice().reverse().map(e=>{
+  const hist=ex.slice().reverse().filter(e=>e.ca!=null||e.actif!=null||e.ebit!=null).map(e=>{
     const gp=e.ca!=null&&e.cogs!=null?e.ca-e.cogs:null;
     const fcff=e.ebit!=null?e.ebit*(1-(e.taux_impot||0))+(e.da||0)-Math.abs(e.capex||0)-(e.dbfr||0):null;
     return `<tr><td>${esc(e.cloture)}</td><td>${N(e.ca)}</td><td>${gp!=null&&e.ca?E(gp/e.ca,1):"—"}</td>
@@ -416,7 +416,7 @@ async function fiche(t,cu){
     </div>
 
     <div class="f-section"><h3>3 · Comptes publiés ${dev?`<span style="color:#7c837a;letter-spacing:0;text-transform:none;font-weight:500">(millions de ${esc(dev)})</span>`:""}</h3>
-      ${hist?`<table><thead><tr><th>Exercice</th><th>Chiffre d'affaires</th><th>Marge brute</th><th>EBIT</th><th>Marge EBIT</th>
+      ${hist?`<table class="large"><thead><tr><th>Exercice</th><th>Chiffre d'affaires</th><th>Marge brute</th><th>EBIT</th><th>Marge EBIT</th>
         <th>Actif total</th><th>GP/A</th><th>Fonds propres</th><th>Dette nette</th><th>FCFF</th></tr></thead><tbody>${hist}</tbody></table>`
         :'<p class="f-texte">Historique non encore collecté pour ce titre (rafraîchi chaque semaine).</p>'}</div>
 

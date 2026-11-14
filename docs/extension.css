@@ -1,6 +1,9 @@
 /* Extension du 14/11/2026 : onglets de portefeuilles, univers filtre, fiche
    d'analyse imprimable, backtest. Memes jetons de couleur que la page. */
 
+/* La zone de depot (display:grid) ignorerait sinon l'attribut hidden. */
+[hidden]{display:none!important}
+
 /* ---------------------------------------------------------------- onglets */
 .onglets{display:flex;flex-wrap:wrap;gap:6px;margin:-8px 0 24px;padding:4px;background:var(--surf);
   border:1px solid var(--line);border-radius:12px}
@@ -106,7 +109,10 @@ tr.clic{cursor:pointer}
 .feuille table{font-size:11.5px;border-collapse:collapse;width:100%}
 .feuille th,.feuille td{padding:5px 8px;border-bottom:1px solid var(--f-line);color:var(--f-ink);
   white-space:nowrap;text-align:right;position:static;background:none}
-.feuille th{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--f-ink3);font-weight:700}
+.feuille th{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--f-ink3);font-weight:700;
+  white-space:normal;vertical-align:bottom;line-height:1.25}
+.feuille .large th,.feuille .large td{padding:5px 5px}
+.feuille .large td{font-size:11px}
 .feuille td:first-child,.feuille th:first-child{text-align:left}
 .feuille tbody tr:hover{background:none}
 .feuille tr.fort td{font-weight:700;background:var(--f-band)}

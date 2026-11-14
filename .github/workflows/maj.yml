@@ -45,9 +45,14 @@ jobs:
         run: |
           git config user.name  "polaris-bot"
           git config user.email "polaris-bot@users.noreply.github.com"
-          git add docs/data.json data/
+          # Tout docs/ : depuis le 14/11/2026 la page lit aussi classements/,
+          # backtest/, etats.json et portefeuilles.json. N'ajouter que
+          # data.json laissait ces fichiers hors du commit, et le pull --rebase
+          # refusait de tourner (« You have unstaged changes »).
+          git add docs/ data/
           git diff --staged --quiet || git commit -m "maj $(date -u +%Y-%m-%d)"
-          # Un depot a pu arriver pendant le calcul : on se recale avant de
-          # pousser. Il declenchera son propre passage.
-          git pull --rebase origin main
-          git push
+          # Un depot a pu arriver pendant le calcul : on se recale sur la
+          # branche qui a lance le passage (main, ou une branche de travail),
+          # puis on pousse. Il declenchera son propre passage.
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
