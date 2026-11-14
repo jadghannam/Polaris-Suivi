@@ -156,3 +156,18 @@ DEVISES = ("GBP", "SEK", "DKK", "CHF", "NOK", "USD", "PLN")
 # traitees (HIGH a Londres, Adidas en francs). Une cotation sans volume et sans
 # amplitude n'est pas negociable, quel que soit le prix affiche.
 VOLUME_MIN_JOUR = 1               # volume du jour strictement positif
+
+# --------------------------------------------- obligations IG, horizon -------
+# Score FINAL HORIZON du classeur obligataire valide le 05/11/2026, reproduit
+# a l'identique (data/obligations_ig.csv porte les notes du classeur).
+# Score /100 = credit 25 + risque 25 + valorisation 25 + diversification 15
+#              + horizon et structure 10.
+OBLIG_DATE_DONNEES = "2026-11-05"  # date des rendements du classeur
+# Date de liquidation retenue par le classeur. A noter : la negociation se
+# clot le 31/03/2027 (DATE_CLOTURE) ; le classeur porte l'horizon au 15/04.
+# Garde tel quel pour reproduire le classeur valide.
+OBLIG_LIQUIDATION = "2027-04-15"
+OBLIG_BENCH_YTM = 0.0393          # indice IG de reference
+OBLIG_BENCH_DURATION = 4.4
+# Chocs en points de base : (Bund, spread de credit).
+OBLIG_SCENARIOS = {"central": (0, 0), "favorable": (-25, -15), "stress": (50, 50)}

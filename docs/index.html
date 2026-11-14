@@ -666,6 +666,34 @@ fetch("data.json?"+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{
     `<small>${esc(e)}</small></div>`;
 });
 
+/* Obligations IG : classement du score horizon /100, obligations detenues en tete
+   de lecture (marquees), et celles detenues hors du classeur. */
+function blocIG(d){
+  const o=d.obligations_ig; if(!o||!(o.lignes||[]).length) return "";
+  const nb=o.lignes.filter(l=>l.detenue).length;
+  const n1=v=>N(v,1);
+  const rows=o.lignes.map(l=>`<tr>
+      <td class="l">${l.rang}</td>
+      <td class="l"><span class="soc">${esc(l.obligation)}</span>${l.detenue?' <span class="badge b-ok">détenue</span>':""}</td>
+      <td><strong style="color:var(--ink)">${n1(l.score)}</strong></td>
+      <td>${n1(l.credit)}</td><td>${n1(l.risque)}</td><td>${n1(l.valorisation)}</td>
+      <td>${n1(l.diversification)}</td><td>${n1(l.horizon)}</td>
+      <td>${E(l.ytm,2)}</td><td>${N(l.duration,2)}</td>
+      <td class="${cls(l.alpha_central)}">${S(l.alpha_central,2)}</td>
+      <td class="${cls(l.alpha_stress)}">${S(l.alpha_stress,2)}</td></tr>`).join("");
+  const hors=(o.hors_classeur||[]).length?`<p class="note">Détenues mais absentes du classeur, donc non notées :
+    ${o.hors_classeur.map(h=>esc(h.description||h.symbole)).join(" · ")}.</p>`:"";
+  return `<h2>Obligations IG <span class="n">score horizon /100 · ${o.lignes.length} obligations · ${nb} détenue${nb>1?"s":""}</span></h2>
+    <div class="card"><table><thead><tr><th class="l">Rang</th><th class="l">Obligation</th><th>Score</th>
+      <th>Crédit /25</th><th>Risque /25</th><th>Valo. /25</th><th>Divers. /15</th><th>Horizon /10</th>
+      <th>YTM</th><th>Duration</th><th>Alpha central</th><th>Alpha stress</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="note">Données du classeur au ${esc(jour(o.date_donnees))}, horizon de liquidation le ${esc(jour(o.liquidation))}
+      (${N(o.horizon_ans,2)} an). Alpha = rendement total approché à l'horizon (YTM × H − duration × choc) moins celui
+      de l'indice IG (YTM ${E(o.indice.ytm,2)}, duration ${N(o.indice.duration,1)}). Stress : +50 pb Bund et +50 pb spread.</p>
+    ${hors}`;
+}
+
 function render(d){
   const bl=lire();
   const estBloque=t=>estBloqueGlobal(t,d);
@@ -799,6 +827,7 @@ function render(d){
       <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td></tr>`).join("")}</tbody></table></div>
     <p class="note">Toute ligne de l'export absente de l'univers est traitée comme un ETF : elle compte
       dans la valeur du fonds et l'allocation, sans classement ni DCF.</p>`:""}
+    ${blocIG(d)}
 
     <h2>Remplaçants prêts <span class="n">${cand.length} éligibles</span></h2>
     <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>

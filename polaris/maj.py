@@ -20,6 +20,7 @@ import pandas as pd
 
 from . import classement as cl
 from . import collecte, config as cfg, dcf, signaux as sg
+from . import obligations as ob
 from . import positions as ps
 from .journal import note, lignes, vider
 
@@ -335,6 +336,11 @@ def main() -> None:
             "remplacant": remp,
         }))
 
+    # Obligations IG : score horizon du classeur, rapproche des obligations
+    # detenues (export StockTrak).
+    classement_ig = ob.scorer(ob.charger())
+    lignes_ig, hors_ig = ob.rapprocher(classement_ig, etf[etf["type"] == "obligation"])
+
     lignes_etf = [_propre({
         "ticker": r.Ticker, "stocktrak": r.symbole_stocktrak,
         "description": r.description, "type": r.type,
@@ -380,6 +386,14 @@ def main() -> None:
             "etf": lignes_etf,
         },
         "taux": taux,
+        "obligations_ig": {
+            "date_donnees": cfg.OBLIG_DATE_DONNEES,
+            "liquidation": cfg.OBLIG_LIQUIDATION,
+            "horizon_ans": ob.horizon_annees(),
+            "indice": {"ytm": cfg.OBLIG_BENCH_YTM, "duration": cfg.OBLIG_BENCH_DURATION},
+            "lignes": lignes_ig,
+            "hors_classeur": hors_ig,
+        },
         "univers": table_univers,
         "remplacants": [_propre(x) for x in candidats.head(20)[
             ["Ticker", "Societe", "Secteur", "Pays", "rang", "verdict",
