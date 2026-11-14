@@ -1,0 +1,45 @@
+{
+ "date": "2026-11-14",
+ "contraintes": {
+  "europe": "Region Europe uniquement",
+  "stocktrak": "Disponible et verifie dans StockTrak"
+ },
+ "indices": {
+  "URTH": "MSCI World (ETF iShares URTH)",
+  "^STOXX": "STOXX Europe 600",
+  "^GSPC": "S&P 500",
+  "^N225": "Nikkei 225",
+  "^HSCE": "Hang Seng China Enterprises",
+  "^KS200": "KOSPI 200"
+ },
+ "univers": {
+  "monde": {
+   "contraintes": [],
+   "nb_titres": 1262,
+   "nb_classes": 444
+  },
+  "europe": {
+   "contraintes": [
+    "europe"
+   ],
+   "nb_titres": 458,
+   "nb_classes": 167
+  },
+  "stocktrak": {
+   "contraintes": [
+    "stocktrak"
+   ],
+   "nb_titres": 192,
+   "nb_classes": 73
+  },
+  "europe-stocktrak": {
+   "contraintes": [
+    "europe",
+    "stocktrak"
+   ],
+   "nb_titres": 192,
+   "nb_classes": 73
+  }
+ },
+ "portefeuilles": []
+}

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import zlib
 
 import numpy as np
 import pandas as pd
@@ -21,6 +22,7 @@ import pandas as pd
 from . import classement as cl
 from . import collecte, config as cfg, dcf, signaux as sg
 from . import obligations as ob
+from . import portefeuilles as pfs
 from . import positions as ps
 from .journal import note, lignes, vider
 
@@ -46,12 +48,54 @@ def _propre(d: dict) -> dict:
     return {k: _nan(v) for k, v in d.items()}
 
 
+COLONNES_RANG = ["ca", "cogs", "profit_brut", "actif", "fonds_propres", "devise_etats"]
+# Montants du DCF, tenus en euros dans fondamentaux_dcf.csv.
+MONTANTS_DCF = (["dette_nette", "minoritaires", "mises_en_equivalence"]
+                + [f"{k}_{s}" for k in ("ebit", "da", "capex", "dbfr") for s in ("n2", "n1", "n")])
+
+
+def _remplacer(nom: str, neuf: pd.DataFrame, cles=("Ticker",)) -> None:
+    """Remplace (ou ajoute) les lignes de `neuf` dans data/<nom>."""
+    chemin = cfg.DATA / nom
+    ancien = pd.read_csv(chemin) if chemin.exists() else pd.DataFrame(columns=neuf.columns)
+    tout = pd.concat([ancien, neuf], ignore_index=True)
+    tout = tout.drop_duplicates(subset=list(cles), keep="last")
+    cols = list(ancien.columns) + [c for c in neuf.columns if c not in ancien.columns]
+    tout[cols].to_csv(chemin, index=False)
+
+
+def rafraichir_monde(tickers: list[str], taux: dict) -> None:
+    """Comptes complets des titres hors fonds : rang (devise de publication,
+    avec sa devise), DCF (converti en euros), et exercices en format long."""
+    etats: list = []
+    neufs = collecte.fondamentaux(tickers, etats)
+    if neufs.empty:
+        note(f"univers mondial : aucun compte lu sur {len(tickers)} titres")
+        return
+    _remplacer("fondamentaux_rang.csv", neufs.reindex(columns=["Ticker"] + COLONNES_RANG))
+    div = neufs["devise_etats"].fillna("EUR").map(lambda d: taux.get(d, np.nan))
+    d = neufs.reindex(columns=["Ticker", "taux_impot", "actions_m"] + MONTANTS_DCF).copy()
+    for c in MONTANTS_DCF:
+        d[c] = pd.to_numeric(d[c], errors="coerce") / div
+    _remplacer("fondamentaux_dcf.csv", d[div.notna()])
+    if etats:
+        _remplacer("etats_annuels.csv", pd.DataFrame(etats), cles=("Ticker", "cloture"))
+    note(f"univers mondial : comptes lus pour {len(neufs)} / {len(tickers)} titres")
+
+
 def main() -> None:
     vider()
     aujourdhui = dt.date.today()
     note(f"mise a jour du {aujourdhui.isoformat()}")
 
-    univers = _lire("univers.csv")
+    # Univers mondial (14/11/2026) et univers du fonds. Tout ce qui suit
+    # jusqu'a l'ecriture de data.json ne voit QUE l'univers du fonds, filtre
+    # par ses deux contraintes : c'est ce qui le garde identique a ce qu'il
+    # etait avant l'extension. Les portefeuilles personnels sont calcules a
+    # la fin, a part (polaris/portefeuilles.py).
+    univers_complet = _lire("univers.csv")
+    univers = pfs.filtrer(univers_complet, cfg.CONTRAINTES_POLARIS)
+    note(f"univers : {len(univers_complet)} titres, dont {len(univers)} dans celui du fonds")
     # Blocages manuels : titres que StockTrak ne permet pas d'acheter en
     # pratique (volume insuffisant, symbole absent, cours aberrant). Les
     # calculs restent faits et visibles, mais le titre n'est plus proposable.
@@ -89,7 +133,7 @@ def main() -> None:
     note(f"taux de change : {', '.join(f'{k} {v:.4f}' for k, v in taux.items())}")
     chemin_cours = cfg.DATA / "cours.csv"
     derniers = pd.read_csv(chemin_cours) if chemin_cours.exists() else None
-    cours = collecte.cours_du_jour(univers["Ticker"].tolist(), derniers)
+    cours = collecte.cours_du_jour(univers_complet["Ticker"].tolist(), derniers)
     if not cours.empty:
         # On garde les cours du jour : ils serviront de repli si Yahoo nous
         # coupe demain. Une donnee manquante ne doit jamais ressembler a un
@@ -97,8 +141,12 @@ def main() -> None:
         cours[~cours["perime"].fillna(True).astype(bool)].to_csv(chemin_cours, index=False)
     # Un cours "frais" doit exister : un perime=False avec un cours vide a deja
     # affiche 192/192 alors que 17 lignes detenues n'avaient pas de prix.
-    frais = int(((~cours["perime"].fillna(True).astype(bool))
-                 & cours["cours"].notna()).sum()) if not cours.empty else 0
+    # Le seuil de fiabilite se mesure sur l'univers du fonds.
+    frais_ok = ((~cours["perime"].fillna(True).astype(bool)) & cours["cours"].notna()) \
+        if not cours.empty else pd.Series(dtype=bool)
+    frais = int((frais_ok & cours["Ticker"].isin(univers["Ticker"])).sum()) if not cours.empty else 0
+    if len(univers_complet) > len(univers):
+        note(f"cours frais univers mondial : {int(frais_ok.sum())} / {len(univers_complet)}")
     note(f"cours frais : {frais} / {len(univers)}")
     if frais < 0.8 * len(univers):
         note("ATTENTION moins de 80 % de cours frais : classement peu fiable, "
@@ -116,7 +164,13 @@ def main() -> None:
     dcf_in = _lire("fondamentaux_dcf.csv")
     if collecte.doit_rafraichir_fondamentaux(aujourdhui):
         note("rafraichissement hebdomadaire des fondamentaux")
-        neufs = collecte.fondamentaux(univers["Ticker"].tolist())
+        etats_fonds: list = []
+        neufs = collecte.fondamentaux(univers["Ticker"].tolist(), etats_fonds)
+        if etats_fonds:
+            # Historique des exercices : fiche d'analyse et backtest. Sans
+            # effet sur le classement du fonds.
+            _remplacer("etats_annuels.csv", pd.DataFrame(etats_fonds),
+                       cles=("Ticker", "cloture"))
         if not neufs.empty:
             # fondamentaux_dcf.csv est tenu EN EUROS (pas de colonne devise),
             # alors que Yahoo publie en devise de publication. Corrige le
@@ -149,6 +203,31 @@ def main() -> None:
                 ancien.update(maj)
                 ancien.reset_index().to_csv(cfg.DATA / cible, index=False)
             note(f"fondamentaux mis a jour pour {len(neufs)} titres")
+
+    # Univers mondial : les titres hors fonds sans comptes sont amorces, puis
+    # chacun est relu un jour ouvre sur cinq. Jamais un titre du fonds.
+    hors = [t for t in univers_complet["Ticker"] if t not in set(univers["Ticker"])]
+    if hors:
+        connus = set(rang_in["Ticker"]) & set(dcf_in["Ticker"])
+        a_lire = [t for t in hors if t not in connus][:cfg.AMORCAGE_MAX]
+        if aujourdhui.weekday() < 5:
+            a_lire += [t for t in hors if t in connus
+                       and zlib.crc32(t.encode()) % cfg.TRANCHES_FONDAMENTAUX == aujourdhui.weekday()]
+        if a_lire:
+            rafraichir_monde(a_lire, taux)
+            # Les comptes tout juste lus servent des aujourd'hui pour les titres
+            # hors fonds ; ceux du fonds restent ceux lus en debut de passage.
+            du_fonds = set(univers["Ticker"])
+            for nom in ("rang", "dcf"):
+                frais_ = _lire(f"fondamentaux_{nom}.csv")
+                frais_ = frais_[~frais_["Ticker"].isin(du_fonds)]
+                garde = rang_in if nom == "rang" else dcf_in
+                garde = pd.concat([garde[garde["Ticker"].isin(du_fonds)], frais_],
+                                  ignore_index=True)
+                if nom == "rang":
+                    rang_in = garde
+                else:
+                    dcf_in = garde
 
     # ------------------------------------------------- classement et DCF ----
     if "actions_m" in dcf_in.columns:
@@ -458,6 +537,27 @@ def main() -> None:
         encoding="utf-8")
     note(f"docs/data.json ecrit ({len(portefeuille)} lignes, "
          f"{len(sortie['remplacants'])} remplacants)")
+
+    # Portefeuilles personnels et classements par univers filtre. Apres le
+    # fonds, et a part : une erreur ici ne doit pas empecher sa mise a jour.
+    # Taux sans risque hors Europe : ceux que Yahoo donne remplacent la saisie
+    # de config.py pour ce passage. Sans effet sur le fonds (devises europeennes,
+    # et son DCF est deja ecrit plus haut).
+    lus = collecte.taux_sans_risque()
+    cfg.TAUX_SANS_RISQUE_DEVISE.update(lus)
+    note("taux sans risque hors Europe : " + ", ".join(
+        f"{k} {v:.2%}{' (Yahoo)' if k in lus else ' (config.py, a valider)'}"
+        for k, v in cfg.TAUX_SANS_RISQUE_DEVISE.items()))
+    try:
+        pfs.calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
+                     bloques, vetos, aujourdhui)
+    except Exception as e:                              # noqa: BLE001
+        note(f"ATTENTION portefeuilles personnels non calcules : {e}")
+    # Le journal de data.json est reecrit pour inclure ces dernieres lignes.
+    sortie["journal"] = lignes()
+    (cfg.DOCS / "data.json").write_text(
+        json.dumps(sortie, ensure_ascii=False, indent=1, default=_nan),
+        encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ on:
       - "data/compte.csv"
       - "data/blocages.csv"
       - "data/vetos.csv"
+      - "data/portefeuilles.json"
 
 # Une seule mise a jour a la fois : deux passages simultanes se disputeraient
 # l'ecriture de data/ et le second echouerait au push.

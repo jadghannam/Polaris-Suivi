@@ -1,0 +1,144 @@
+/* Extension du 14/11/2026 : onglets de portefeuilles, univers filtre, fiche
+   d'analyse imprimable, backtest. Memes jetons de couleur que la page. */
+
+/* ---------------------------------------------------------------- onglets */
+.onglets{display:flex;flex-wrap:wrap;gap:6px;margin:-8px 0 24px;padding:4px;background:var(--surf);
+  border:1px solid var(--line);border-radius:12px}
+.onglets button{border:0;background:transparent;color:var(--ink2);padding:8px 14px;border-radius:9px;
+  font-size:13px;display:flex;align-items:center;gap:8px}
+.onglets button:hover{background:var(--surf2);color:var(--ink)}
+.onglets button.on{background:var(--surf2);color:var(--ink);font-weight:600;
+  box-shadow:inset 0 0 0 1px var(--line2)}
+.onglets .sep{flex:1}
+.onglets .plus{color:var(--accent)}
+.verrou{font-size:10.5px;color:var(--ink3);font-weight:500;letter-spacing:.04em}
+.chips{display:inline-flex;gap:4px}
+.chip{font-size:10.5px;padding:1px 7px;border-radius:999px;background:var(--accentbg);color:var(--accent);
+  font-weight:600;letter-spacing:.02em}
+.chip.off{background:var(--surf2);color:var(--ink3);text-decoration:line-through}
+
+/* ----------------------------------------------------- barre de filtres */
+.filtres{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin:0 0 14px}
+.filtres label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer}
+.filtres input[type=checkbox]{accent-color:#b8ccd6;width:15px;height:15px}
+.filtres select,.form select,.form input[type=number]{font:inherit;font-size:13px;padding:7px 10px;
+  border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--ink)}
+.filtres .compte{margin-left:auto;font-size:12.5px;color:var(--ink3)}
+.lien-fiche{cursor:pointer;border-bottom:1px dotted var(--ink3)}
+.lien-fiche:hover{color:var(--accent);border-bottom-color:var(--accent)}
+tr.clic{cursor:pointer}
+.plus-lignes{display:block;margin:12px auto 0}
+
+/* ---------------------------------------------------------- repartitions */
+.repart{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.repart .panneau h3{margin:0 0 12px;font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--ink3);font-weight:600}
+.barre-l{display:grid;grid-template-columns:minmax(0,1fr) 56px;gap:4px 10px;align-items:center;
+  font-size:12.5px;color:var(--ink2);margin:6px 0}
+.barre-l .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.barre-l .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.barre-l .b{grid-column:1/-1;height:5px;border-radius:999px;background:var(--line);overflow:hidden}
+.barre-l .b i{display:block;height:100%;background:var(--accent);border-radius:999px}
+
+/* ------------------------------------------------------------ formulaire */
+.voile{position:fixed;inset:0;background:rgba(10,11,10,.72);z-index:20;overflow:auto;
+  display:flex;justify-content:center;align-items:flex-start;padding:36px 16px}
+.voile[hidden]{display:none}
+.form{background:var(--surf);border:1px solid var(--line2);border-radius:16px;padding:24px 26px;
+  width:min(560px,100%);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.form h3{margin:0 0 4px;font-size:17px}
+.form .d{color:var(--ink3);font-size:12.5px;margin-bottom:18px;line-height:1.55}
+.form .grille{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form label.c{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--ink3);
+  text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+.form .cases{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;padding:12px 14px;
+  border:1px solid var(--line);border-radius:10px}
+.form .cases label{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--ink2)}
+.form .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.form input[type=text]{width:100%}
+
+/* --------------------------------------------------------------- backtest */
+.graphe{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 10px}
+.graphe svg{width:100%;height:auto;display:block}
+.graphe .leg{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink2);margin:0 0 8px}
+.graphe .leg span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;
+  margin-right:7px;vertical-align:3px;background:var(--c)}
+.limites{margin:10px 0 0;padding-left:18px;color:var(--ink3);font-size:12.5px;line-height:1.6}
+.compo{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.compo b{color:var(--ink)}
+
+/* ============================================================ FICHE ===== */
+/* Une page A4 claire, lisible a l'ecran comme sur papier : la fiche est le
+   document qu'on joint a une note de comite. */
+#fiche.voile{padding:28px 16px}
+.feuille{--f-ink:#1c1e1c;--f-ink2:#4a4f49;--f-ink3:#7c837a;--f-line:#e2e5e0;--f-band:#f4f6f3;
+  --f-accent:#3d5a66;--f-vert:#5d6e58;--f-ok:#2f6b45;--f-bad:#a2463b;--f-warn:#8a6a1f;
+  background:#fff;color:var(--f-ink);width:min(210mm,100%);border-radius:6px;
+  box-shadow:0 24px 70px rgba(0,0,0,.5);font-size:12.5px;line-height:1.5;position:relative}
+.feuille .barre-outils{position:sticky;top:0;display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;
+  background:rgba(255,255,255,.96);border-bottom:1px solid var(--f-line);border-radius:6px 6px 0 0;z-index:2}
+.feuille .barre-outils .btn{background:#fff;color:var(--f-ink);border-color:#cfd4cd}
+.feuille .barre-outils .btn.prim{background:var(--f-accent);border-color:var(--f-accent);color:#fff}
+.feuille .page{padding:14mm 14mm 12mm}
+.f-tete{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
+  border-bottom:2px solid var(--f-ink);padding-bottom:10px}
+.f-marque{font-size:10px;letter-spacing:.22em;color:var(--f-vert);font-weight:700}
+.f-tete h2{all:unset;display:block;font-size:22px;font-weight:700;letter-spacing:-.01em;margin-top:4px}
+.f-tete .id{color:var(--f-ink3);font-size:11.5px;margin-top:3px}
+.f-tete .px{text-align:right}
+.f-tete .px .c{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.f-tete .px .s{color:var(--f-ink3);font-size:11px}
+.f-synthese{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:12px 0 4px;
+  border:1px solid var(--f-line);border-radius:6px;overflow:hidden}
+.f-synthese>div{padding:9px 12px;border-right:1px solid var(--f-line)}
+.f-synthese>div:last-child{border-right:0}
+.f-synthese .k{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--f-ink3);font-weight:700}
+.f-synthese .v{font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.f-synthese .s{font-size:10.5px;color:var(--f-ink2)}
+.f-verdict{margin:10px 0 2px;padding:10px 12px;border-left:4px solid var(--f-accent);background:var(--f-band);
+  font-size:12.5px}
+.f-verdict.ok{border-color:var(--f-ok)} .f-verdict.bad{border-color:var(--f-bad)} .f-verdict.warn{border-color:var(--f-warn)}
+.f-verdict b{font-weight:700}
+.f-section{margin-top:16px;break-inside:avoid}
+.f-section h3{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--f-vert);
+  margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid var(--f-line);font-weight:700}
+.f-deux{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feuille table{font-size:11.5px;border-collapse:collapse;width:100%}
+.feuille th,.feuille td{padding:5px 8px;border-bottom:1px solid var(--f-line);color:var(--f-ink);
+  white-space:nowrap;text-align:right;position:static;background:none}
+.feuille th{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--f-ink3);font-weight:700}
+.feuille td:first-child,.feuille th:first-child{text-align:left}
+.feuille tbody tr:hover{background:none}
+.feuille tr.fort td{font-weight:700;background:var(--f-band)}
+.feuille .pos{color:var(--f-ok)!important} .feuille .neg{color:var(--f-bad)!important}
+.jauge{margin:7px 0 10px}
+.jauge .t{display:flex;justify-content:space-between;font-size:11px;color:var(--f-ink2)}
+.jauge .t b{color:var(--f-ink)}
+.jauge .r{position:relative;height:8px;background:var(--f-band);border:1px solid var(--f-line);border-radius:999px;margin-top:4px}
+.jauge .r i{position:absolute;left:0;top:0;bottom:0;background:var(--f-accent);border-radius:999px}
+.jauge .r .pl{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--f-bad)}
+.jauge .r .pl::after{content:attr(data-l);position:absolute;top:14px;left:-14px;font-size:9px;color:var(--f-bad);
+  white-space:nowrap}
+.f-texte{font-size:11.5px;color:var(--f-ink2);margin:6px 0 0;line-height:1.55}
+.f-pied{margin-top:18px;padding-top:8px;border-top:1px solid var(--f-line);display:flex;justify-content:space-between;
+  font-size:9.5px;color:var(--f-ink3)}
+.feuille svg text{font-family:inherit}
+
+@media(max-width:760px){
+  .repart{grid-template-columns:1fr}
+  .form .grille{grid-template-columns:1fr}
+  .f-synthese{grid-template-columns:1fr 1fr}
+  .f-deux{grid-template-columns:1fr}
+  .feuille .page{padding:18px 16px}
+}
+
+/* --------------------------------------------------------------- impression */
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff!important}
+  body.imprime>*:not(#fiche){display:none!important}
+  body.imprime #fiche{position:static;background:none;padding:0;display:block}
+  body.imprime .feuille{box-shadow:none;width:210mm;border-radius:0}
+  body.imprime .barre-outils{display:none}
+  .feuille{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}

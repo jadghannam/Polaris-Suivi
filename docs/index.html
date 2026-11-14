@@ -177,6 +177,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 @media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
   .tile.large .v{font-size:28px}}
 </style>
+<link rel="stylesheet" href="extension.css">
 </head>
 <body>
 <div class="wrap">
@@ -766,7 +767,7 @@ function render(d){
       const mot=(l.motifs&&l.motifs.length)
         ? `<div class="rempl">${esc(l.motifs.join(" · "))}</div>`:"";
       return `<tr class="${estBloque(l.ticker)?"bloque":""}">
-        <td class="l"><span class="soc">${esc(l.societe)}</span><span class="tick">${esc(l.stocktrak||l.ticker)}</span>${r}${conf}</td>
+        <td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}">${esc(l.societe)}</span><span class="tick">${esc(l.stocktrak||l.ticker)}</span>${r}${conf}</td>
         <td class="l">${esc(l.secteur)}</td><td>${E(l.poids)}</td>
         <td class="${cls(l.perf)}">${S(l.perf)}</td>
         <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
@@ -787,7 +788,7 @@ function render(d){
   const cand=(d.remplacants||[]).filter(r=>!estBloque(r.Ticker));
   const rempl=cand.map((r,i)=>`<tr>
       <td class="l">${i===0?"<strong>1<sup>er</sup></strong>":i+1}</td>
-      <td class="l"><span class="soc">${esc(r.Societe)}</span><span class="tick">${esc(r.Ticker)}</span></td>
+      <td class="l"><span class="soc lien-fiche" data-f="${esc(r.Ticker)}">${esc(r.Societe)}</span><span class="tick">${esc(r.Ticker)}</span></td>
       <td class="l">${esc(r.Secteur)}</td><td class="l">${esc(r.Pays)}</td>
       <td>${N(r.rang)}</td><td class="l">${esc(r.verdict||"—")}</td>
       <td>${E(r.g1,2)}</td><td>${E(r.seuil,2)}</td>
@@ -845,5 +846,6 @@ function render(d){
     <div class="card"><div class="jrn">${esc((d.journal||[]).join("\n"))}</div></div>`;
 }
 </script>
+<script src="extension.js"></script>
 </body>
 </html>

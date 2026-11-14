@@ -1,193 +1,1270 @@
-Ticker,Symbole StockTrak,Societe,Pays,Secteur,verifie_stocktrak,devise_stocktrak
-ABI.BR,ABI:BR,AB InBev,Belgique,Consommation de base,2026-10-03,
-APAM.AS,APAM:AS,Aperam,Belgique,Materiaux,2026-10-03,
-AZE.BR,AZE:BR,Azelis Group,Belgique,Industrie,2026-10-03,
-DIE.BR,DIE:BR,D'Ieteren Group,Belgique,Consommation discretionnaire,2026-10-03,
-ELI.BR,ELI:BR,Elia Group,Belgique,Services aux collectivites,2026-10-03,
-LOTB.BR,LOTB:BR,Lotus Bakeries,Belgique,Consommation de base,2026-10-03,
-MELE.BR,MELE:BR,Melexis,Belgique,Technologies de l'information,2026-10-03,
-SOLB.BR,SOLB:BR,Solvay,Belgique,Materiaux,2026-10-03,
-SYENS.BR,SYENS:BR,Syensqo,Belgique,Materiaux,2026-10-03,
-UCB.BR,UCB:BR,UCB,Belgique,Sante,2026-10-03,
-UMI.BR,UMI:BR,Umicore,Belgique,Materiaux,2026-10-03,
-ARGX.BR,ARGX:BR,argenx,Belgique,Sante,2026-10-03,
-MAERSK-B.CO,MAERSKB:CO,A.P. Moller-Maersk B,Danemark,Industrie,2026-10-03,
-AMBU-B.CO,AMBUB:CO,Ambu B,Danemark,Sante,2026-10-03,
-BAVA.CO,BAVA:CO,Bavarian Nordic,Danemark,Sante,2026-10-03,
-CARL-B.CO,CARLB:CO,Carlsberg B,Danemark,Consommation de base,2026-10-03,
-COLO-B.CO,COLOB:CO,Coloplast B,Danemark,Sante,2026-10-03,
-DSV.CO,DSV:CO,DSV,Danemark,Industrie,2026-10-03,
-DEMANT.CO,DEMANT:CO,Demant,Danemark,Sante,2026-10-03,
-GN.CO,GN:CO,GN Store Nord,Danemark,Sante,2026-10-03,
-GMAB.CO,GMAB:CO,Genmab,Danemark,Sante,2026-10-03,
-ISS.CO,ISS:CO,ISS,Danemark,Industrie,2026-10-03,
-NKT.CO,NKT:CO,NKT,Danemark,Industrie,2026-10-03,
-NOVO-B.CO,NOVOB:CO,Novo Nordisk B,Danemark,Sante,2026-10-03,
-NSIS-B.CO,NSISB:CO,Novonesis B,Danemark,Materiaux,2026-10-03,
-ORSTED.CO,ORSTED:CO,Orsted,Danemark,Services aux collectivites,2026-10-03,
-PNDORA.CO,PNDORA:CO,Pandora,Danemark,Consommation discretionnaire,2026-10-03,
-ROCK-B.CO,ROCKB:CO,Rockwool B,Danemark,Industrie,2026-10-03,
-RBREW.CO,RBREW:CO,Royal Unibrew,Danemark,Consommation de base,2026-10-03,
-VWS.CO,VWS:CO,Vestas Wind Systems,Danemark,Industrie,2026-10-03,
-ZEAL.CO,ZEAL:CO,Zealand Pharma,Danemark,Sante,2026-10-03,
-ACS.MC,ACS:MA,ACS,Espagne,Industrie,2026-10-03,
-ANA.MC,ANA:MA,Acciona,Espagne,Services aux collectivites,2026-10-03,
-ANE.MC,ANE:MA,Acciona Energia,Espagne,Services aux collectivites,2026-10-03,
-ACX.MC,ACX:MA,Acerinox,Espagne,Materiaux,2026-10-03,
-AENA.MC,AENA:MA,Aena,Espagne,Industrie,2026-10-03,
-AMS.MC,AMS:MA,Amadeus IT Group,Espagne,Technologies de l'information,2026-10-03,
-CLNX.MC,CLNX:MA,Cellnex Telecom,Espagne,Services de communication,2026-10-03,
-ENG.MC,ENG:MA,Enagas,Espagne,Services aux collectivites,2026-10-03,
-ELE.MC,ELE:MA,Endesa,Espagne,Services aux collectivites,2026-10-03,
-FER.MC,FER:MA,Ferrovial,Espagne,Industrie,2026-10-03,
-FDR.MC,FDR:MA,Fluidra,Espagne,Industrie,2026-10-03,
-GRF.MC,GRF:MA,Grifols,Espagne,Sante,2026-10-03,
-IBE.MC,IBE:MA,Iberdrola,Espagne,Services aux collectivites,2026-10-03,
-ITX.MC,ITX:MA,Inditex,Espagne,Consommation discretionnaire,2026-10-03,
-IDR.MC,IDR:MA,Indra Sistemas,Espagne,Technologies de l'information,2026-10-03,
-IAG.MC,IAG:MA,International Airlines Group,Espagne,Industrie,2026-10-03,
-ROVI.MC,ROVI:MA,Laboratorios Rovi,Espagne,Sante,2026-10-03,
-LOG.MC,LOG:MA,Logista,Espagne,Consommation de base,2026-10-03,
-NTGY.MC,NTGY:MA,Naturgy,Espagne,Services aux collectivites,2026-10-03,
-PUIG.MC,PUIG:MA,Puig Brands,Espagne,Consommation de base,2026-10-03,
-RED.MC,RED:MA,Redeia,Espagne,Services aux collectivites,2026-10-03,
-REP.MC,REP:MA,Repsol,Espagne,Energie,2026-10-03,
-SCYR.MC,SCYR:MA,Sacyr,Espagne,Industrie,2026-10-03,
-SLR.MC,SLR:MA,Solaria Energia,Espagne,Services aux collectivites,2026-10-03,
-TEF.MC,TEF:MA,Telefonica,Espagne,Services de communication,2026-10-03,
-AC.PA,AC:PA,Accor,France,Consommation discretionnaire,2026-10-03,
-AI.PA,AI:PA,Air Liquide,France,Materiaux,2026-10-03,
-AIR.PA,AIR:PA,Airbus,France,Industrie,2026-10-03,
-EN.PA,EN:PA,Bouygues,France,Industrie,2026-10-03,
-BVI.PA,BVI:PA,Bureau Veritas,France,Industrie,2026-10-03,
-CAP.PA,CAP:PA,Capgemini,France,Technologies de l'information,2026-10-03,
-CA.PA,CA:PA,Carrefour,France,Consommation de base,2026-10-03,
-BN.PA,BN:PA,Danone,France,Consommation de base,2026-10-03,
-DSY.PA,DSY:PA,Dassault Systemes,France,Technologies de l'information,2026-10-03,
-ENGI.PA,ENGI:PA,Engie,France,Services aux collectivites,2026-10-03,
-EL.PA,EL:PA,EssilorLuxottica,France,Sante,2026-10-03,
-ERF.PA,ERF:PA,Eurofins Scientific,France,Sante,2026-10-03,
-RMS.PA,RMS:PA,Hermes,France,Consommation discretionnaire,2026-10-03,
-KER.PA,KER:PA,Kering,France,Consommation discretionnaire,2026-10-03,
-OR.PA,OR:PA,L'Oreal,France,Consommation de base,2026-10-03,
-MC.PA,MC:PA,LVMH,France,Consommation discretionnaire,2026-10-03,
-LR.PA,LR:PA,Legrand,France,Industrie,2026-10-03,
-ML.PA,ML:PA,Michelin,France,Consommation discretionnaire,2026-10-03,
-ORA.PA,ORA:PA,Orange,France,Services de communication,2026-10-03,
-RI.PA,RI:PA,Pernod Ricard,France,Consommation de base,2026-10-03,
-PUB.PA,PUB:PA,Publicis,France,Services de communication,2026-10-03,
-RNO.PA,RNO:PA,Renault,France,Consommation discretionnaire,2026-10-03,
-STMPA.PA,STMPA:PA,STMicroelectronics,France,Technologies de l'information,2026-10-03,
-SAF.PA,SAF:PA,Safran,France,Industrie,2026-10-03,
-SGO.PA,SGO:PA,Saint-Gobain,France,Industrie,2026-10-03,
-SAN.PA,SAN:PA,Sanofi,France,Sante,2026-10-03,
-SU.PA,SU:PA,Schneider Electric,France,Industrie,2026-10-03,
-STLAP.PA,STLAP:PA,Stellantis,France,Consommation discretionnaire,2026-10-03,
-TEP.PA,TEP:PA,Teleperformance,France,Industrie,2026-10-03,
-HO.PA,HO:PA,Thales,France,Industrie,2026-10-03,
-TTE.PA,TTE:PA,TotalEnergies,France,Energie,2026-10-03,
-VIE.PA,VIE:PA,Veolia,France,Services aux collectivites,2026-10-03,
-DG.PA,DG:PA,Vinci,France,Industrie,2026-10-03,
-ASM.AS,ASM:AS,ASM International,Pays-Bas,Technologies de l'information,2026-10-03,
-ASML.AS,ASML:AS,ASML Holding,Pays-Bas,Technologies de l'information,2026-10-03,
-AD.AS,AD:AS,Ahold Delhaize,Pays-Bas,Consommation de base,2026-10-03,
-AKZA.AS,AKZA:AS,AkzoNobel,Pays-Bas,Materiaux,2026-10-03,
-MT.AS,MT,ArcelorMittal,Pays-Bas,Materiaux,2026-10-03,
-BESI.AS,BESI:AS,BE Semiconductor,Pays-Bas,Technologies de l'information,2026-10-03,
-DSFIR.AS,DSFIR:AS,DSM-Firmenich,Pays-Bas,Materiaux,2026-10-03,
-HEIA.AS,HEIA:AS,Heineken,Pays-Bas,Consommation de base,2026-10-03,
-IMCD.AS,IMCD:AS,IMCD,Pays-Bas,Industrie,2026-10-03,
-KPN.AS,KPN:AS,KPN,Pays-Bas,Services de communication,2026-10-03,
-PHIA.AS,PHIA:AS,Philips,Pays-Bas,Sante,2026-10-03,
-PRX.AS,PRX:AS,Prosus,Pays-Bas,Consommation discretionnaire,2026-10-03,
-REN.AS,REN:AS,RELX,Pays-Bas,Industrie,2026-10-03,
-RAND.AS,RAND:AS,Randstad,Pays-Bas,Industrie,2026-10-03,
-SHELL.AS,SHELL:AS,Shell,Pays-Bas,Energie,2026-10-03,
-UNA.AS,UNA:AS,Unilever,Pays-Bas,Consommation de base,2026-10-03,
-UMG.AS,UMG:AS,Universal Music Group,Pays-Bas,Services de communication,2026-10-03,
-WKL.AS,WKL:AS,Wolters Kluwer,Pays-Bas,Industrie,2026-10-03,
-AAF.L,AAF:LN,Airtel Africa,Royaume-Uni,Services de communication,2026-10-03,
-AAL.L,AAL:LN,Anglo American,Royaume-Uni,Materiaux,2026-10-03,
-ANTO.L,ANTO:LN,Antofagasta,Royaume-Uni,Materiaux,2026-10-03,
-ABF.L,ABF:LN,Associated British Foods,Royaume-Uni,Consommation de base,2026-10-03,
-AZN.L,AZN:LN,AstraZeneca,Royaume-Uni,Sante,2026-10-03,
-AUTO.L,AUTO:LN,Auto Trader Group,Royaume-Uni,Services de communication,2026-10-03,
-BA.L,BA.:LN,BAE Systems,Royaume-Uni,Industrie,2026-10-03,
-BP.L,BP.:LN,BP,Royaume-Uni,Energie,2026-10-03,
-BT-A.L,BTA:LN,BT Group,Royaume-Uni,Services de communication,2026-10-03,
-BAB.L,BAB:LN,Babcock International,Royaume-Uni,Industrie,2026-10-03,
-BTRW.L,BTRW:LN,Barratt Redrow,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-BATS.L,BATS:LN,British American Tobacco,Royaume-Uni,Consommation de base,2026-10-03,
-BNZL.L,BNZL:LN,Bunzl,Royaume-Uni,Industrie,2026-10-03,
-BRBY.L,BRBY:LN,Burberry Group,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-CNA.L,CNA:LN,Centrica,Royaume-Uni,Services aux collectivites,2026-10-03,
-CCEP.L,CCEP:LN,Coca-Cola Europacific,Royaume-Uni,Consommation de base,2026-10-03,
-CCH.L,CCH:LN,Coca-Cola HBC,Royaume-Uni,Consommation de base,2026-10-03,
-CPG.L,CPG:LN,Compass Group,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-CCC.L,CCC:LN,Computacenter,Royaume-Uni,Technologies de l'information,2026-10-03,
-CTEC.L,CTEC:LN,Convatec,Royaume-Uni,Sante,2026-10-03,
-CRDA.L,CRDA:LN,Croda International,Royaume-Uni,Materiaux,2026-10-03,
-DCC.L,DCC:LN,DCC,Royaume-Uni,Industrie,2026-10-03,
-DGE.L,DGE:LN,Diageo,Royaume-Uni,Consommation de base,2026-10-03,
-DPLM.L,DPLM:LN,Diploma,Royaume-Uni,Industrie,2026-10-03,
-EDV.L,EDV:LN,Endeavour Mining,Royaume-Uni,Materiaux,2026-10-03,
-ENT.L,ENT:LN,Entain,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-EXPN.L,EXPN:LN,Experian,Royaume-Uni,Industrie,2026-10-03,
-FRES.L,FRES:LN,Fresnillo,Royaume-Uni,Materiaux,2026-10-03,
-GSK.L,GSK:LN,GSK,Royaume-Uni,Sante,2026-10-03,
-GAW.L,GAW:LN,Games Workshop,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-GLEN.L,GLEN:LN,Glencore,Royaume-Uni,Materiaux,2026-10-03,
-HLN.L,HLN:LN,Haleon,Royaume-Uni,Consommation de base,2026-10-03,
-HLMA.L,HLMA:LN,Halma,Royaume-Uni,Technologies de l'information,2026-10-03,
-HWDN.L,HWDN:LN,Howden Joinery,Royaume-Uni,Industrie,2026-10-03,
-IMI.L,IMI:LN,IMI,Royaume-Uni,Industrie,2026-10-03,
-IMB.L,IMB:LN,Imperial Brands,Royaume-Uni,Consommation de base,2026-10-03,
-INF.L,INF:LN,Informa,Royaume-Uni,Services de communication,2026-10-03,
-IHG.L,IHG:LN,InterContinental Hotels,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-ITRK.L,ITRK:LN,Intertek Group,Royaume-Uni,Industrie,2026-10-03,
-JD.L,JD.:LN,JD Sports Fashion,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-KGF.L,KGF:LN,Kingfisher,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-MKS.L,MKS:LN,Marks & Spencer,Royaume-Uni,Consommation de base,2026-10-03,
-MRO.L,MRO:LN,Melrose Industries,Royaume-Uni,Industrie,2026-10-03,
-MTLN.L,MTLN:LN,Metlen Energy & Metals,Royaume-Uni,Materiaux,2026-10-03,
-NG.L,NG.:LN,National Grid,Royaume-Uni,Services aux collectivites,2026-10-03,
-NXT.L,NXT:LN,Next,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-PSON.L,PSON:LN,Pearson,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-PSN.L,PSN:LN,Persimmon,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-RKT.L,RKT:LN,Reckitt Benckiser,Royaume-Uni,Consommation de base,2026-10-03,
-RTO.L,RTO:LN,Rentokil Initial,Royaume-Uni,Industrie,2026-10-03,
-RIO.L,RIO:LN,Rio Tinto,Royaume-Uni,Materiaux,2026-10-03,
-RR.L,RR.:LN,Rolls-Royce Holdings,Royaume-Uni,Industrie,2026-10-03,
-SSE.L,SSE:LN,SSE,Royaume-Uni,Services aux collectivites,2026-10-03,
-SGE.L,SGE:LN,Sage Group,Royaume-Uni,Technologies de l'information,2026-10-03,
-SBRY.L,SBRY:LN,Sainsbury,Royaume-Uni,Consommation de base,2026-10-03,
-SVT.L,SVT:LN,Severn Trent,Royaume-Uni,Services aux collectivites,2026-10-03,
-SN.L,SN.:LN,Smith & Nephew,Royaume-Uni,Sante,2026-10-03,
-SMIN.L,SMIN:LN,Smiths Group,Royaume-Uni,Industrie,2026-10-03,
-SPX.L,SPX:LN,Spirax Group,Royaume-Uni,Industrie,2026-10-03,
-TSCO.L,TSCO:LN,Tesco,Royaume-Uni,Consommation de base,2026-10-03,
-UU.L,UU.:LN,United Utilities,Royaume-Uni,Services aux collectivites,2026-10-03,
-VOD.L,VOD:LN,Vodafone Group,Royaume-Uni,Services de communication,2026-10-03,
-WEIR.L,WEIR:LN,Weir Group,Royaume-Uni,Industrie,2026-10-03,
-WTB.L,WTB:LN,Whitbread,Royaume-Uni,Consommation discretionnaire,2026-10-03,
-ADDT-B.ST,ADDTB:ST,Addtech B,Suede,Industrie,2026-10-03,
-ALFA.ST,ALFA:ST,Alfa Laval,Suede,Industrie,2026-10-03,
-ASSA-B.ST,ASSAB:ST,Assa Abloy B,Suede,Industrie,2026-10-03,
-ATCO-A.ST,ATCOA:ST,Atlas Copco A,Suede,Industrie,2026-10-03,
-BOL.ST,BOL:ST,Boliden,Suede,Materiaux,2026-10-03,
-EPI-A.ST,EPIA:ST,Epiroc A,Suede,Industrie,2026-10-03,
-ERIC-B.ST,ERICB:ST,Ericsson B,Suede,Technologies de l'information,2026-10-03,
-ESSITY-B.ST,ESSITYB:ST,Essity B,Suede,Consommation de base,2026-10-03,
-EVO.ST,EVO:ST,Evolution,Suede,Consommation discretionnaire,2026-10-03,
-HM-B.ST,HMB:ST,H&M B,Suede,Consommation discretionnaire,2026-10-03,
-HEXA-B.ST,HEXAB:ST,Hexagon B,Suede,Technologies de l'information,2026-10-03,
-LIFCO-B.ST,LIFCOB:ST,Lifco B,Suede,Industrie,2026-10-03,
-NIBE-B.ST,NIBEB:ST,Nibe Industrier B,Suede,Industrie,2026-10-03,
-SCA-B.ST,SCAB:ST,SCA B,Suede,Materiaux,2026-10-03,
-SKF-B.ST,SKFB:ST,SKF B,Suede,Industrie,2026-10-03,
-SAAB-B.ST,SAABB:ST,Saab B,Suede,Industrie,2026-10-03,
-SAND.ST,SAND:ST,Sandvik,Suede,Industrie,2026-10-03,
-SKA-B.ST,SKAB:ST,Skanska B,Suede,Industrie,2026-10-03,
-TEL2-B.ST,TEL2B:ST,Tele2 B,Suede,Services de communication,2026-10-03,
-TELIA.ST,TELIA:ST,Telia Company,Suede,Services de communication,2026-10-03,
-VOLV-B.ST,VOLVB:ST,Volvo B,Suede,Industrie,2026-10-03,
+Ticker,Symbole StockTrak,Societe,Pays,Secteur,verifie_stocktrak,devise_stocktrak,Region,Indice,contrainte_stocktrak,contrainte_europe
+ABI.BR,ABI:BR,AB InBev,Belgique,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+APAM.AS,APAM:AS,Aperam,Belgique,Materiaux,2026-10-03,,Europe,hors indice,OUI,OUI
+AZE.BR,AZE:BR,Azelis Group,Belgique,Industrie,2026-10-03,,Europe,hors indice,OUI,OUI
+DIE.BR,DIE:BR,D'Ieteren Group,Belgique,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ELI.BR,ELI:BR,Elia Group,Belgique,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+LOTB.BR,LOTB:BR,Lotus Bakeries,Belgique,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MELE.BR,MELE:BR,Melexis,Belgique,Technologies de l'information,2026-10-03,,Europe,hors indice,OUI,OUI
+SOLB.BR,SOLB:BR,Solvay,Belgique,Materiaux,2026-10-03,,Europe,hors indice,OUI,OUI
+SYENS.BR,SYENS:BR,Syensqo,Belgique,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+UCB.BR,UCB:BR,UCB,Belgique,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+UMI.BR,UMI:BR,Umicore,Belgique,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ARGX.BR,ARGX:BR,argenx,Belgique,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MAERSK-B.CO,MAERSKB:CO,A.P. Moller-Maersk B,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AMBU-B.CO,AMBUB:CO,Ambu B,Danemark,Sante,2026-10-03,,Europe,hors indice,OUI,OUI
+BAVA.CO,BAVA:CO,Bavarian Nordic,Danemark,Sante,2026-10-03,,Europe,hors indice,OUI,OUI
+CARL-B.CO,CARLB:CO,Carlsberg B,Danemark,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+COLO-B.CO,COLOB:CO,Coloplast B,Danemark,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DSV.CO,DSV:CO,DSV,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DEMANT.CO,DEMANT:CO,Demant,Danemark,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+GN.CO,GN:CO,GN Store Nord,Danemark,Sante,2026-10-03,,Europe,hors indice,OUI,OUI
+GMAB.CO,GMAB:CO,Genmab,Danemark,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ISS.CO,ISS:CO,ISS,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NKT.CO,NKT:CO,NKT,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NOVO-B.CO,NOVOB:CO,Novo Nordisk B,Danemark,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NSIS-B.CO,NSISB:CO,Novonesis B,Danemark,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ORSTED.CO,ORSTED:CO,Orsted,Danemark,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PNDORA.CO,PNDORA:CO,Pandora,Danemark,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ROCK-B.CO,ROCKB:CO,Rockwool B,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RBREW.CO,RBREW:CO,Royal Unibrew,Danemark,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+VWS.CO,VWS:CO,Vestas Wind Systems,Danemark,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ZEAL.CO,ZEAL:CO,Zealand Pharma,Danemark,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ACS.MC,ACS:MA,ACS,Espagne,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ANA.MC,ANA:MA,Acciona,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ANE.MC,ANE:MA,Acciona Energia,Espagne,Services aux collectivites,2026-10-03,,Europe,hors indice,OUI,OUI
+ACX.MC,ACX:MA,Acerinox,Espagne,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AENA.MC,AENA:MA,Aena,Espagne,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AMS.MC,AMS:MA,Amadeus IT Group,Espagne,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CLNX.MC,CLNX:MA,Cellnex Telecom,Espagne,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ENG.MC,ENG:MA,Enagas,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ELE.MC,ELE:MA,Endesa,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+FER.MC,FER:MA,Ferrovial,Espagne,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+FDR.MC,FDR:MA,Fluidra,Espagne,Industrie,2026-10-03,,Europe,hors indice,OUI,OUI
+GRF.MC,GRF:MA,Grifols,Espagne,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IBE.MC,IBE:MA,Iberdrola,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ITX.MC,ITX:MA,Inditex,Espagne,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IDR.MC,IDR:MA,Indra Sistemas,Espagne,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IAG.MC,IAG:MA,International Airlines Group,Espagne,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ROVI.MC,ROVI:MA,Laboratorios Rovi,Espagne,Sante,2026-10-03,,Europe,hors indice,OUI,OUI
+LOG.MC,LOG:MA,Logista,Espagne,Consommation de base,2026-10-03,,Europe,hors indice,OUI,OUI
+NTGY.MC,NTGY:MA,Naturgy,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PUIG.MC,PUIG:MA,Puig Brands,Espagne,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RED.MC,RED:MA,Redeia,Espagne,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+REP.MC,REP:MA,Repsol,Espagne,Energie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SCYR.MC,SCYR:MA,Sacyr,Espagne,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SLR.MC,SLR:MA,Solaria Energia,Espagne,Services aux collectivites,2026-10-03,,Europe,hors indice,OUI,OUI
+TEF.MC,TEF:MA,Telefonica,Espagne,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AC.PA,AC:PA,Accor,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AI.PA,AI:PA,Air Liquide,France,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AIR.PA,AIR:PA,Airbus,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EN.PA,EN:PA,Bouygues,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BVI.PA,BVI:PA,Bureau Veritas,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CAP.PA,CAP:PA,Capgemini,France,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CA.PA,CA:PA,Carrefour,France,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BN.PA,BN:PA,Danone,France,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DSY.PA,DSY:PA,Dassault Systemes,France,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ENGI.PA,ENGI:PA,Engie,France,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EL.PA,EL:PA,EssilorLuxottica,France,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ERF.PA,ERF:PA,Eurofins Scientific,France,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RMS.PA,RMS:PA,Hermes,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+KER.PA,KER:PA,Kering,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+OR.PA,OR:PA,L'Oreal,France,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MC.PA,MC:PA,LVMH,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+LR.PA,LR:PA,Legrand,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ML.PA,ML:PA,Michelin,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ORA.PA,ORA:PA,Orange,France,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RI.PA,RI:PA,Pernod Ricard,France,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PUB.PA,PUB:PA,Publicis,France,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RNO.PA,RNO:PA,Renault,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+STMPA.PA,STMPA:PA,STMicroelectronics,France,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SAF.PA,SAF:PA,Safran,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SGO.PA,SGO:PA,Saint-Gobain,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SAN.PA,SAN:PA,Sanofi,France,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SU.PA,SU:PA,Schneider Electric,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+STLAP.PA,STLAP:PA,Stellantis,France,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+TEP.PA,TEP:PA,Teleperformance,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HO.PA,HO:PA,Thales,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+TTE.PA,TTE:PA,TotalEnergies,France,Energie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+VIE.PA,VIE:PA,Veolia,France,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DG.PA,DG:PA,Vinci,France,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ASM.AS,ASM:AS,ASM International,Pays-Bas,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ASML.AS,ASML:AS,ASML Holding,Pays-Bas,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AD.AS,AD:AS,Ahold Delhaize,Pays-Bas,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AKZA.AS,AKZA:AS,AkzoNobel,Pays-Bas,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MT.AS,MT,ArcelorMittal,Pays-Bas,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BESI.AS,BESI:AS,BE Semiconductor,Pays-Bas,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DSFIR.AS,DSFIR:AS,DSM-Firmenich,Pays-Bas,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HEIA.AS,HEIA:AS,Heineken,Pays-Bas,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IMCD.AS,IMCD:AS,IMCD,Pays-Bas,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+KPN.AS,KPN:AS,KPN,Pays-Bas,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PHIA.AS,PHIA:AS,Philips,Pays-Bas,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PRX.AS,PRX:AS,Prosus,Pays-Bas,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+REN.AS,REN:AS,RELX,Pays-Bas,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RAND.AS,RAND:AS,Randstad,Pays-Bas,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SHELL.AS,SHELL:AS,Shell,Pays-Bas,Energie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+UNA.AS,UNA:AS,Unilever,Pays-Bas,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+UMG.AS,UMG:AS,Universal Music Group,Pays-Bas,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+WKL.AS,WKL:AS,Wolters Kluwer,Pays-Bas,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AAF.L,AAF:LN,Airtel Africa,Royaume-Uni,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AAL.L,AAL:LN,Anglo American,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ANTO.L,ANTO:LN,Antofagasta,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ABF.L,ABF:LN,Associated British Foods,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AZN.L,AZN:LN,AstraZeneca,Royaume-Uni,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+AUTO.L,AUTO:LN,Auto Trader Group,Royaume-Uni,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BA.L,BA.:LN,BAE Systems,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BP.L,BP.:LN,BP,Royaume-Uni,Energie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BT-A.L,BTA:LN,BT Group,Royaume-Uni,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BAB.L,BAB:LN,Babcock International,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BTRW.L,BTRW:LN,Barratt Redrow,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BATS.L,BATS:LN,British American Tobacco,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BNZL.L,BNZL:LN,Bunzl,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BRBY.L,BRBY:LN,Burberry Group,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CNA.L,CNA:LN,Centrica,Royaume-Uni,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CCEP.L,CCEP:LN,Coca-Cola Europacific,Royaume-Uni,Consommation de base,2026-10-03,,Europe,hors indice,OUI,OUI
+CCH.L,CCH:LN,Coca-Cola HBC,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CPG.L,CPG:LN,Compass Group,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CCC.L,CCC:LN,Computacenter,Royaume-Uni,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CTEC.L,CTEC:LN,Convatec,Royaume-Uni,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+CRDA.L,CRDA:LN,Croda International,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DCC.L,DCC:LN,DCC,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DGE.L,DGE:LN,Diageo,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+DPLM.L,DPLM:LN,Diploma,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EDV.L,EDV:LN,Endeavour Mining,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ENT.L,ENT:LN,Entain,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EXPN.L,EXPN:LN,Experian,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+FRES.L,FRES:LN,Fresnillo,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+GSK.L,GSK:LN,GSK,Royaume-Uni,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+GAW.L,GAW:LN,Games Workshop,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+GLEN.L,GLEN:LN,Glencore,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HLN.L,HLN:LN,Haleon,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HLMA.L,HLMA:LN,Halma,Royaume-Uni,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HWDN.L,HWDN:LN,Howden Joinery,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IMI.L,IMI:LN,IMI,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IMB.L,IMB:LN,Imperial Brands,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+INF.L,INF:LN,Informa,Royaume-Uni,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+IHG.L,IHG:LN,InterContinental Hotels,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ITRK.L,ITRK:LN,Intertek Group,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+JD.L,JD.:LN,JD Sports Fashion,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,hors indice,OUI,OUI
+KGF.L,KGF:LN,Kingfisher,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MKS.L,MKS:LN,Marks & Spencer,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MRO.L,MRO:LN,Melrose Industries,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+MTLN.L,MTLN:LN,Metlen Energy & Metals,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NG.L,NG.:LN,National Grid,Royaume-Uni,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NXT.L,NXT:LN,Next,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PSON.L,PSON:LN,Pearson,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+PSN.L,PSN:LN,Persimmon,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RKT.L,RKT:LN,Reckitt Benckiser,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RTO.L,RTO:LN,Rentokil Initial,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RIO.L,RIO:LN,Rio Tinto,Royaume-Uni,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+RR.L,RR.:LN,Rolls-Royce Holdings,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SSE.L,SSE:LN,SSE,Royaume-Uni,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SGE.L,SGE:LN,Sage Group,Royaume-Uni,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SBRY.L,SBRY:LN,Sainsbury,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SVT.L,SVT:LN,Severn Trent,Royaume-Uni,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SN.L,SN.:LN,Smith & Nephew,Royaume-Uni,Sante,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SMIN.L,SMIN:LN,Smiths Group,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SPX.L,SPX:LN,Spirax Group,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+TSCO.L,TSCO:LN,Tesco,Royaume-Uni,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+UU.L,UU.:LN,United Utilities,Royaume-Uni,Services aux collectivites,2026-10-03,,Europe,STOXX 600,OUI,OUI
+VOD.L,VOD:LN,Vodafone Group,Royaume-Uni,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+WEIR.L,WEIR:LN,Weir Group,Royaume-Uni,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+WTB.L,WTB:LN,Whitbread,Royaume-Uni,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ADDT-B.ST,ADDTB:ST,Addtech B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ALFA.ST,ALFA:ST,Alfa Laval,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ASSA-B.ST,ASSAB:ST,Assa Abloy B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ATCO-A.ST,ATCOA:ST,Atlas Copco A,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+BOL.ST,BOL:ST,Boliden,Suede,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EPI-A.ST,EPIA:ST,Epiroc A,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ERIC-B.ST,ERICB:ST,Ericsson B,Suede,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+ESSITY-B.ST,ESSITYB:ST,Essity B,Suede,Consommation de base,2026-10-03,,Europe,STOXX 600,OUI,OUI
+EVO.ST,EVO:ST,Evolution,Suede,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HM-B.ST,HMB:ST,H&M B,Suede,Consommation discretionnaire,2026-10-03,,Europe,STOXX 600,OUI,OUI
+HEXA-B.ST,HEXAB:ST,Hexagon B,Suede,Technologies de l'information,2026-10-03,,Europe,STOXX 600,OUI,OUI
+LIFCO-B.ST,LIFCOB:ST,Lifco B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NIBE-B.ST,NIBEB:ST,Nibe Industrier B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SCA-B.ST,SCAB:ST,SCA B,Suede,Materiaux,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SKF-B.ST,SKFB:ST,SKF B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SAAB-B.ST,SAABB:ST,Saab B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SAND.ST,SAND:ST,Sandvik,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+SKA-B.ST,SKAB:ST,Skanska B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+TEL2-B.ST,TEL2B:ST,Tele2 B,Suede,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+TELIA.ST,TELIA:ST,Telia Company,Suede,Services de communication,2026-10-03,,Europe,STOXX 600,OUI,OUI
+VOLV-B.ST,VOLVB:ST,Volvo B,Suede,Industrie,2026-10-03,,Europe,STOXX 600,OUI,OUI
+NOVN.SW,,Novartis Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+NESN.SW,,Nestle Sa,Suisse,Consommation de base,,,Europe,STOXX 600,NON,OUI
+SAP.DE,,Sap,Allemagne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SIE.DE,,Siemens N Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+ABBN.SW,,Abb Ltd,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+ENR.DE,,Siemens Energy N Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+CFR.SW,,Compagnie Financiere Richemont Sa,Suisse,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+DTE.DE,,Deutsche Telekom N Ag,Allemagne,Services de communication,,,Europe,STOXX 600,NON,OUI
+ENEL.MI,,Enel,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+IFX.DE,,Infineon Technologies Ag,Allemagne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+DHL.DE,,Dhl Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+BAYN.DE,,Bayer Ag,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+ENI.MI,,Eni,Italie,Energie,,,Europe,STOXX 600,NON,OUI
+LONN.SW,,Lonza Group Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+BAS.DE,,Basf N,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+RACE.MI,,Ferrari,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+HOLN.SW,,Holcim Ltd Ag,Suisse,Materiaux,,,Europe,STOXX 600,NON,OUI
+EOAN.DE,,E.On N,Allemagne,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+SDZ.SW,,Sandoz Group Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+RWE.DE,,Rwe Ag,Allemagne,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+NOKIA.HE,,Nokia,Finlande,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+GALD.SW,,Galderma Group N Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+RHM.DE,,Rheinmetall Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+GIVN.SW,,Givaudan Sa,Suisse,Materiaux,,,Europe,STOXX 600,NON,OUI
+SIKA.SW,,Sika Ag,Suisse,Materiaux,,,Europe,STOXX 600,NON,OUI
+PRY.MI,,Prysmian,Italie,Industrie,,,Europe,STOXX 600,NON,OUI
+ALC.SW,,Alcon Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+ADS.DE,,Adidas N Ag,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+MBG.DE,,Mercedes-Benz Group N Ag,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+EQNR.OL,,Equinor,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+KNEBV.HE,,Kone,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+GEBN.SW,,Geberit Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+HEI.DE,,Heidelberg Materials Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+DTG.DE,,Daimler Truck Holding E Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+FRE.DE,,Fresenius N,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+RYA.IR,,Ryanair Holdings Plc,Irlande,Industrie,,,Europe,STOXX 600,NON,OUI
+SCMN.SW,,Swisscom Ag,Suisse,Services de communication,,,Europe,STOXX 600,NON,OUI
+LDO.MI,,Leonardo Finmeccanica Spa,Italie,Industrie,,,Europe,STOXX 600,NON,OUI
+MRK.DE,,Merck,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+SGSN.SW,,Sgs Sa,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+MTX.DE,,Mtu Aero Engines Holding Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+BMW.DE,,Bmw,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+PKN.WA,,Orlen,Pologne,Energie,,,Europe,STOXX 600,NON,OUI
+SHL.DE,,Siemens Healthineers Ag,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+VACN.SW,,Vat Group Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+KRZ.IR,,Kerry Group Plc,Irlande,Consommation de base,,,Europe,STOXX 600,NON,OUI
+SOON.SW,,Sonova Holding Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+EDP.LS,,Edp Energias De Portugal,Portugal,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+ALE.WA,,Allegro Sa,Pologne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+KRX.IR,,Kingspan Group Plc,Irlande,Industrie,,,Europe,STOXX 600,NON,OUI
+KOG.OL,,Kongsberg Gruppen,Norvege,Industrie,,,Europe,STOXX 600,NON,OUI
+TRN.MI,,Terna Rete Elettrica Nazionale,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+STMN.SW,,Straumann Holding Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+VOW3.DE,,Volkswagen Non-Voting Pref Ag,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+KNIN.SW,,Kuehne Und Nagel International Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+HEN3.DE,,Henkel & Kgaa Pref Ag,Allemagne,Consommation de base,,,Europe,STOXX 600,NON,OUI
+SCHP.SW,,Schindler Holding Par Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+LOGN.SW,,Logitech International,Suisse,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SY1.DE,,Symrise Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+WRT1V.HE,,Wartsila,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+SRG.MI,,Snam,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+NESTE.HE,,Neste,Finlande,Energie,,,Europe,STOXX 600,NON,OUI
+UPM.HE,,Upm-Kymmene,Finlande,Materiaux,,,Europe,STOXX 600,NON,OUI
+ORNBV.HE,,Orion Class B,Finlande,Sante,,,Europe,STOXX 600,NON,OUI
+METSO.HE,,Metso Corporation,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+OMV.VI,,Omv,Autriche,Energie,,,Europe,STOXX 600,NON,OUI
+FGR.PA,,Eiffage Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+SOBI.ST,,Swedish Orphan Biovitrum,Suede,Sante,,,Europe,STOXX 600,NON,OUI
+FORTUM.HE,,Fortum,Finlande,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+G1A.DE,,Gea Group Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+MONC.MI,,Moncler,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+AKRBP.OL,,Aker Bp,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+QIA.DE,,Qiagen,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+MOWI.OL,,Mowi,Norvege,Consommation de base,,,Europe,STOXX 600,NON,OUI
+MICC.AS,,Magnum Ice Cream,Pays-Bas,Consommation de base,,,Europe,STOXX 600,NON,OUI
+LISP.SW,,Chocoladefabriken Lindt & Spruengl,Suisse,Consommation de base,,,Europe,STOXX 600,NON,OUI
+RXL.PA,,Rexel Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+NHY.OL,,Norsk Hydro,Norvege,Materiaux,,,Europe,STOXX 600,NON,OUI
+KGH.WA,,Kghm Polska Miedz Sa,Pologne,Materiaux,,,Europe,STOXX 600,NON,OUI
+TEN.MI,,Tenaris Sa,Italie,Energie,,,Europe,STOXX 600,NON,OUI
+TEL.OL,,Telenor,Norvege,Services de communication,,,Europe,STOXX 600,NON,OUI
+CON.DE,,Continental Ag,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+TREL-B.ST,,Trelleborg B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+LPP.WA,,Lpp Sa,Pologne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+SECU-B.ST,,Securitas B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+BEAN.SW,,Belimo N Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+SPIE.PA,,Spie Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+FME.DE,,Fresenius Medical Care Ag,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+GALP.LS,,Galp Energia Sgps Sa Class B,Portugal,Energie,,,Europe,STOXX 600,NON,OUI
+BEI.DE,,Beiersdorf Ag,Allemagne,Consommation de base,,,Europe,STOXX 600,NON,OUI
+ORK.OL,,Orkla,Norvege,Consommation de base,,,Europe,STOXX 600,NON,OUI
+ACLN.SW,,Accelleron N Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+LTMC.MI,,Lottomatica Group,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+BNR.DE,,Brenntag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+SRT3.DE,,Sartorius Pref Ag,Allemagne,Sante,,,Europe,STOXX 600,NON,OUI
+G24.DE,,Scout24 N,Allemagne,Services de communication,,,Europe,STOXX 600,NON,OUI
+GTT.PA,,Gaztransport & Technigaz Sa,France,Energie,,,Europe,STOXX 600,NON,OUI
+HOT.DE,,Hochtief Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+PPC.AT,,Public Power Corporation Sa,Grece,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+KESKOB.HE,,Kesko Corp Class B,Finlande,Consommation de base,,,Europe,STOXX 600,NON,OUI
+ZAL.DE,,Zalando,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+BEIJ-B.ST,,Beijer Ref Class B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+KCR.HE,,Konecranes,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+SUBC.OL,,Subsea,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+FRO.OL,,Frontline Plc,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+KBX.DE,,Knorr Bremse Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+ABVX.PA,,Abivax Sa,France,Sante,,,Europe,STOXX 600,NON,OUI
+ACKB.BR,,Ackermans & Van Haaren Nv,Belgique,Industrie,,,Europe,STOXX 600,NON,OUI
+DIM.PA,,Sartorius Stedim Biotech Sa,France,Sante,,,Europe,STOXX 600,NON,OUI
+YAR.OL,,Yara International,Norvege,Materiaux,,,Europe,STOXX 600,NON,OUI
+UHR.SW,,The Swatch Group Ag,Suisse,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+INDT.ST,,Indutrade,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+IPN.PA,,Ipsen Sa,France,Sante,,,Europe,STOXX 600,NON,OUI
+EMSN.SW,,Ems-Chemie Holding Ag,Suisse,Materiaux,,,Europe,STOXX 600,NON,OUI
+TKA.DE,,Thyssenkrupp Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+IG.MI,,Italgas,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+EVK.DE,,Evonik Industries Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+REC.MI,,Recordati Industria Chimica E Farm,Italie,Sante,,,Europe,STOXX 600,NON,OUI
+SPM.MI,,Saipem,Italie,Energie,,,Europe,STOXX 600,NON,OUI
+AM.PA,,Dassault Aviation Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+STERV.HE,,Stora Enso Class R,Finlande,Materiaux,,,Europe,STOXX 600,NON,OUI
+JMT.LS,,Jeronimo Martins Sa,Portugal,Consommation de base,,,Europe,STOXX 600,NON,OUI
+BBY.L,,Balfour Beatty Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+GETI-B.ST,,Getinge B,Suede,Sante,,,Europe,STOXX 600,NON,OUI
+LHA.DE,,Deutsche Lufthansa Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+SSAB-B.ST,,Ssab Class B,Suede,Materiaux,,,Europe,STOXX 600,NON,OUI
+ANDR.VI,,Andritz Ag,Autriche,Industrie,,,Europe,STOXX 600,NON,OUI
+GF.SW,,Georg Fischer Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+NEX.PA,,Nexans Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+ELISA.HE,,Elisa,Finlande,Services de communication,,,Europe,STOXX 600,NON,OUI
+RMV.L,,Rightmove Plc,Royaume-Uni,Services de communication,,,Europe,STOXX 600,NON,OUI
+GET.PA,,Getlink,France,Industrie,,,Europe,STOXX 600,NON,OUI
+WPP.L,,Wpp Plc,Royaume-Uni,Services de communication,,,Europe,STOXX 600,NON,OUI
+NDX1.DE,,Nordex,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+SW.PA,,Sodexo Sa,France,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+GALE.SW,,Galenica Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+AVOL.SW,,Avolta Ag,Suisse,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+TUB.BR,,Financiere De Tubize Sa,Belgique,Sante,,,Europe,STOXX 600,NON,OUI
+P911.DE,,Dr Ing Hc F Porsche Prf Ag,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+VER.VI,,Verbund Ag,Autriche,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+SIGN.SW,,Sig Group N Ag,Suisse,Materiaux,,,Europe,STOXX 600,NON,OUI
+BARN.SW,,Barry Callebaut Ag,Suisse,Consommation de base,,,Europe,STOXX 600,NON,OUI
+ADEN.SW,,Adecco Group Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+HAG.DE,,Hensoldt Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+FHZN.SW,,Flughafen Zuerich Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+ROR.L,,Rotork Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+TE.PA,,Technip Energies,France,Energie,,,Europe,STOXX 600,NON,OUI
+TEMN.SW,,Temenos Ag,Suisse,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SBMO.AS,,Sbm Offshore,Pays-Bas,Energie,,,Europe,STOXX 600,NON,OUI
+BIM.PA,,Biomerieux Sa,France,Sante,,,Europe,STOXX 600,NON,OUI
+VK.PA,,Vallourec Sa,France,Energie,,,Europe,STOXX 600,NON,OUI
+VALMT.HE,,Valmet Corp,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+SECT-B.ST,,Sectra Class B,Suede,Sante,,,Europe,STOXX 600,NON,OUI
+EDPR.LS,,Edp Renewables Sa,Portugal,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+BKG.L,,Berkeley Group Holdings (The),Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+ALK-B.CO,,Alk-Abello Class B,Danemark,Sante,,,Europe,STOXX 600,NON,OUI
+GL9.IR,,Glanbia Plc,Irlande,Consommation de base,,,Europe,STOXX 600,NON,OUI
+TPRO.MI,,Technoprobe Spa,Italie,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+RS1.L,,Rs Group Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+VOE.VI,,Voestalpine Ag,Autriche,Materiaux,,,Europe,STOXX 600,NON,OUI
+VAR.OL,,Var Energi,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+ELIS.PA,,Elis Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+AKE.PA,,Arkema Sa,France,Materiaux,,,Europe,STOXX 600,NON,OUI
+CDR.WA,,Cd Projekt Red,Pologne,Services de communication,,,Europe,STOXX 600,NON,OUI
+BME.L,,B&M European Value Retail Plc,Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+NEM.DE,,Nemetschek,Allemagne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SALM.OL,,Salmar,Norvege,Consommation de base,,,Europe,STOXX 600,NON,OUI
+OCTV-SDB.ST,,Octave Intelligence Sdr Plc,Suede,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+PAH3.DE,,Porsche Automobil Holding Pref,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+DNP.WA,,Dino Polska,Pologne,Consommation de base,,,Europe,STOXX 600,NON,OUI
+BFT.WA,,Benefit Systems,Pologne,Industrie,,,Europe,STOXX 600,NON,OUI
+LAGR-B.ST,,Lagercrantz Group Class B,Suede,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+ZAB.WA,,Zabka Group Societe Anonyme Sa,Pologne,Consommation de base,,,Europe,STOXX 600,NON,OUI
+MOH.AT,,Motor Oil (Hellas) Corinth Refiner,Grece,Energie,,,Europe,STOXX 600,NON,OUI
+AALB.AS,,Aalberts,Pays-Bas,Industrie,,,Europe,STOXX 600,NON,OUI
+CPR.MI,,Davide Campari Milano Nv,Italie,Consommation de base,,,Europe,STOXX 600,NON,OUI
+ADP.PA,,Aeroports De Paris Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+ZEG.L,,Zegona Communications Plc,Royaume-Uni,Services de communication,,,Europe,STOXX 600,NON,OUI
+MYCR.ST,,Mycronic,Suede,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SRP.L,,Serco Group Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+AIXA.DE,,Aixtron,Allemagne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+DRX.L,,Drax Group Plc,Royaume-Uni,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+BZU.MI,,Buzzi,Italie,Materiaux,,,Europe,STOXX 600,NON,OUI
+A2A.MI,,A2A,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+NDA.DE,,Aurubis Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+DHER.DE,,Delivery Hero,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+ALO.PA,,Alstom Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+VEND.OL,,Vend Marketplaces Asa,Norvege,Services de communication,,,Europe,STOXX 600,NON,OUI
+ROSE.L,,Rosebank Industries Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+GEKTERNA.AT,,Gek Terna,Grece,Industrie,,,Europe,STOXX 600,NON,OUI
+TECN.SW,,Tecan Group Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+AYV.PA,,Ayvens Sa,France,Industrie,,,Europe,STOXX 600,NON,OUI
+JMAT.L,,Johnson Matthey Plc,Royaume-Uni,Materiaux,,,Europe,STOXX 600,NON,OUI
+ARCAD.AS,,Arcadis Nv,Pays-Bas,Industrie,,,Europe,STOXX 600,NON,OUI
+MNDI.L,,Mondi Plc,Royaume-Uni,Materiaux,,,Europe,STOXX 600,NON,OUI
+EVD.DE,,Cts Eventim Ag,Allemagne,Services de communication,,,Europe,STOXX 600,NON,OUI
+MTO.L,,Mitie Group Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+IP.MI,,Interpump Group,Italie,Industrie,,,Europe,STOXX 600,NON,OUI
+CWK.L,,Cranswick Plc,Royaume-Uni,Consommation de base,,,Europe,STOXX 600,NON,OUI
+BAMNB.AS,,Bam Groep Koninklijke Nv,Pays-Bas,Industrie,,,Europe,STOXX 600,NON,OUI
+SUN.SW,,Sulzer Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+RAA.DE,,Rational Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+TUI1.DE,,Tui N Ag,Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+PIRC.MI,,Pirelli & C,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+VSURE.ST,,Verisure Plc,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+REY.MI,,Reply,Italie,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+LOOMIS.ST,,Loomis Class B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+TW.L,,Taylor Wimpey Plc,Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+RUI.PA,,Rubis,France,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+EZJ.L,,Easyjet,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+QQ.L,,Qinetiq Group Plc,Royaume-Uni,Industrie,,,Europe,STOXX 600,NON,OUI
+ACP.WA,,Asseco Poland Sa,Pologne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+HER.MI,,Hera,Italie,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+BELA.AT,,Jumbo,Grece,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+DLG.MI,,Delonghi,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+SOI.PA,,Soitec Sa,France,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+FNTN.DE,,Freenet Ag,Allemagne,Services de communication,,,Europe,STOXX 600,NON,OUI
+INCH.L,,Inchcape Plc,Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+HUBN.SW,,Huber & Suhner Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+BWY.L,,Bellway Plc,Royaume-Uni,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+BC.MI,,Brunello Cucinelli,Italie,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+VPK.AS,,Koninklijke Vopak,Pays-Bas,Energie,,,Europe,STOXX 600,NON,OUI
+ATS.VI,,At & S Austria Technologie & Syste,Autriche,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+PNN.L,,Pennon Group Plc,Royaume-Uni,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+FLS.CO,,Flsmidth And Co Class B,Danemark,Industrie,,,Europe,STOXX 600,NON,OUI
+KTY.WA,,Grupa Kety,Pologne,Materiaux,,,Europe,STOXX 600,NON,OUI
+SFZN.SW,,Siegfried Holding Ag,Suisse,Sante,,,Europe,STOXX 600,NON,OUI
+HIK.L,,Hikma Pharmaceuticals Plc,Royaume-Uni,Sante,,,Europe,STOXX 600,NON,OUI
+NOD.OL,,Nordic Semiconductor,Norvege,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+ITV.L,,Itv Plc,Royaume-Uni,Services de communication,,,Europe,STOXX 600,NON,OUI
+AAK.ST,,Aak,Suede,Consommation de base,,,Europe,STOXX 600,NON,OUI
+BC8.DE,,Bechtle Ag,Allemagne,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SUNN.SW,,Sunrise N Class A Ltd,Suisse,Services de communication,,,Europe,STOXX 600,NON,OUI
+PAF.L,,Pan African Resources Plc,Royaume-Uni,Materiaux,,,Europe,STOXX 600,NON,OUI
+LATO-B.ST,,Latour Investment Class B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+BKW.SW,,Bkw N Ag,Suisse,Services aux collectivites,,,Europe,STOXX 600,NON,OUI
+IFCN.SW,,Inficon Holding Ag,Suisse,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+SWEC-B.ST,,Sweco Class B,Suede,Industrie,,,Europe,STOXX 600,NON,OUI
+SOP.PA,,Sopra Steria Group,France,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+HILS.L,,Hill And Smith Plc,Royaume-Uni,Materiaux,,,Europe,STOXX 600,NON,OUI
+R3NK.DE,,Renk Group Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+DKSH.SW,,Dksh Holding Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+FPE3.DE,,Fuchs Pref,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+SCT.L,,Softcat Plc,Royaume-Uni,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+HTO.AT,,Hellenic Telecommunications Organi,Grece,Services de communication,,,Europe,STOXX 600,NON,OUI
+PUM.DE,,Puma,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+HUH1V.HE,,Huhtamaki,Finlande,Materiaux,,,Europe,STOXX 600,NON,OUI
+BOL.PA,,Bollore,France,Energie,,,Europe,STOXX 600,NON,OUI
+SFSN.SW,,Sfs Group Ag,Suisse,Industrie,,,Europe,STOXX 600,NON,OUI
+TGS.OL,,Tgs Nopec Geophysical,Norvege,Energie,,,Europe,STOXX 600,NON,OUI
+TOM.OL,,Tomra Systems,Norvege,Industrie,,,Europe,STOXX 600,NON,OUI
+AKER.OL,,Aker,Norvege,Industrie,,,Europe,STOXX 600,NON,OUI
+FDJU.PA,,Fdj United,France,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+KGX.DE,,Kion Group Ag,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+COTN.SW,,Comet Holding Ag,Suisse,Technologies de l'information,,,Europe,STOXX 600,NON,OUI
+AXFO.ST,,Axfood,Suede,Consommation de base,,,Europe,STOXX 600,NON,OUI
+FR.PA,,Valeo,France,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+HOLM-B.ST,,Holmen Class B,Suede,Materiaux,,,Europe,STOXX 600,NON,OUI
+AG1.DE,,Auto1 Group,Allemagne,Consommation discretionnaire,,,Europe,STOXX 600,NON,OUI
+SDF.DE,,K+S N Ag,Allemagne,Materiaux,,,Europe,STOXX 600,NON,OUI
+HIAB.HE,,Hiab Corporation Class B,Finlande,Industrie,,,Europe,STOXX 600,NON,OUI
+GBF.DE,,Bilfinger,Allemagne,Industrie,,,Europe,STOXX 600,NON,OUI
+HOC.L,,Hochschild Mining Plc,Royaume-Uni,Materiaux,,,Europe,STOXX 600,NON,OUI
+CSG.AS,,Csg Class A Nv,Pays-Bas,Industrie,,,Europe,STOXX 600,NON,OUI
+IVG.MI,,Iveco Group Nv,Italie,Industrie,,,Europe,STOXX 600,NON,OUI
+MMM,,3M,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+AOS,,A. O. Smith,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ABT,,Abbott Laboratories,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ABBV,,AbbVie,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ACN,,Accenture,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ADBE,,Adobe Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+AMD,,Advanced Micro Devices,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+AES,,AES Corporation,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+A,,Agilent Technologies,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+APD,,Air Products,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+ABNB,,Airbnb,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+AKAM,,Akamai Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ALB,,Albemarle Corporation,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+ALGN,,Align Technology,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ALLE,,Allegion,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+LNT,,Alliant Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+GOOGL,,Alphabet Inc. (Class A),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+GOOG,,Alphabet Inc. (Class C),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+MO,,Altria,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+AMZN,,Amazon,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+AMCR,,Amcor,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+AEE,,Ameren,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+AEP,,American Electric Power,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+AWK,,American Water Works,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+AME,,Ametek,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+AMGN,,Amgen,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+APH,,Amphenol,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ADI,,Analog Devices,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+APA,,APA Corporation,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+AAPL,,Apple Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+AMAT,,Applied Materials,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+APP,,AppLovin,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+APTV,,Aptiv,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+ADM,,Archer Daniels Midland,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+ANET,,Arista Networks,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+T,,AT&T,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+ATO,,Atmos Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+ADSK,,Autodesk,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ADP,,Automatic Data Processing,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+AZO,,AutoZone,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+AVY,,Avery Dennison,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+AXON,,Axon Enterprise,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+BKR,,Baker Hughes,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+BALL,,Ball Corporation,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+BAX,,Baxter International,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+BDX,,Becton Dickinson,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+BBY,,Best Buy,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+TECH,,Bio-Techne,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+BIIB,,Biogen,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+BE,,Bloom Energy,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+BA,,Boeing,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+BKNG,,Booking Holdings,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+BSX,,Boston Scientific,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+BMY,,Bristol Myers Squibb,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+AVGO,,Broadcom,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+BR,,Broadridge Financial Solutions,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+BF-B,,Brown–Forman,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+BG,,Bunge Global,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CHRW,,C.H. Robinson,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CDNS,,Cadence Design Systems,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+CAH,,Cardinal Health,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CCL,,Carnival Corporation,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+CARR,,Carrier Global,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CVNA,,Carvana,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+CASY,,Casey's,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CAT,,Caterpillar Inc.,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CDW,,CDW Corporation,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+COR,,Cencora,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CNC,,Centene Corporation,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CNP,,CenterPoint Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+CF,,CF Industries,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+CRL,,Charles River Laboratories,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CHTR,,Charter Communications,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+CVX,,Chevron Corporation,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+CMG,,Chipotle Mexican Grill,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+CHD,,Church & Dwight,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CIEN,,Ciena,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+CI,,Cigna,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CTAS,,Cintas,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CSCO,,Cisco,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+CLX,,Clorox,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CMS,,CMS Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+KO,,Coca-Cola Company (The),Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CTSH,,Cognizant,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+COHR,,Coherent Corp.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+CL,,Colgate-Palmolive,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CMCSA,,Comcast,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+FIX,,Comfort Systems USA,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+COP,,ConocoPhillips,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+ED,,Consolidated Edison,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+STZ,,Constellation Brands,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CEG,,Constellation Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+COO,,Cooper Companies (The),Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+CPRT,,Copart,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+GLW,,Corning Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+COST,,Costco,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+CRH,,CRH plc,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+CRWD,,CrowdStrike,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+CSX,,CSX Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CMI,,Cummins,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CVS,,CVS Health,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+DHR,,Danaher Corporation,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+DRI,,Darden Restaurants,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+DDOG,,Datadog,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+DVA,,DaVita,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+DECK,,Deckers Brands,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+DE,,Deere & Company,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+DELL,,Dell Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+DAL,,Delta Air Lines,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+DVN,,Devon Energy,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+DXCM,,Dexcom,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+FANG,,Diamondback Energy,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+DG,,Dollar General,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+DLTR,,Dollar Tree,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+D,,Dominion Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+DPZ,,Domino's,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+DASH,,DoorDash,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+DOV,,Dover Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+DOW,,Dow Inc.,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+DHI,,D. R. Horton,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+DTE,,DTE Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+DUK,,Duke Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+DD,,DuPont,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ETN,,Eaton Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+EBAY,,eBay Inc.,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+ECHO,,EchoStar,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+ECL,,Ecolab,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+EIX,,Edison International,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+EW,,Edwards Lifesciences,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ELV,,Elevance Health,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+EME,,Emcor,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+EMR,,Emerson Electric,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ETR,,Entergy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+EOG,,EOG Resources,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+EQT,,EQT Corporation,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+EFX,,Equifax,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+EL,,Estée Lauder Companies (The),Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+EVRG,,Evergy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+P,,Everpure,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ES,,Eversource Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+EXC,,Exelon,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+EXE,,Expand Energy,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+EXPE,,Expedia Group,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+EXPD,,Expeditors International,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+XOM,,ExxonMobil,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+FFIV,,"F5, Inc.",Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+FICO,,Fair Isaac,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+FAST,,Fastenal,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+FDX,,FedEx,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+FDXF,,FedEx Freight,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+FERG,,Ferguson Enterprises,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+FSLR,,First Solar,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+FE,,FirstEnergy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+FLEX,,Flex Ltd.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+F,,Ford Motor Company,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+FTNT,,Fortinet,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+FTV,,Fortive,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+FOXA,,Fox Corporation (Class A),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+FOX,,Fox Corporation (Class B),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+FCX,,Freeport-McMoRan,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+GRMN,,Garmin,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+IT,,Gartner,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+GE,,GE Aerospace,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+GEHC,,GE HealthCare,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+GEV,,GE Vernova,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+GEN,,Gen Digital,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+GNRC,,Generac,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+GD,,General Dynamics,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+GIS,,General Mills,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+GM,,General Motors,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+GPC,,Genuine Parts Company,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+GILD,,Gilead Sciences,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+GDDY,,GoDaddy,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+HAL,,Halliburton,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+HAS,,Hasbro,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+HCA,,HCA Healthcare,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+HSIC,,Henry Schein,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+HSY,,Hershey Company (The),Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+HPE,,Hewlett Packard Enterprise,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+HLT,,Hilton Worldwide,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+HD,,Home Depot (The),Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+HONA,,Honeywell Aerospace,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+HON,,Honeywell Technologies,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+HRL,,Hormel Foods,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+HWM,,Howmet Aerospace,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+HPQ,,HP Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+HUBB,,Hubbell Incorporated,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+HUM,,Humana,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+HII,,Huntington Ingalls Industries,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+IBM,,IBM,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+IEX,,IDEX Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+IDXX,,Idexx Laboratories,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ITW,,Illinois Tool Works,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ILMN,,"Illumina, Inc.",Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+INCY,,Incyte,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+IR,,Ingersoll Rand,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PODD,,Insulet Corporation,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+INTC,,Intel,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+IFF,,International Flavors & Fragrances,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+IP,,International Paper,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+INTU,,Intuit,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ISRG,,Intuitive Surgical,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+IQV,,IQVIA,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+JBHT,,J.B. Hunt,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+JBL,,Jabil,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+J,,Jacobs Solutions,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+JNJ,,Johnson & Johnson,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+JCI,,Johnson Controls,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+KDP,,Keurig Dr Pepper,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+KEYS,,Keysight Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+KMB,,Kimberly-Clark,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+KMI,,Kinder Morgan,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+KLAC,,KLA Corporation,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+KHC,,Kraft Heinz,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+KR,,Kroger,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+LHX,,L3Harris,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+LH,,Labcorp,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+LRCX,,Lam Research,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+LVS,,Las Vegas Sands,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+LDOS,,Leidos,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+LEN,,Lennar,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+LII,,Lennox International,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+LLY,,Lilly (Eli),Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+LIN,,Linde plc,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+LYV,,Live Nation Entertainment,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+LMT,,Lockheed Martin,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+LOW,,Lowe's,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+LULU,,Lululemon Athletica,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+LITE,,Lumentum,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+LYB,,LyondellBasell,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+MPC,,Marathon Petroleum,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+MAR,,Marriott International,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+MLM,,Martin Marietta Materials,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+MRVL,,Marvell Technology,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+MAS,,Masco,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+MKC,,McCormick & Company,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+MCD,,McDonald's,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+MCK,,McKesson,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+MDT,,Medtronic,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+MRK,,Merck & Co.,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+META,,Meta Platforms,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+MTD,,Mettler Toledo,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+MGM,,MGM Resorts,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+MCHP,,Microchip Technology,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+MU,,Micron Technology,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+MSFT,,Microsoft,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+MRNA,,Moderna,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+MDLZ,,Mondelez International,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+MPWR,,Monolithic Power Systems,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+MNST,,Monster Beverage,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+MOS,,Mosaic Company (The),Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+MSI,,Motorola Solutions,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+NTAP,,NetApp,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+NFLX,,Netflix,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+NEM,,Newmont,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+NWSA,,News Corp (Class A),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+NWS,,News Corp (Class B),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+NEE,,NextEra Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+NKE,,"Nike, Inc.",Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+NI,,NiSource,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+NDSN,,Nordson Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+NSC,,Norfolk Southern,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+NOC,,Northrop Grumman,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+NCLH,,Norwegian Cruise Line Holdings,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+NRG,,NRG Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+NUE,,Nucor,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+NVDA,,Nvidia,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+NVR,,"NVR, Inc.",Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+NXPI,,NXP Semiconductors,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ORLY,,O'Reilly Automotive,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+OXY,,Occidental Petroleum,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+OKTA,,"Okta, Inc.",Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ODFL,,Old Dominion,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+OMC,,Omnicom Group,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+ON,,ON Semiconductor,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+OKE,,Oneok,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+ORCL,,Oracle Corporation,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+OTIS,,Otis Worldwide,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PCAR,,Paccar,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PKG,,Packaging Corporation of America,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+PLTR,,Palantir Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+PANW,,Palo Alto Networks,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+PH,,Parker Hannifin,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PAYX,,Paychex,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PNR,,Pentair,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+PEP,,PepsiCo,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+PFE,,Pfizer,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+PCG,,PG&E Corporation,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+PM,,Philip Morris International,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+PSX,,Phillips 66,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+PNW,,Pinnacle West Capital,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+PPG,,PPG Industries,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+PPL,,PPL Corporation,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+PG,,Procter & Gamble,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+PTC,,PTC Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+PEG,,Public Service Enterprise Group,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+PHM,,PulteGroup,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+Q,,Qnity Electronics,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+QCOM,,Qualcomm,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+PWR,,Quanta Services,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+DGX,,Quest Diagnostics,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+RL,,Ralph Lauren Corporation,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+RDDT,,Reddit,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+REGN,,Regeneron Pharmaceuticals,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+RSG,,Republic Services,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+RMD,,ResMed,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+RVTY,,Revvity,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ROK,,Rockwell Automation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ROL,,"Rollins, Inc.",Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ROP,,Roper Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ROST,,Ross Stores,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+RCL,,Royal Caribbean Group,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+RTX,,RTX Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+CRM,,Salesforce,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SNDK,,Sandisk,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SLB,,Schlumberger,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+STX,,Seagate Technology,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SRE,,Sempra,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+NOW,,ServiceNow,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SHW,,Sherwin-Williams,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+SKYD,,Skydance,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+SWKS,,Skyworks Solutions,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SJM,,J.M. Smucker Company (The),Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+SW,,Smurfit Westrock,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+SNA,,Snap-on,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+SOLV,,Solventum,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+SO,,Southern Company,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+LUV,,Southwest Airlines,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+SWK,,Stanley Black & Decker,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+SBUX,,Starbucks,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+STLD,,Steel Dynamics,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+STE,,Steris,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+SYK,,Stryker Corporation,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+SMCI,,Supermicro,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SNPS,,Synopsys,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+SYY,,Sysco,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+TMUS,,T-Mobile US,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+TTWO,,Take-Two Interactive,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+TPR,,"Tapestry, Inc.",Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+TRGP,,Targa Resources,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+TGT,,Target Corporation,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+TEL,,TE Connectivity,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TDY,,Teledyne Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TER,,Teradyne,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TSLA,,"Tesla, Inc.",Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+TXN,,Texas Instruments,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TPL,,Texas Pacific Land Corporation,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+TXT,,Textron,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+TMO,,Thermo Fisher Scientific,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+TJX,,TJX Companies,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+TKO,,TKO Group Holdings,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+TSCO,,Tractor Supply,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+TT,,Trane Technologies,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+TDG,,TransDigm Group,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+TRMB,,Trimble Inc.,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TWLO,,Twilio,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TYL,,Tyler Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+TSN,,Tyson Foods,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+UBER,,Uber,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+ULTA,,Ulta Beauty,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+UNP,,Union Pacific Corporation,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+UAL,,United Airlines Holdings,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+UPS,,United Parcel Service,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+URI,,United Rentals,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+UNH,,UnitedHealth Group,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+UHS,,Universal Health Services,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+VLO,,Valero Energy,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+VEEV,,Veeva Systems,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+VLTO,,Veralto,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+VRSN,,Verisign,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+VRSK,,Verisk Analytics,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+VZ,,Verizon,Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+VRTX,,Vertex Pharmaceuticals,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+VRT,,Vertiv,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+VTRS,,Viatris,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+VST,,Vistra Corp.,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+VMC,,Vulcan Materials Company,Etats-Unis,Materiaux,,,Amerique du Nord,S&P 500,NON,NON
+VYLR,,Vylor,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+GWW,,W. W. Grainger,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+WAB,,Wabtec,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+WMT,,Walmart,Etats-Unis,Consommation de base,,,Amerique du Nord,S&P 500,NON,NON
+DIS,,Walt Disney Company (The),Etats-Unis,Services de communication,,,Amerique du Nord,S&P 500,NON,NON
+WM,,Waste Management,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+WAT,,Waters Corporation,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+WEC,,WEC Energy Group,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+WST,,West Pharmaceutical Services,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+WDC,,Western Digital,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+WSM,,"Williams-Sonoma, Inc.",Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+WMB,,Williams Companies,Etats-Unis,Energie,,,Amerique du Nord,S&P 500,NON,NON
+WDAY,,"Workday, Inc.",Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+WYNN,,Wynn Resorts,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+XEL,,Xcel Energy,Etats-Unis,Services aux collectivites,,,Amerique du Nord,S&P 500,NON,NON
+XYL,,Xylem Inc.,Etats-Unis,Industrie,,,Amerique du Nord,S&P 500,NON,NON
+YUM,,Yum! Brands,Etats-Unis,Consommation discretionnaire,,,Amerique du Nord,S&P 500,NON,NON
+ZBRA,,Zebra Technologies,Etats-Unis,Technologies de l'information,,,Amerique du Nord,S&P 500,NON,NON
+ZBH,,Zimmer Biomet,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+ZTS,,Zoetis,Etats-Unis,Sante,,,Amerique du Nord,S&P 500,NON,NON
+6857.T,,", the divisor is 29.66435840. That is, every ¥100 change in the adjusted price of a constituent stock results in a 3.3710 unit movement in the index.
+
+As of 29 October 2026[update], the company with the largest influence on the index is Advantest",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+9202.T,,"[clarification needed] Constituents must be highly traded (""liquid""). Constituents are changed either at periodic review one per year, or by ""extraordinary replacement"", for example if a company is delisted.[5]
+
+As of April 2026, the Nikkei 225 consists of the following companies (Japanese securities identification code in parentheses):[25] Bold indicates the top ten by market capitalisation.
+
+Air transport[edit]
+ANA Holdings Inc.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9201.T,,"Japan Airlines Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+543A.T,,Archion Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7267.T,,"Honda Motor Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7202.T,,Isuzu Motors Ltd.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7261.T,,Mazda Motor Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7211.T,,Mitsubishi Motors Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7201.T,,"Nissan Motor Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7270.T,,Subaru Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7269.T,,Suzuki Motor Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7203.T,,Toyota Motor Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7272.T,,"Yamaha Motor Company, Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+3407.T,,Asahi Kasei Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+4061.T,,"Denka Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4901.T,,Fujifilm Holdings Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+4452.T,,Kao Corp.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+3405.T,,"Kuraray Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4188.T,,Mitsubishi Chemical Holdings Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4183.T,,"Mitsui Chemicals, Inc.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4021.T,,"Nissan Chemical Industries, Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+6988.T,,Nitto Denko,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4004.T,,Resonac Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4063.T,,"Shin-Etsu Chemical Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4911.T,,"Shiseido Co., Ltd.",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+4005.T,,"Sumitomo Chemical Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4043.T,,Tokuyama Corporation,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4042.T,,Tosoh Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+4208.T,,"Ube Industries, Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+9433.T,,KDDI Corp.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+9432.T,,Nippon Telegraph &amp; Telephone Corp.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+9434.T,,SoftBank Corp.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+9984.T,,SoftBank Group Corp.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+1721.T,,Comsys Holdings Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1808.T,,Haseko Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+1963.T,,JGC Corporation,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1812.T,,Kajima Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1802.T,,Obayashi Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1928.T,,"Sekisui House, Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+1803.T,,Shimizu Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1801.T,,Taisei Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6770.T,,"Alps Alpine Co., Ltd.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+7751.T,,Canon Inc.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6902.T,,Denso Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+6954.T,,FANUC Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6504.T,,"Fuji Electric Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6702.T,,Fujitsu Ltd.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6501.T,,"Hitachi, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6861.T,,Keyence Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+285A.T,,Kioxia Holdings Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6971.T,,Kyocera Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6920.T,,Lasertec,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6479.T,,"MinebeaMitsumi, Inc.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6503.T,,Mitsubishi Electric Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6981.T,,"Murata Manufacturing Co., Ltd.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6701.T,,NEC Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6594.T,,Nidec,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6645.T,,Omron Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6752.T,,Panasonic Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6723.T,,Renesas Electronics,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+7752.T,,"Ricoh Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6963.T,,"Rohm Co., Ltd.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+7735.T,,SCREEN Holdings,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6724.T,,Seiko Epson Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6753.T,,Sharp Corporation,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6758.T,,Sony Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6526.T,,Socionext Inc.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6976.T,,"Taiyo Yuden Co., Ltd.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6762.T,,TDK Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+8035.T,,Tokyo Electron Ltd.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+6506.T,,"Yaskawa Electric Corporation, Limited",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6841.T,,Yokogawa Electric Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9502.T,,"Chubu Electric Power Co., Inc.",Japon,Services aux collectivites,,,Japon,Nikkei 225,NON,NON
+9503.T,,"The Kansai Electric Power Co., Inc.",Japon,Services aux collectivites,,,Japon,Nikkei 225,NON,NON
+9501.T,,"Tokyo Electric Power Company Holdings, Incorporated",Japon,Services aux collectivites,,,Japon,Nikkei 225,NON,NON
+1332.T,,Nissui Corporation,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2802.T,,"Ajinomoto Co., Inc.",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2502.T,,"Asahi Group Holdings, Ltd.",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2914.T,,Japan Tobacco Inc.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2801.T,,Kikkoman Corp.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2503.T,,"Kirin Holdings Co, Ltd",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2269.T,,"Meiji Holdings Company, Limited",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2282.T,,NH Foods Ltd.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2871.T,,Nichirei Corp.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2002.T,,Nisshin Seifun Group Inc.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+2501.T,,Sapporo Holdings Ltd.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+9532.T,,"Osaka Gas Co., Ltd.",Japon,Services aux collectivites,,,Japon,Nikkei 225,NON,NON
+9531.T,,"Tokyo Gas Co., Ltd.",Japon,Services aux collectivites,,,Japon,Nikkei 225,NON,NON
+5201.T,,AGC Inc.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5333.T,,"NGK Insulators, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5214.T,,"Nippon Electric Glass Co., Ltd.",Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+5233.T,,Taiheiyo Cement Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5301.T,,"Tokai Carbon Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5332.T,,Toto Ltd.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9147.T,,Nippon Express Holdings Inc.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9064.T,,"Yamato Holdings Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6113.T,,Amada Co. Ltd.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6367.T,,"Daikin Industries, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6361.T,,Ebara Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6305.T,,"Hitachi Construction Machinery Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7004.T,,Kanadevia Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7013.T,,IHI Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5631.T,,"The Japan Steel Works, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6473.T,,JTEKT Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+6301.T,,Komatsu Ltd.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6326.T,,Kubota Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7011.T,,"Mitsubishi Heavy Industries, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6471.T,,NSK Ltd.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+6472.T,,NTN Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6103.T,,"Okuma Holdings, Inc.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6302.T,,"Sumitomo Heavy Industries, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+6273.T,,SMC Corporation,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9107.T,,"Kawasaki Kisen Kaisha, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9104.T,,"Mitsui O.S.K. Lines, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9101.T,,Nippon Yusen K.K.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+1605.T,,Inpex Corp.,Japon,Energie,,,Japon,Nikkei 225,NON,NON
+5714.T,,"Dowa Holdings Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5803.T,,Fujikura Ltd.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5801.T,,"The Furukawa Electric Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5711.T,,Mitsubishi Materials Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5706.T,,"Mitsui Mining &amp; Smelting Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+3436.T,,SUMCO Corp.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+5802.T,,"Sumitomo Electric Industries, Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+5713.T,,"Sumitomo Metal Mining Co., Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+7832.T,,"Bandai Namco Holdings, Inc.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7912.T,,"Dai Nippon Printing Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7911.T,,"Toppan Printing Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7951.T,,Yamaha Corporation,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+5020.T,,Eneos Holdings,Japon,Energie,,,Japon,Nikkei 225,NON,NON
+5019.T,,"Idemitsu Kosan Co., Ltd",Japon,Energie,,,Japon,Nikkei 225,NON,NON
+4503.T,,Astellas Pharma Inc.,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4519.T,,"Chugai Pharmaceutical Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4568.T,,"Daiichi Sankyo Company, Limited",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4523.T,,"Eisai Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4151.T,,"Kyowa Hakko Kirin Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4578.T,,"Otsuka Holdings Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4506.T,,"Sumitomo Dainippon Pharma Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4507.T,,"Shionogi &amp; Co., Ltd.",Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4502.T,,Takeda Pharmaceutical Company Limited,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+6146.T,,Disco Corporation Ltd.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+7741.T,,Hoya Corporation,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4902.T,,"Konica Minolta Holdings, Inc.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+7731.T,,Nikon Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7733.T,,Olympus Corp.,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+4543.T,,Terumo Corp.,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+3861.T,,Oji Holdings Corporation,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+9022.T,,Central Japan Railway Company,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9020.T,,East Japan Railway Company,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9008.T,,Keio Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9009.T,,"Keisei Electric Railway Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9007.T,,"Odakyu Electric Railway Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9001.T,,"Tobu Railway Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9005.T,,Tokyu Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+9021.T,,West Japan Railway Company,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8267.T,,"Aeon Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+9983.T,,"Fast Retailing Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+3099.T,,Isetan Mitsukoshi Holdings Ltd.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+3086.T,,"J. Front Retailing Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7453.T,,"Muji Co., Ltd",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+9843.T,,"Nitori Holdings Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+7532.T,,Pan Pacific International Holdings Corp.,Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+3382.T,,"Seven &amp; I Holdings Co., Ltd.",Japon,Consommation de base,,,Japon,Nikkei 225,NON,NON
+8233.T,,"Takashimaya Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+3092.T,,"ZOZO Co., Ltd",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+5108.T,,Bridgestone Corp.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+5101.T,,"The Yokohama Rubber Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+6532.T,,Baycurrent Inc.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+4751.T,,CyberAgent Inc.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+2432.T,,"Dena Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+4324.T,,Dentsu Inc.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+9766.T,,Konami Corp.,Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+4689.T,,LY Corporation,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+4385.T,,Mercari Inc.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+2413.T,,M3 Inc.,Japon,Sante,,,Japon,Nikkei 225,NON,NON
+3659.T,,"Nexon Co., Ltd.",Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+7974.T,,"Nintendo Co., Ltd.",Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+4307.T,,Nomura Research Institute Ltd.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+4661.T,,"Oriental Land Co., Ltd.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+4755.T,,Rakuten Inc.,Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+6098.T,,"Recruit Holdings Co., Ltd.",Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+9735.T,,"Secom Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+3697.T,,SHIFT Inc.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+9602.T,,"Toho Co., Ltd.",Japon,Services de communication,,,Japon,Nikkei 225,NON,NON
+4704.T,,Trend Micro Inc.,Japon,Technologies de l'information,,,Japon,Nikkei 225,NON,NON
+7012.T,,"Kawasaki Heavy Industries, Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+5411.T,,"JFE Holdings, Inc.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5406.T,,"Kobe Steel, Ltd.",Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+5401.T,,Nippon Steel Corp.,Japon,Materiaux,,,Japon,Nikkei 225,NON,NON
+3401.T,,Teijin Ltd.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+3402.T,,"Toray Industries, Inc.",Japon,Consommation discretionnaire,,,Japon,Nikkei 225,NON,NON
+8001.T,,Itochu Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8002.T,,Marubeni Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8058.T,,Mitsubishi Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8031.T,,"Mitsui &amp; Co., Ltd.",Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+2768.T,,Sojitz Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8053.T,,Sumitomo Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+8015.T,,Toyota Tsusho Corp.,Japon,Industrie,,,Japon,Nikkei 225,NON,NON
+9988.HK,,Alibaba Group,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+3690.HK,,Meituan,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+0700.HK,,Tencent,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+9618.HK,,JD.com,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+0941.HK,,China Mobile,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+1211.HK,,BYD Company,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+1810.HK,,Xiaomi,Chine,Technologies de l'information,,,Chine,HSCEI,NON,NON
+0883.HK,,CNOOC Limited,Chine,Energie,,,Chine,HSCEI,NON,NON
+2331.HK,,Li-Ning,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+1024.HK,,Kuaishou,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+2319.HK,,Mengniu Dairy,Chine,Consommation de base,,,Chine,HSCEI,NON,NON
+2020.HK,,Anta Sports,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+0175.HK,,Geely,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+9633.HK,,Nongfu Spring,Chine,Consommation de base,,,Chine,HSCEI,NON,NON
+2688.HK,,ENN Energy,Chine,Services aux collectivites,,,Chine,HSCEI,NON,NON
+0386.HK,,Sinopec,Chine,Energie,,,Chine,HSCEI,NON,NON
+0291.HK,,China Resources Beer,Chine,Consommation de base,,,Chine,HSCEI,NON,NON
+9999.HK,,NetEase,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+2382.HK,,Sunny Optical,Chine,Technologies de l'information,,,Chine,HSCEI,NON,NON
+1093.HK,,Shijiazhuang Pharma Group,Chine,Sante,,,Chine,HSCEI,NON,NON
+0981.HK,,SMIC,Chine,Technologies de l'information,,,Chine,HSCEI,NON,NON
+2313.HK,,Shenzhou International,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+9888.HK,,Baidu,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+6618.HK,,JD Health,Chine,Sante,,,Chine,HSCEI,NON,NON
+0267.HK,,CITIC Limited,Chine,Industrie,,,Chine,HSCEI,NON,NON
+0968.HK,,Xinyi Solar,Chine,Technologies de l'information,,,Chine,HSCEI,NON,NON
+0992.HK,,Lenovo,Chine,Technologies de l'information,,,Chine,HSCEI,NON,NON
+1177.HK,,Sino Biopharmaceutical Limited,Chine,Sante,,,Chine,HSCEI,NON,NON
+1801.HK,,Innovent Biologics,Chine,Sante,,,Chine,HSCEI,NON,NON
+0384.HK,,China Gas,Chine,Services aux collectivites,,,Chine,HSCEI,NON,NON
+6186.HK,,China Feihe,Chine,Consommation de base,,,Chine,HSCEI,NON,NON
+2618.HK,,JD Logistics,Chine,Industrie,,,Chine,HSCEI,NON,NON
+6862.HK,,Haidilao,Chine,Consommation discretionnaire,,,Chine,HSCEI,NON,NON
+0241.HK,,Alibaba Health,Chine,Sante,,,Chine,HSCEI,NON,NON
+9626.HK,,Bilibili,Chine,Services de communication,,,Chine,HSCEI,NON,NON
+090430.KS,,Amorepacific,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+002790.KS,,Amorepacific Holdings,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+278470.KS,,APR,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+002030.KS,,Asia Holdings,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+282330.KS,,BGF Retail,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+068270.KS,,Celltrion,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+030000.KS,,Cheil Worldwide,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+185750.KS,,Chong Kun Dang,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+001040.KS,,CJ,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+097950.KS,,CJ CheilJedang,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+000120.KS,,CJ Logistics,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+192820.KS,,Cosmax,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+005420.KS,,Cosmo Chemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+021240.KS,,Coway,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+112610.KS,,CS Wind,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+483650.KS,,d'Alba Global,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+001680.KS,,Daesang,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+047040.KS,,Daewoo E&C,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+003090.KS,,Daewoong,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+069620.KS,,Daewoong Pharmaceutical,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+000990.KS,,DB HiTek,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+000210.KS,,DL,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+375500.KS,,DL E&C,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+007340.KS,,DN Automotive,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+026960.KS,,Dongsuh,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+006040.KS,,Dongwon Industries,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+014820.KS,,Dongwon Systems,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000150.KS,,Doosan,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+241560.KS,,Doosan Bobcat,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+034020.KS,,Doosan Enerbility,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+454910.KS,,Doosan Robotics,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+192080.KS,,DoubleU Games,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+450080.KS,,Ecopro Materials,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+139480.KS,,Emart,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+383220.KS,,F&F,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+093370.KS,,Foosung,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+006280.KS,,Green Cross,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+078930.KS,,GS,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+007070.KS,,GS Retail,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+009420.KS,,Hanall Biopharma,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+300720.KS,,Hanil Cement,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+161390.KS,,Hankook,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000240.KS,,Hankook & Company,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+128940.KS,,Hanmi Pharm,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+008930.KS,,Hanmi Science,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+042700.KS,,Hanmi Semiconductor,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+018880.KS,,Hanon Systems,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+014680.KS,,Hansol Chemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+009240.KS,,Hanssem,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000880.KS,,Hanwha,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+012450.KS,,Hanwha Aerospace,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+082740.KS,,Hanwha Engine,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+042660.KS,,Hanwha Ocean,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+009830.KS,,Hanwha Solutions,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+272210.KS,,Hanwha Systems,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+267270.KS,,HD Construction Equipment,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+267250.KS,,HD Hyundai,Coree du Sud,Energie,,,Coree,KOSPI 200,NON,NON
+267260.KS,,HD Hyundai Electric,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+329180.KS,,HD Hyundai Heavy Industries,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+071970.KS,,HD Hyundai Marine Engine,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+443060.KS,,HD Hyundai Marine Solution,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+009540.KS,,HD KSOE,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+017960.KS,,Hankuk Carbon,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+000080.KS,,HiteJinro,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+204320.KS,,HL Mando,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+011200.KS,,HMM,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+008770.KS,,Hotel Shilla,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+298050.KS,,HS Hyosung Advanced Materials,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+352820.KS,,Hybe,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+298040.KS,,Hyosung Heavy Industries,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+298020.KS,,Hyosung TNC,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+307950.KS,,Hyundai AutoEver,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+069960.KS,,Hyundai Department Store,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000720.KS,,Hyundai E&C,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+017800.KS,,Hyundai Elevator,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+086280.KS,,Hyundai Glovis,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+012330.KS,,Hyundai Mobis,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+005380.KS,,Hyundai Motor,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+064350.KS,,Hyundai Rotem,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+004020.KS,,Hyundai Steel,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+011210.KS,,Hyundai WIA,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+007660.KS,,Isu Petasys,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+035720.KS,,Kakao,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+377300.KS,,KakaoPay,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+035250.KS,,Kangwon Land,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+002380.KS,,KCC,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+015760.KS,,KEPCO,Coree du Sud,Services aux collectivites,,,Coree,KOSPI 200,NON,NON
+052690.KS,,KEPCO E&C,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+051600.KS,,KEPCO KPS,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+000270.KS,,Kia,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+161890.KS,,Kolmar Korea,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+120110.KS,,Kolon Industries,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+047810.KS,,Korea Aerospace,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+071320.KS,,Korea District Heating,Coree du Sud,Services aux collectivites,,,Coree,KOSPI 200,NON,NON
+036460.KS,,Korea Gas,Coree du Sud,Services aux collectivites,,,Coree,KOSPI 200,NON,NON
+006650.KS,,Korea Petrochemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+010130.KS,,Korea Zinc,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+003490.KS,,Korean Air,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+259960.KS,,Krafton,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+030200.KS,,KT,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+033780.KS,,KT&G,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+011780.KS,,Kumho Petrochemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+073240.KS,,Kumho Tire,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+066970.KS,,L&F,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+003550.KS,,LG,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+051910.KS,,LG Chem,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+064400.KS,,LG CNS,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+034220.KS,,LG Display,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+066570.KS,,LG Electronics,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+373220.KS,,LG Energy Solution,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+051900.KS,,LG H&H,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+011070.KS,,LG Innotek,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+032640.KS,,LG Uplus,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+079550.KS,,LIG Nex1,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+004990.KS,,Lotte,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+011170.KS,,Lotte Chemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+005300.KS,,Lotte Chilsung,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+004000.KS,,Lotte Fine Chemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+023530.KS,,Lotte Shopping,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+280360.KS,,Lotte Wellfood,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+006260.KS,,LS,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+010120.KS,,LS Electric,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+081660.KS,,Misto,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+002840.KS,,Miwon Commercial,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+268280.KS,,Miwon Specialty Chemical,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+035420.KS,,Naver,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+036570.KS,,NC,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+251270.KS,,Netmarble,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+004370.KS,,Nongshim,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+456040.KS,,OCI,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+271560.KS,,Orion,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+001800.KS,,Orion Holdings,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+007310.KS,,Ottogi,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+028670.KS,,Pan Ocean,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+034230.KS,,Paradise,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+103140.KS,,Poongsan,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+005490.KS,,POSCO,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+022100.KS,,POSCO DX,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+003670.KS,,POSCO Future M,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+047050.KS,,POSCO International,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+012750.KS,,S-1,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+062040.KS,,Sanil Electric,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+207940.KS,,Samsung Biologics,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+028260.KS,,Samsung C&T,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+028050.KS,,Samsung E&A,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+009150.KS,,Samsung Electro-Mechanics,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+005930.KS,,Samsung Electronics,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+0126Z0.KS,,Samsung Epis,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+010140.KS,,Samsung Heavy Industries,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+006400.KS,,Samsung SDI,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+018260.KS,,Samsung SDS,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+003230.KS,,Samyang Foods,Coree du Sud,Consommation de base,,,Coree,KOSPI 200,NON,NON
+137310.KS,,SD Biosensor,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+001430.KS,,Seah Besteel,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+003030.KS,,Seah Steel Holdings,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+004170.KS,,Shinsegae,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+034730.KS,,SK,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+326030.KS,,SK Biopharm,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+302440.KS,,SK Bioscience,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+285130.KS,,SK Chemicals,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+000660.KS,,SK Hynix,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+361610.KS,,SK IE Technology,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+096770.KS,,SK Innovation,Coree du Sud,Energie,,,Coree,KOSPI 200,NON,NON
+017670.KS,,SK Telecom,Coree du Sud,Services de communication,,,Coree,KOSPI 200,NON,NON
+011790.KS,,SKC,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+005850.KS,,SL,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+010950.KS,,S-Oil,Coree du Sud,Energie,,,Coree,KOSPI 200,NON,NON
+003240.KS,,Taekwang Industrial,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+001440.KS,,Taihan Cable & Solution,Coree du Sud,Industrie,,,Coree,KOSPI 200,NON,NON
+069260.KS,,TKG Huchems,Coree du Sud,Materiaux,,,Coree,KOSPI 200,NON,NON
+008730.KS,,Youlchon Chemical,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000670.KS,,Young Poong,Coree du Sud,Technologies de l'information,,,Coree,KOSPI 200,NON,NON
+111770.KS,,Youngone,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+009970.KS,,Youngone Holdings,Coree du Sud,Consommation discretionnaire,,,Coree,KOSPI 200,NON,NON
+000100.KS,,Yuhan,Coree du Sud,Sante,,,Coree,KOSPI 200,NON,NON
+ROP.SW,,Roche Holding,Suisse,Sante,,,Europe,STOXX 600,NON,OUI

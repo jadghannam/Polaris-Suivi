@@ -175,6 +175,14 @@ def evaluer(classement: pd.DataFrame, dcf_in: pd.DataFrame, hist_ca: pd.DataFram
     df = classement.merge(dcf_in, on="Ticker", how="left") \
                    .merge(hist_ca, on="Ticker", how="left")
     df["wacc"] = df["Secteur"].map(w)
+    # Hors Europe, le WACC sectoriel (construit sur le Bund) est decale de
+    # l'ecart de taux sans risque de la devise de cotation. Sans effet sur
+    # l'univers du fonds, tout en devises europeennes. Ajoute le 14/11/2026.
+    if "devise" in df.columns:
+        ecart = df["devise"].map(
+            lambda d: cfg.TAUX_SANS_RISQUE_DEVISE.get(d, cfg.TAUX_SANS_RISQUE)
+            - cfg.TAUX_SANS_RISQUE)
+        df["wacc"] = df["wacc"] + ecart.fillna(0.0)
     df["fcff"] = df.apply(fcff_normatif, axis=1)
     df["ve_marche"] = [ve_marche(r.capitalisation, r.dette_nette,
                                  r.minoritaires, r.mises_en_equivalence)

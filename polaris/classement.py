@@ -32,7 +32,8 @@ def percentile(serie: pd.Series) -> pd.Series:
 
 def classer(univers: pd.DataFrame, fonda: pd.DataFrame,
             cours: pd.DataFrame, taux: dict[str, float],
-            bloques: set[str] | None = None) -> pd.DataFrame:
+            bloques: set[str] | None = None,
+            exiger_stocktrak: bool = True) -> pd.DataFrame:
     """Construit le classement du jour.
 
     `fonda` porte les comptes en devise de publication, `cours` le prix du jour
@@ -101,6 +102,10 @@ def classer(univers: pd.DataFrame, fonda: pd.DataFrame,
     #    verifie n'est pas proposable.
     df["liquide"] = df.get("negociable", True).fillna(False)
     df["verifie"] = df.get("verifie_stocktrak", pd.Series(dtype=object)).notna()
+    # Hors contrainte StockTrak (portefeuilles personnels, 14/11/2026), le
+    # controle manuel n'a pas lieu d'etre : seul le test de liquidite compte.
+    if not exiger_stocktrak:
+        df["verifie"] = True
     # 3. Les blocages manuels (data/blocages.csv) : StockTrak ne permet pas de
     #    traiter le titre au prix affiche. Appliques ici, avant le rang, depuis
     #    le 06/11/2026 : appliques apres, Compass Group bloque gardait le rang 1

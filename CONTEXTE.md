@@ -243,6 +243,60 @@ Ce qu'il faudra alors, dans l'ordre :
   mais n'ajoute pas les nouveaux tickers. Sans ça les valeurs suisses resteront
   sans fondamentaux et donc sans rang
 
+## 11 bis. Extension mondiale et portefeuilles personnels (14 novembre 2026)
+
+Le dépôt sert désormais au-delà du fonds : Jad le réutilisera pour ses
+investissements personnels après la clôture. Ce qui a été décidé, et pourquoi.
+
+**Univers.** STOXX 600, S&P 500, Nikkei 225, HSCEI (Chine cotée à Hong Kong) et
+KOSPI 200, hors financières et immobilier : environ 1 260 titres dans
+`data/univers.csv`, reconstruit par `python -m polaris.univers_monde`. Les 192
+lignes du fonds n'y sont jamais modifiées ; elles reçoivent seulement `Region`
+et `Indice`. Les doublons de cotation (Unilever à Londres et Amsterdam) sont
+écartés au profit de la ligne du fonds, et chaque rejet est motivé dans
+`data/univers_rejets.csv`.
+
+**Deux contraintes.** *Europe* (région) et *StockTrak* (`verifie_stocktrak`
+renseigné). Le fonds les a toutes les deux, verrouillées. Le classement est
+refait **à l'intérieur** de chaque univers filtré : percentiles, médianes
+sectorielles, planchers. C'est voulu : Novy-Marx classe une société contre ses
+concurrentes de l'univers. Conséquence vérifiée le 14/11 par un test de
+non-régression : avec les deux contraintes, le fonds retrouve exactement son
+classement, ses g₁ et ses verdicts.
+
+**Ce qui n'est pas GICS.** Pour Nikkei, HSCEI et KOSPI, Wikipedia donne des
+classifications locales ; le secteur est celui de Yahoo (Morningstar), ramené
+à la nomenclature GICS. Proche, pas identique.
+
+**DCF hors Europe.** Le WACC sectoriel est construit sur le Bund. Pour une
+société cotée en dollars, yens, wons ou dollars de Hong Kong, il est décalé de
+l'écart de taux sans risque (`TAUX_SANS_RISQUE_DEVISE` dans `config.py`). Les
+devises européennes ne le sont pas : c'est la convention du fonds. **Les taux
+saisis sont approximatifs et doivent être validés avant toute décision hors
+Europe.** Le CAGR hors fonds retombe presque toujours sur la médiane du
+secteur : Yahoo ne donne que quatre exercices.
+
+**Portefeuilles personnels.** Créés depuis la page (`data/portefeuilles.json`),
+construits par la méthode au passage suivant : les N premiers de la liste de
+suivi, verdict A ou B, sans veto, équipondérés, puis suivis avec les zones du
+fonds. Rien n'est vendu automatiquement.
+
+**Macro.** Pas de factor timing : moduler la sélection selon la conjoncture
+contredirait la méthode (prime en coupe transversale, règle écrite avant d'être
+appliquée). La page montre en revanche les expositions (régions, devises,
+secteurs), parce qu'un portefeuille mondial 100 % actions est d'abord un pari
+de change.
+
+**Backtest.** Point-in-time, rebalancement le 1er juillet, comptes clos au
+moins quatre mois avant. Classement seul, sans DCF ni veto ; biais du
+survivant ; environ trois ans. Les quintiles servent à vérifier que la
+mécanique produit un escalier, pas à prouver une prime.
+
+**Bug corrigé le même jour.** Le premier rafraîchissement hebdomadaire écrivait
+la dette nette en devise de publication dans `fondamentaux_dcf.csv`, tenu en
+euros : Assa Abloy, Essity et Royal Unibrew tombaient en veto DCF. La
+conversion est faite avant l'écriture depuis le commit `092461c`.
+
 ## 11. Répartition du travail
 
 Le **dépôt** — code, page, collecte, tests — est le terrain de Claude Code.

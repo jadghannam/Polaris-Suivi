@@ -149,7 +149,58 @@ BENCHMARK_NOM = "STOXX Europe 600"
 # surtout Yahoo revise ses chiffres en silence, ce qui ferait bouger le
 # classement sans que personne sache pourquoi.
 JOUR_FONDAMENTAUX = 5             # 0 = lundi ... 5 = samedi
-DEVISES = ("GBP", "SEK", "DKK", "CHF", "NOK", "USD", "PLN")
+# JPY, HKD, KRW, CNY ajoutees le 14/11/2026 avec l'univers mondial (les
+# H-shares de Hong Kong publient le plus souvent en renminbi).
+DEVISES = ("GBP", "SEK", "DKK", "CHF", "NOK", "USD", "PLN",
+           "JPY", "HKD", "KRW", "CNY")
+# Hors univers du fonds, les ~1 300 titres mondiaux ont leurs comptes
+# rafraichis par tranche, un cinquieme chaque jour ouvre : 1 300 appels le
+# meme jour depuis un serveur GitHub, c'est la coupure du 5 novembre en pire.
+# L'univers du fonds garde son rafraichissement du samedi, inchange.
+TRANCHES_FONDAMENTAUX = 5
+# Titres nouveaux dans l'univers, sans aucun compte : lus au plus 300 par
+# passage, pour que l'amorcage d'un indice entier ne fasse pas couper Yahoo.
+AMORCAGE_MAX = 300
+
+# ------------------------------------------------- univers et contraintes ----
+# Ajoute le 14/11/2026. L'univers couvre cinq indices ; le fonds n'en voit
+# qu'un sous-ensemble, defini par deux contraintes que chaque portefeuille
+# active ou non. Percentiles, medianes sectorielles et rangs sont calcules A
+# L'INTERIEUR de l'univers filtre : avec les deux contraintes, le fonds
+# retrouve exactement son classement d'avant l'extension.
+CONTRAINTES = {
+    "europe": "Region Europe uniquement",
+    "stocktrak": "Disponible et verifie dans StockTrak",
+}
+CONTRAINTES_POLARIS = ("europe", "stocktrak")
+# Indices de comparaison proposes pour un portefeuille personnel :
+# symbole Yahoo -> (nom, devise). La performance est toujours mesuree en euros.
+INDICES = {
+    "URTH": ("MSCI World (ETF iShares URTH)", "USD"),
+    "^STOXX": ("STOXX Europe 600", "EUR"),
+    "^GSPC": ("S&P 500", "USD"),
+    "^N225": ("Nikkei 225", "JPY"),
+    "^HSCE": ("Hang Seng China Enterprises", "HKD"),
+    "^KS200": ("KOSPI 200", "KRW"),
+}
+
+# Taux sans risque 10 ans par devise de cotation, pour le DCF hors Europe.
+# Le WACC sectoriel est construit sur le Bund ; pour une societe cotee dans
+# une autre zone monetaire, on le decale de l'ecart de taux sans risque
+# (WACC local = WACC secteur + rf local - rf Bund), pour que flux et taux
+# d'actualisation soient dans la meme monnaie. Les devises europeennes ne sont
+# PAS decalees : c'est la convention du fonds depuis septembre, la changer
+# changerait ses verdicts.
+# USD et HKD sont relus chaque jour sur Yahoo (^TNX, le HKD etant arrime au
+# dollar) : les valeurs ci-dessous ne servent alors que de repli.
+# JPY et KRW : Yahoo ne les sert pas. A VALIDER PAR JAD, niveaux approximatifs
+# au 14/11/2026, a recaler sur les rendements du jour avant toute decision.
+TAUX_SANS_RISQUE_DEVISE = {
+    "USD": 0.0430,   # Treasury 10 ans (repli si ^TNX indisponible)
+    "JPY": 0.0150,   # JGB 10 ans
+    "HKD": 0.0430,   # arrime au dollar (repli)
+    "KRW": 0.0290,   # KTB 10 ans
+}
 
 # ---------------------------- lignes fantomes --------------------------------
 # Decouvert le 05/11/2026 : StockTrak expose des lignes cotees mais jamais

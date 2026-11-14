@@ -45,14 +45,24 @@ PLACES = {
     ".DE": ("EUR", 1.0), ".F": ("EUR", 1.0),
     ".ST": ("SEK", 1.0), ".CO": ("DKK", 1.0), ".OL": ("NOK", 1.0),
     ".SW": ("CHF", 1.0), ".VX": ("CHF", 1.0), ".WA": ("PLN", 1.0),
+    ".AT": ("EUR", 1.0),
+    # Univers mondial, 14/11/2026
+    ".T": ("JPY", 1.0), ".HK": ("HKD", 1.0), ".KS": ("KRW", 1.0),
 }
 
 
 def place(ticker: str) -> tuple[str, float]:
-    """Devise de cotation et diviseur, deduits du suffixe du ticker."""
+    """Devise de cotation et diviseur, deduits du suffixe du ticker.
+
+    Sans suffixe, c'est une valeur americaine, donc en dollars. Jusqu'au
+    14/11/2026 le repli etait l'euro : tous les titres de l'univers portaient
+    un suffixe, et ce repli n'avait jamais servi.
+    """
     for suffixe, (devise, diviseur) in PLACES.items():
         if ticker.endswith(suffixe):
             return devise, diviseur
+    if "." not in ticker:
+        return "USD", 1.0
     return "EUR", 1.0
 
 
@@ -184,6 +194,23 @@ def taux_de_change() -> dict[str, float]:
     return taux
 
 
+def taux_sans_risque() -> dict[str, float]:
+    """Taux 10 ans lisibles sur Yahoo, en decimal.
+
+    Seul le Treasury americain y est (^TNX, cote en pourcent). Yahoo ne sert ni
+    le JGB, ni le KTB, ni le Bund : ceux-la restent dans config.py. Le dollar de
+    Hong Kong est arrime au dollar americain : il en prend le taux.
+    """
+    out = {}
+    try:
+        h = yf.Ticker("^TNX").history(period="10d")["Close"].dropna()
+        if not h.empty and 0 < float(h.iloc[-1]) < 20:
+            out["USD"] = out["HKD"] = float(h.iloc[-1]) / 100
+    except Exception as e:                              # noqa: BLE001
+        note(f"taux sans risque americain indisponible : {e}")
+    return out
+
+
 def indice(symbole: str = cfg.BENCHMARK, depuis: str = cfg.DATE_LANCEMENT) -> pd.Series:
     """Serie de cloture de l'indice de reference depuis le lancement."""
     try:
@@ -209,13 +236,64 @@ def _val(df: pd.DataFrame, cles: list[str], col) -> float | None:
     return None
 
 
-def fondamentaux(tickers: list[str]) -> pd.DataFrame:
+def _ratio(df: pd.DataFrame, cles: list[str], col) -> float | None:
+    """Comme _val, sans conversion en millions (taux, ratios)."""
+    for k in cles:
+        if k in df.index:
+            v = df.loc[k, col]
+            if pd.notna(v):
+                return float(v)
+    return None
+
+
+def _etats_long(t: str, inc, bil, cf, devise: str) -> list[dict]:
+    """Un exercice par ligne, tous ceux que Yahoo publie (quatre en general).
+
+    Sert au backtest point-in-time et a la fiche d'analyse : on garde la date
+    de cloture de chaque exercice pour ne jamais utiliser un compte avant
+    qu'il ait pu etre publie.
+    """
+    out = []
+    for col in inc.columns:
+        cb = col if col in bil.columns else None
+        cc = col if (cf is not None and not cf.empty and col in cf.columns) else None
+        l = {"Ticker": t, "cloture": pd.Timestamp(col).date().isoformat(),
+             "devise_etats": devise,
+             "ca": _val(inc, ["Total Revenue", "Operating Revenue"], col),
+             "cogs": _val(inc, ["Cost Of Revenue", "Reconciled Cost Of Revenue"], col),
+             "ebit": _val(inc, ["EBIT", "Operating Income"], col),
+             "taux_impot": _ratio(inc, ["Tax Rate For Calcs"], col)}
+        if cb is not None:
+            l.update(actif=_val(bil, ["Total Assets"], cb),
+                     fonds_propres=_val(bil, ["Stockholders Equity", "Common Stock Equity"], cb),
+                     dette=_val(bil, ["Total Debt"], cb),
+                     tresorerie=_val(bil, ["Cash And Cash Equivalents",
+                                           "Cash Cash Equivalents And Short Term Investments"], cb),
+                     minoritaires=_val(bil, ["Minority Interest"], cb),
+                     actions_m=_val(bil, ["Ordinary Shares Number", "Share Issued"], cb))
+        if cc is not None:
+            capex = _val(cf, ["Capital Expenditure"], cc)
+            bfr = _val(cf, ["Change In Working Capital"], cc)
+            l.update(da=_val(cf, ["Depreciation And Amortization",
+                                  "Depreciation Amortization Depletion"], cc),
+                     capex=abs(capex) if capex is not None else None,
+                     dbfr=-bfr if bfr is not None else None)
+        out.append(l)
+    return out
+
+
+def fondamentaux(tickers: list[str], etats: list | None = None) -> pd.DataFrame:
     """Comptes du dernier exercice publie, en millions de devise de publication.
 
     Les conventions de signe de Yahoo sont redressees ici, une fois pour
     toutes : les capex sortent en negatif, la variation du BFR est inversee.
     La devise de publication voyage avec les montants : sans elle, les chiffres
     collectes se melangeraient aux valeurs de depart, qui sont en euros.
+
+    Si `etats` est une liste, chaque exercice publie y est ajoute (format long,
+    voir _etats_long). Depuis le 14/11/2026, la ligne porte aussi le nombre
+    d'actions et le taux d'impot : un titre nouveau dans l'univers n'avait
+    sinon ni capitalisation ni DCF.
     """
     lignes = []
     for i, t in enumerate(tickers):
@@ -226,6 +304,12 @@ def fondamentaux(tickers: list[str]) -> pd.DataFrame:
                 note(f"etats financiers absents pour {t}")
                 continue
             c, cb = inc.columns[0], bil.columns[0]
+            try:
+                devise_etats = (y.info or {}).get("financialCurrency", "EUR")
+            except Exception:                           # noqa: BLE001
+                devise_etats = None
+            if etats is not None:
+                etats.extend(_etats_long(t, inc, bil, cf, devise_etats))
             l = {
                 "Ticker": t,
                 "ca": _val(inc, ["Total Revenue", "Operating Revenue"], c),
@@ -237,7 +321,9 @@ def fondamentaux(tickers: list[str]) -> pd.DataFrame:
                 "mises_en_equivalence": _val(
                     bil, ["Investmentin Financial Assets",
                           "Investments In Other Ventures Under Equity Method"], cb) or 0.0,
-                "devise_etats": (y.info or {}).get("financialCurrency", "EUR"),
+                "devise_etats": devise_etats or "EUR",
+                "actions_m": _val(bil, ["Ordinary Shares Number", "Share Issued"], cb),
+                "taux_impot": _ratio(inc, ["Tax Rate For Calcs"], c),
             }
             dette = _val(bil, ["Total Debt"], cb)
             tresorerie = _val(bil, ["Cash And Cash Equivalents",

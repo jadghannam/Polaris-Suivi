@@ -1,0 +1,340 @@
+Ticker,Societe,Indice,motif
+HSBA.L,Hsbc Holdings Plc,STOXX 600,secteur exclu : Financials
+ALV.DE,Allianz,STOXX 600,secteur exclu : Financials
+SAN.MC,Banco Santander,STOXX 600,secteur exclu : Financials
+UBSG.SW,Ubs Group Ag,STOXX 600,secteur exclu : Financials
+BBVA.MC,Banco Bilbao Vizcaya Argentaria,STOXX 600,secteur exclu : Financials
+UCG.MI,Unicredit,STOXX 600,secteur exclu : Financials
+ZURN.SW,Zurich Insurance Group Ag,STOXX 600,secteur exclu : Financials
+BNP.PA,Bnp Paribas Sa,STOXX 600,secteur exclu : Financials
+ISP.MI,Intesa Sanpaolo,STOXX 600,secteur exclu : Financials
+INGA.AS,Ing Groep,STOXX 600,secteur exclu : Financials
+CS.PA,Axa Sa,STOXX 600,secteur exclu : Financials
+MUV2.DE,Muenchener Rueckversicherungs-Gese,STOXX 600,secteur exclu : Financials
+INVE-B.ST,Investor Class B,STOXX 600,secteur exclu : Financials
+BARC.L,Barclays Plc,STOXX 600,secteur exclu : Financials
+LLOY.L,Lloyds Banking Group Plc,STOXX 600,secteur exclu : Financials
+DBK.DE,Deutsche Bank Ag,STOXX 600,secteur exclu : Financials
+DB1.DE,Deutsche Boerse Ag,STOXX 600,secteur exclu : Financials
+NDA-FI.HE,Nordea Bank,STOXX 600,secteur exclu : Financials
+NWG.L,Natwest Group Plc,STOXX 600,secteur exclu : Financials
+LSEG.L,London Stock Exchange Group Plc,STOXX 600,secteur exclu : Financials
+GLE.PA,Societe Generale Sa,STOXX 600,secteur exclu : Financials
+SREN.SW,Swiss Re Ag,STOXX 600,secteur exclu : Financials
+G.MI,Assicurazioni Generali,STOXX 600,secteur exclu : Financials
+STAN.L,Standard Chartered Plc,STOXX 600,secteur exclu : Financials
+CABK.MC,Caixabank Sa,STOXX 600,secteur exclu : Financials
+EBS.VI,Erste Group Bank Ag,STOXX 600,secteur exclu : Financials
+SWED-A.ST,Swedbank,STOXX 600,secteur exclu : Financials
+DANSKE.CO,Danske Bank,STOXX 600,secteur exclu : Financials
+III.L,3I Group Fund Plc,STOXX 600,secteur exclu : Financials
+SEB-A.ST,Skandinaviska Enskilda Banken,STOXX 600,secteur exclu : Financials
+SLHN.SW,Swiss Life Holding Ag,STOXX 600,secteur exclu : Financials
+PRU.L,Prudential Plc,STOXX 600,secteur exclu : Financials
+ADYEN.AS,Adyen,STOXX 600,secteur exclu : Financials
+ABN.AS,Abn Amro Bank Nv,STOXX 600,secteur exclu : Financials
+AV.L,Aviva Plc,STOXX 600,secteur exclu : Financials
+SAMPO.HE,Sampo Class A,STOXX 600,secteur exclu : Financials
+KBC.BR,Kbc Groep,STOXX 600,secteur exclu : Financials
+DNB.OL,Dnb Bank,STOXX 600,secteur exclu : Financials
+BMPS.MI,Banca Monte Dei Paschi Di Siena Sp,STOXX 600,secteur exclu : Financials
+EQT.ST,Eqt,STOXX 600,secteur exclu : Financials
+A5G.IR,Aib Group Plc,STOXX 600,secteur exclu : Financials
+PKO.WA,Powszechna Kasa Oszczednosci Bank,STOXX 600,secteur exclu : Financials
+SHB-A.ST,Svenska Handelsbanken-A Shs,STOXX 600,secteur exclu : Financials
+NN.AS,Nn Group,STOXX 600,secteur exclu : Financials
+BPE.MI,Bper Banca,STOXX 600,secteur exclu : Financials
+PST.MI,Poste Italiane,STOXX 600,secteur exclu : Financials
+LGEN.L,Legal And General Group Plc,STOXX 600,secteur exclu : Financials
+HBAN.SW,Helvetia Baloise Holding N Ag,STOXX 600,secteur exclu : Financials
+BIRG.IR,Bank Of Ireland Group Plc,STOXX 600,secteur exclu : Financials
+HNR1.DE,Hannover Rueck,STOXX 600,secteur exclu : Financials
+SAB.MC,Banco De Sabadell,STOXX 600,secteur exclu : Financials
+ACA.PA,Credit Agricole Sa,STOXX 600,secteur exclu : Financials
+PGHN.SW,Partners Group Holding Ag,STOXX 600,secteur exclu : Financials
+CBK.DE,Commerzbank Ag,STOXX 600,secteur exclu : Financials
+BAER.SW,Julius Baer Gruppe Ag,STOXX 600,secteur exclu : Financials
+ETE.AT,National Bank Of Greece,STOXX 600,secteur exclu : Financials
+BAMI.MI,Banco Bpm,STOXX 600,secteur exclu : Financials
+FBK.MI,Finecobank Banca Fineco,STOXX 600,secteur exclu : Financials
+SGRO.L,Segro Reit Plc,STOXX 600,secteur exclu : Real Estate
+BG.VI,Bawag Group Ag,STOXX 600,secteur exclu : Financials
+ENX.PA,Euronext Nv,STOXX 600,secteur exclu : Financials
+ADM.L,Admiral Group Plc,STOXX 600,secteur exclu : Financials
+AGS.BR,Ageas,STOXX 600,secteur exclu : Financials
+UNI.MI,Unipol Assicurazioni Spa,STOXX 600,secteur exclu : Financials
+VNA.DE,Vonovia Se,STOXX 600,secteur exclu : Real Estate
+EUROB.AT,Eurobank Sa,STOXX 600,secteur exclu : Financials
+SPSN.SW,Swiss Prime Site Ag,STOXX 600,secteur exclu : Real Estate
+ASRNL.AS,Asr Nederland,STOXX 600,secteur exclu : Financials
+PEO.WA,Bank Pekao Sa,STOXX 600,secteur exclu : Financials
+URW.PA,Unibail Rodamco We Stapled Units,STOXX 600,secteur exclu : Real Estate
+TPEIR.AT,Piraeus Bank,STOXX 600,secteur exclu : Financials
+BCP.LS,Banco Comercial Portugues Sa,STOXX 600,secteur exclu : Financials
+AGN.AS,Aegon,STOXX 600,secteur exclu : Financials
+PZU.WA,Pzu Sa,STOXX 600,secteur exclu : Financials
+BKT.MC,Bankinter,STOXX 600,secteur exclu : Financials
+SDLF.L,Standard Life Plc,STOXX 600,secteur exclu : Financials
+RBI.VI,Raiffeisen Bank International Ag,STOXX 600,secteur exclu : Financials
+LI.PA,Klepierre Reit Sa,STOXX 600,secteur exclu : Real Estate
+WISE.L,Wise Plc Class A,STOXX 600,secteur exclu : Financials
+STB.OL,Storebrand,STOXX 600,secteur exclu : Financials
+MNG.L,M&G Plc,STOXX 600,secteur exclu : Financials
+INDU-C.ST,Industrivarden Series,STOXX 600,secteur exclu : Financials
+HSX.L,Hiscox Ltd,STOXX 600,secteur exclu : Financials
+TLX.DE,Talanx Ag,STOXX 600,secteur exclu : Financials
+EBP.WA,Erste Bank Polska Sa,STOXX 600,secteur exclu : Financials
+PSPN.SW,Psp Swiss Property Ag,STOXX 600,secteur exclu : Real Estate
+EXO.AS,Exor Nv,STOXX 600,secteur exclu : Financials
+ALPHA.AT,Alpha Bank Sa,STOXX 600,secteur exclu : Financials
+STJ.L,St Jamess Place Plc,STOXX 600,secteur exclu : Financials
+ALSYDB.CO,Al Sydbank,STOXX 600,secteur exclu : Financials
+TRYG.CO,Tryg,STOXX 600,secteur exclu : Financials
+ICG.L,Icg Plc,STOXX 600,secteur exclu : Financials
+JYSK.CO,Jyske Bank,STOXX 600,secteur exclu : Financials
+BGEO.L,Lion Finance Group Plc,STOXX 600,secteur exclu : Financials
+RILBA.CO,Ringkjobing Landbobank,STOXX 600,secteur exclu : Financials
+LAND.L,Land Securities Group Reit Plc,STOXX 600,secteur exclu : Real Estate
+EDEN.PA,Edenred,STOXX 600,secteur exclu : Financials
+AED.BR,Aedifica Nv,STOXX 600,secteur exclu : Real Estate
+GBLB.BR,Groupe Bruxelles Lambert Nv,STOXX 600,secteur exclu : Financials
+AMUN.PA,Amundi Sa,STOXX 600,secteur exclu : Financials
+SAVE.ST,Nordnet,STOXX 600,secteur exclu : Financials
+SCR.PA,Scor,STOXX 600,secteur exclu : Financials
+MBK.WA,Mbank Sa,STOXX 600,secteur exclu : Financials
+BLND.L,British Land Reit,STOXX 600,secteur exclu : Real Estate
+SB1NO.OL,Sparebank Sr-Norge,STOXX 600,secteur exclu : Financials
+GJF.OL,Gjensidige Forsikring,STOXX 600,secteur exclu : Financials
+BMED.MI,Banca Mediolanum,STOXX 600,secteur exclu : Financials
+LMP.L,Londonmetric Property Reit Plc,STOXX 600,secteur exclu : Real Estate
+MRL.MC,Merlin Properties Reit,STOXX 600,secteur exclu : Real Estate
+SQN.SW,Swissquote Group Holding Sa,STOXX 600,secteur exclu : Financials
+ABDN.L,Aberdeen Group Plc,STOXX 600,secteur exclu : Financials
+SOF.BR,Sofina Sa,STOXX 600,secteur exclu : Financials
+BCVN.SW,Bc Vaud N,STOXX 600,secteur exclu : Financials
+EMG.L,Man Group Plc,STOXX 600,secteur exclu : Financials
+CAST.ST,Castellum,STOXX 600,secteur exclu : Real Estate
+BBOX.L,Tritax Big Box Reit Plc,STOXX 600,secteur exclu : Real Estate
+AZA.ST,Avanza Bank Holding,STOXX 600,secteur exclu : Financials
+WDP.BR,Warehouses De Pauw Nv,STOXX 600,secteur exclu : Real Estate
+LUND-B.ST,Lundbergforetagen Class B,STOXX 600,secteur exclu : Financials
+INVP.L,Investec Plc,STOXX 600,secteur exclu : Financials
+LEG.DE,Leg Immobilien N,STOXX 600,secteur exclu : Real Estate
+IGG.L,Ig Group Holdings Plc,STOXX 600,secteur exclu : Financials
+UNI.MC,Unicaja Banco Sa,STOXX 600,secteur exclu : Financials
+AZM.MI,Azimut Holding,STOXX 600,secteur exclu : Financials
+MAP.MC,Mapfre Sa,STOXX 600,secteur exclu : Financials
+CVC.AS,Cvc Capital Partners Plc,STOXX 600,secteur exclu : Financials
+SAGA-B.ST,Sagax Class B,STOXX 600,secteur exclu : Real Estate
+ING.WA,Ing Bank Slaski Sa,STOXX 600,secteur exclu : Financials
+KBCA.BR,Kbc Ancora Nv,STOXX 600,secteur exclu : Financials
+ALLN.SW,Allreal Holding Ag,STOXX 600,secteur exclu : Real Estate
+GFC.PA,Gecina Sa,STOXX 600,secteur exclu : Real Estate
+MIL.WA,Bank Millennium Sa,STOXX 600,secteur exclu : Financials
+BGN.MI,Banca Generali,STOXX 600,secteur exclu : Financials
+BPT.L,Bridgepoint Group Plc,STOXX 600,secteur exclu : Financials
+MANTA.HE,Mandatum,STOXX 600,secteur exclu : Financials
+BALD-B.ST,Fastighets Balder Class B,STOXX 600,secteur exclu : Real Estate
+TBCG.L,Tbc Bank Group Plc,STOXX 600,secteur exclu : Financials
+TCAP.L,Tp Icap Group Plc,STOXX 600,secteur exclu : Financials
+NEXI.MI,Nexi,STOXX 600,secteur exclu : Financials
+VZN.SW,Vz Holding Ag,STOXX 600,secteur exclu : Financials
+ALLFG.AS,Allfunds Group Plc,STOXX 600,secteur exclu : Financials
+PLUS.L,Plus500,STOXX 600,secteur exclu : Financials
+VONN.SW,Vontobel Holding Ag,STOXX 600,secteur exclu : Financials
+SBNOR.OL,Sparebanken Norge,STOXX 600,secteur exclu : Financials
+UTG.L,Unite Group Reit Plc,STOXX 600,secteur exclu : Real Estate
+MOBN.SW,Mobimo Holding Ag,STOXX 600,secteur exclu : Real Estate
+VATN.SW,Valiant Holding Ag,STOXX 600,secteur exclu : Financials
+SHC.L,Shaftesbury Capital Reit Plc,STOXX 600,secteur exclu : Real Estate
+QLT.L,Quilter Plc,STOXX 600,secteur exclu : Financials
+PHP.L,Primary Health Properties Reit Plc,STOXX 600,secteur exclu : Real Estate
+CMBN.SW,Cembra Money Bank Ag,STOXX 600,secteur exclu : Financials
+XTB.WA,Xtb,STOXX 600,secteur exclu : Financials
+COV.PA,Covivio Sa,STOXX 600,secteur exclu : Real Estate
+TEG.DE,Tag Immobilien Ag,STOXX 600,secteur exclu : Real Estate
+DLN.L,Derwent London Reit Plc,STOXX 600,secteur exclu : Real Estate
+FTK.DE,Flatexdegiro N,STOXX 600,secteur exclu : Financials
+KESKOBU0126.HE,Kesko Subscription Rights Corp,STOXX 600,secteur exclu : Other
+AFL,Aflac,S&P 500,secteur exclu : Financials
+ARE,Alexandria Real Estate Equities,S&P 500,secteur exclu : Real Estate
+ALL,Allstate,S&P 500,secteur exclu : Financials
+AXP,American Express,S&P 500,secteur exclu : Financials
+AIG,American International Group,S&P 500,secteur exclu : Financials
+AMT,American Tower,S&P 500,secteur exclu : Real Estate
+AMP,Ameriprise Financial,S&P 500,secteur exclu : Financials
+AON,Aon plc,S&P 500,secteur exclu : Financials
+APO,Apollo Global Management,S&P 500,secteur exclu : Financials
+ACGL,Arch Capital Group,S&P 500,secteur exclu : Financials
+ARES,Ares Management,S&P 500,secteur exclu : Financials
+AJG,Arthur J. Gallagher & Co.,S&P 500,secteur exclu : Financials
+AIZ,Assurant,S&P 500,secteur exclu : Financials
+BAC,Bank of America,S&P 500,secteur exclu : Financials
+BRK-B,Berkshire Hathaway,S&P 500,secteur exclu : Financials
+BLK,BlackRock,S&P 500,secteur exclu : Financials
+BX,Blackstone Inc.,S&P 500,secteur exclu : Financials
+XYZ,"Block, Inc.",S&P 500,secteur exclu : Financials
+BNY,BNY Mellon,S&P 500,secteur exclu : Financials
+BRO,Brown & Brown,S&P 500,secteur exclu : Financials
+BXP,"BXP, Inc.",S&P 500,secteur exclu : Real Estate
+CPT,Camden Property Trust,S&P 500,secteur exclu : Real Estate
+COF,Capital One,S&P 500,secteur exclu : Financials
+CBOE,Cboe Global Markets,S&P 500,secteur exclu : Financials
+CBRE,CBRE Group,S&P 500,secteur exclu : Real Estate
+SCHW,Charles Schwab Corporation,S&P 500,secteur exclu : Financials
+CB,Chubb Limited,S&P 500,secteur exclu : Financials
+CINF,Cincinnati Financial,S&P 500,secteur exclu : Financials
+C,Citigroup,S&P 500,secteur exclu : Financials
+CFG,Citizens Financial Group,S&P 500,secteur exclu : Financials
+CME,CME Group,S&P 500,secteur exclu : Financials
+COIN,Coinbase,S&P 500,secteur exclu : Financials
+CPAY,Corpay,S&P 500,secteur exclu : Financials
+CSGP,CoStar Group,S&P 500,secteur exclu : Real Estate
+CCI,Crown Castle,S&P 500,secteur exclu : Real Estate
+DLR,Digital Realty,S&P 500,secteur exclu : Real Estate
+EQIX,Equinix,S&P 500,secteur exclu : Real Estate
+ERIE,Erie Indemnity,S&P 500,secteur exclu : Financials
+ESS,Essex Property Trust,S&P 500,secteur exclu : Real Estate
+EG,Everest Group,S&P 500,secteur exclu : Financials
+EXR,Extra Space Storage,S&P 500,secteur exclu : Real Estate
+FDS,FactSet,S&P 500,secteur exclu : Financials
+FRT,Federal Realty Investment Trust,S&P 500,secteur exclu : Real Estate
+FIS,Fidelity National Information Services,S&P 500,secteur exclu : Financials
+FITB,Fifth Third Bancorp,S&P 500,secteur exclu : Financials
+FISV,Fiserv,S&P 500,secteur exclu : Financials
+BEN,Franklin Resources,S&P 500,secteur exclu : Financials
+GPN,Global Payments,S&P 500,secteur exclu : Financials
+GL,Globe Life,S&P 500,secteur exclu : Financials
+GS,Goldman Sachs,S&P 500,secteur exclu : Financials
+HIG,Hartford (The),S&P 500,secteur exclu : Financials
+DOC,Healthpeak Properties,S&P 500,secteur exclu : Real Estate
+HST,Host Hotels & Resorts,S&P 500,secteur exclu : Real Estate
+HBAN,Huntington Bancshares,S&P 500,secteur exclu : Financials
+IBKR,Interactive Brokers,S&P 500,secteur exclu : Financials
+ICE,Intercontinental Exchange,S&P 500,secteur exclu : Financials
+IVZ,Invesco,S&P 500,secteur exclu : Financials
+INVH,Invitation Homes,S&P 500,secteur exclu : Real Estate
+IRM,Iron Mountain,S&P 500,secteur exclu : Real Estate
+JKHY,Jack Henry & Associates,S&P 500,secteur exclu : Financials
+JPM,JPMorgan Chase,S&P 500,secteur exclu : Financials
+KEY,KeyCorp,S&P 500,secteur exclu : Financials
+KIM,Kimco Realty,S&P 500,secteur exclu : Real Estate
+KKR,KKR & Co.,S&P 500,secteur exclu : Financials
+L,Loews Corporation,S&P 500,secteur exclu : Financials
+MTB,M&T Bank,S&P 500,secteur exclu : Financials
+MRSH,Marsh McLennan,S&P 500,secteur exclu : Financials
+MA,Mastercard,S&P 500,secteur exclu : Financials
+MET,MetLife,S&P 500,secteur exclu : Financials
+MAA,Mid-America Apartment Communities,S&P 500,secteur exclu : Real Estate
+MCO,Moody's Corporation,S&P 500,secteur exclu : Financials
+MS,Morgan Stanley,S&P 500,secteur exclu : Financials
+MSCI,MSCI,S&P 500,secteur exclu : Financials
+NDAQ,"Nasdaq, Inc.",S&P 500,secteur exclu : Financials
+NTRS,Northern Trust,S&P 500,secteur exclu : Financials
+PYPL,PayPal,S&P 500,secteur exclu : Financials
+PNC,PNC Financial Services,S&P 500,secteur exclu : Financials
+PFG,Principal Financial Group,S&P 500,secteur exclu : Financials
+PGR,Progressive Corporation,S&P 500,secteur exclu : Financials
+PLD,Prologis,S&P 500,secteur exclu : Real Estate
+PRU,Prudential Financial,S&P 500,secteur exclu : Financials
+PSA,Public Storage,S&P 500,secteur exclu : Real Estate
+RJF,Raymond James Financial,S&P 500,secteur exclu : Financials
+O,Realty Income,S&P 500,secteur exclu : Real Estate
+REG,Regency Centers,S&P 500,secteur exclu : Real Estate
+RF,Regions Financial Corporation,S&P 500,secteur exclu : Financials
+HOOD,Robinhood Markets,S&P 500,secteur exclu : Financials
+SPGI,S&P Global,S&P 500,secteur exclu : Financials
+SBAC,SBA Communications,S&P 500,secteur exclu : Real Estate
+SPG,Simon Property Group,S&P 500,secteur exclu : Real Estate
+STT,State Street Corporation,S&P 500,secteur exclu : Financials
+SYF,Synchrony Financial,S&P 500,secteur exclu : Financials
+TROW,T. Rowe Price,S&P 500,secteur exclu : Financials
+TRV,Travelers Companies (The),S&P 500,secteur exclu : Financials
+TFC,Truist Financial,S&P 500,secteur exclu : Financials
+USB,U.S. Bancorp,S&P 500,secteur exclu : Financials
+UDR,"UDR, Inc.",S&P 500,secteur exclu : Real Estate
+VTR,Ventas,S&P 500,secteur exclu : Real Estate
+VICI,Vici Properties,S&P 500,secteur exclu : Real Estate
+V,Visa Inc.,S&P 500,secteur exclu : Financials
+VMRK,Vivmark Residential,S&P 500,secteur exclu : Real Estate
+WRB,W. R. Berkley Corporation,S&P 500,secteur exclu : Financials
+WFC,Wells Fargo,S&P 500,secteur exclu : Financials
+WELL,Welltower,S&P 500,secteur exclu : Real Estate
+WY,Weyerhaeuser,S&P 500,secteur exclu : Real Estate
+WTW,Willis Towers Watson,S&P 500,secteur exclu : Financials
+8304.T,"Aozora Bank, Ltd.",Nikkei 225,secteur exclu : Financial Services
+8331.T,"The Chiba Bank, Ltd.",Nikkei 225,secteur exclu : Financial Services
+8354.T,"Fukuoka Financial Group, Inc.",Nikkei 225,secteur exclu : Financial Services
+8306.T,"Mitsubishi UFJ Financial Group, Inc.",Nikkei 225,secteur exclu : Financial Services
+8411.T,"Mizuho Financial Group, Inc.",Nikkei 225,secteur exclu : Financial Services
+8308.T,"Resona Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+5831.T,Shizuoka Financial Group,Nikkei 225,secteur exclu : Financial Services
+8316.T,"Sumitomo Mitsui Financial Group, Inc.",Nikkei 225,secteur exclu : Financial Services
+8309.T,"Sumitomo Mitsui Trust Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+7186.T,Yokohama Financial Group,Nikkei 225,secteur exclu : Financial Services
+1925.T,"Daiwa House Industry Co., Ltd.",Nikkei 225,secteur exclu : Real Estate
+8750.T,"Dai-ichi Life Insurance Company, Limited",Nikkei 225,secteur exclu : Financial Services
+8725.T,"MS&amp;AD Insurance Group, Inc.",Nikkei 225,secteur exclu : Financial Services
+8630.T,"Sompo Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+8795.T,"T&amp;D Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+8766.T,"Tokio Marine Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+8253.T,"Credit Saison Co., Ltd.",Nikkei 225,secteur exclu : Financial Services
+8697.T,Japan Exchange Group Inc.,Nikkei 225,secteur exclu : Financial Services
+8591.T,Orix Co.,Nikkei 225,secteur exclu : Financial Services
+8802.T,"Mitsubishi Estate Co., Ltd.",Nikkei 225,secteur exclu : Real Estate
+8801.T,"Mitsui Fudosan Co., Ltd",Nikkei 225,secteur exclu : Real Estate
+8830.T,"Sumitomo Realty &amp; Development Co., Ltd.",Nikkei 225,secteur exclu : Real Estate
+8804.T,"Tokyo Tatemono Co., Ltd.",Nikkei 225,secteur exclu : Real Estate
+3289.T,Tokyu Land Corp.,Nikkei 225,secteur exclu : Real Estate
+8252.T,"Marui Group Co., Ltd.",Nikkei 225,secteur exclu : Financial Services
+8601.T,Daiwa Securities Group Inc.,Nikkei 225,secteur exclu : Financial Services
+8604.T,"Nomura Holdings, Inc.",Nikkei 225,secteur exclu : Financial Services
+6178.T,"Japan Post Holdings Co., Ltd.",Nikkei 225,secteur exclu : Financial Services
+0939.HK,China Construction Bank,HSCEI,secteur exclu : Financial Services
+1398.HK,ICBC,HSCEI,secteur exclu : Financial Services
+2318.HK,Ping An Insurance,HSCEI,secteur exclu : Financial Services
+3988.HK,Bank of China,HSCEI,secteur exclu : Financial Services
+3968.HK,China Merchants Bank,HSCEI,secteur exclu : Financial Services
+1109.HK,China Resources Land,HSCEI,secteur exclu : Real Estate
+2628.HK,China Life Insurance Company,HSCEI,secteur exclu : Financial Services
+0688.HK,China Overseas Land and Investment,HSCEI,secteur exclu : Real Estate
+1288.HK,Agricultural Bank of China,HSCEI,secteur exclu : Financial Services
+1658.HK,Postal Savings Bank of China,HSCEI,secteur exclu : Financial Services
+0960.HK,Longfor Properties,HSCEI,secteur exclu : Real Estate
+2601.HK,China Pacific Insurance Company,HSCEI,secteur exclu : Financial Services
+3328.HK,Bank of Communications,HSCEI,secteur exclu : Financial Services
+6098.HK,CG Services,HSCEI,secteur exclu : Real Estate
+2007.HK,Country Garden,HSCEI,secteur exclu : Real Estate
+138930.KS,BNK Financial,KOSPI 200,secteur exclu : Financial Services
+005830.KS,DB Insurance,KOSPI 200,secteur exclu : Financial Services
+086790.KS,Hana Financial,KOSPI 200,secteur exclu : Financial Services
+180640.KS,Hanjin KAL,KOSPI 200,secteur exclu : Real Estate
+088350.KS,Hanwha Life,KOSPI 200,secteur exclu : Financial Services
+001450.KS,Hyundai Marine & Fire,KOSPI 200,secteur exclu : Financial Services
+139130.KS,IM Financial,KOSPI 200,secteur exclu : Financial Services
+024110.KS,Industrial Bank of Korea,KOSPI 200,secteur exclu : Financial Services
+457190.KS,Isu Specialty Chemical,KOSPI 200,secteur exclu : inconnu
+175330.KS,JB Financial,KOSPI 200,secteur exclu : Financial Services
+323410.KS,KakaoBank,KOSPI 200,secteur exclu : Financial Services
+105560.KS,KB Financial,KOSPI 200,secteur exclu : Financial Services
+039490.KS,Kiwoom Securities,KOSPI 200,secteur exclu : Financial Services
+071050.KS,Korea Investment,KOSPI 200,secteur exclu : Financial Services
+138040.KS,Meritz Financial,KOSPI 200,secteur exclu : Financial Services
+006800.KS,Mirae Asset Securities,KOSPI 200,secteur exclu : Financial Services
+005940.KS,NH Investment & Securities,KOSPI 200,secteur exclu : Financial Services
+010060.KS,OCI Holdings,KOSPI 200,secteur exclu : Financial Services
+029780.KS,Samsung Card,KOSPI 200,secteur exclu : Financial Services
+000810.KS,Samsung Fire & Marine,KOSPI 200,secteur exclu : Financial Services
+032830.KS,Samsung Life,KOSPI 200,secteur exclu : Financial Services
+016360.KS,Samsung Securities,KOSPI 200,secteur exclu : Financial Services
+055550.KS,Shinhan Financial,KOSPI 200,secteur exclu : Financial Services
+402340.KS,SK Square,KOSPI 200,secteur exclu : Financial Services
+316140.KS,Woori Financial,KOSPI 200,secteur exclu : Financial Services
+ULVR.L,Unilever Plc,STOXX 600,doublon de UNA.AS (univers du fonds)
+REL.L,Relx Plc,STOXX 600,doublon de REN.AS (univers du fonds)
+STMMI.MI,Stmicroelectronics,STOXX 600,doublon de STMPA.PA (univers du fonds)
+IAG.L,International Airlines Group,STOXX 600,doublon de IAG.MC (univers du fonds)
+HEIO.AS,Heineken Holding Nv,STOXX 600,doublon de HEIA.AS (univers du fonds)
+STLAM.MI,Stellantis,STOXX 600,doublon de STLAP.PA (univers du fonds)
+MTLN.AT,Metlen Energy & Metals Plc,STOXX 600,doublon de MTLN.L (univers du fonds)
+ROG.SW,Roche Ps Par Ag,STOXX 600,aucune cotation Yahoo
