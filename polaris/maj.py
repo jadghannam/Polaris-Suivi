@@ -118,6 +118,20 @@ def main() -> None:
         note("rafraichissement hebdomadaire des fondamentaux")
         neufs = collecte.fondamentaux(univers["Ticker"].tolist())
         if not neufs.empty:
+            # fondamentaux_dcf.csv est tenu EN EUROS (pas de colonne devise),
+            # alors que Yahoo publie en devise de publication. Corrige le
+            # 14/11/2026 : le premier rafraichissement avait ecrit la dette
+            # nette d'Assa Abloy en couronnes (63 955 au lieu de 5 678 MEUR),
+            # gonfle sa VE, et fait passer Assa Abloy, Essity et Royal Unibrew
+            # en veto DCF. Conversion au taux du jour, avant la mise a jour.
+            div = neufs["devise_etats"].fillna("EUR").map(lambda d: taux.get(d, np.nan))
+            sans_taux = neufs.loc[div.isna(), "Ticker"].tolist()
+            if sans_taux:
+                note(f"ATTENTION comptes sans taux de change, dette non mise a jour : "
+                     f"{', '.join(sans_taux)}")
+            for c in ("dette_nette", "minoritaires", "mises_en_equivalence"):
+                if c in neufs.columns:
+                    neufs[c] = neufs[c] / div
             for cible, colonnes in (
                 # La devise voyage avec les montants : sans elle, les chiffres
                 # fraichement collectes (en devise de publication) se
