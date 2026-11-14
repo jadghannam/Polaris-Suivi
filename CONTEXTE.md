@@ -292,6 +292,29 @@ moins quatre mois avant. Classement seul, sans DCF ni veto ; biais du
 survivant ; environ trois ans. Les quintiles servent à vérifier que la
 mécanique produit un escalier, pas à prouver une prime.
 
+**MSCI ACWI (décidé le 14/11, le soir).** L'indice de référence des
+portefeuilles personnels est le MSCI ACWI (développés + émergents), pas le
+MSCI World, qui ne contient ni la Chine, ni la Corée, ni l'Inde, ni Taïwan.
+Constituants et poids viennent des fichiers iShares MSCI World (SWDA) et
+MSCI Emerging Markets (IEMM), relus à chaque reconstruction de l'univers ; le
+fichier de l'ETF ACWI lui-même (SSAC) échantillonne et ne détient pas l'Inde :
+il ne sert qu'à mesurer la part des développés (88,9 % au 12/11). Les actions A
+chinoises, détenues par l'indice via un ETF, ne sont pas dans l'univers.
+L'univers compte environ 1 880 titres, dont 1 440 constituants ACWI hors
+financières ; le STOXX 600, le S&P 500, le Nikkei et le KOSPI sont gardés pour
+la couverture. Performance comparée à l'ETF IUSQ (ACWI, euros).
+
+**Classement par région, poids de l'ACWI.** Sans la contrainte Europe, chaque
+région est classée contre elle-même : la jambe valorisation mesurait sinon le
+pays plutôt que la société (la Corée occupait le haut du classement mondial).
+Un portefeuille « réparti ACWI » donne à chaque région exactement son poids
+dans l'indice hors financières ; un titre sortant est remplacé dans sa région.
+On suit l'allocation de l'indice, on ne la décide pas : pas de macro.
+
+**DCF hors zone euro.** L'écart de taux sans risque décale le WACC *et* la
+croissance perpétuelle (écart d'inflation, Fisher). Taux des émergents dans
+`config.py`, à valider ; seuls USD et HKD sont relus sur Yahoo.
+
 **Bug corrigé le même jour.** Le premier rafraîchissement hebdomadaire écrivait
 la dette nette en devise de publication dans `fondamentaux_dcf.csv`, tenu en
 euros : Assa Abloy, Essity et Royal Unibrew tombaient en veto DCF. La

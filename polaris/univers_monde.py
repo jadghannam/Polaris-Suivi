@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Construction de l'univers mondial.
 
@@ -99,6 +99,133 @@ PAYS_FR = {
 }
 REGION_INDICE = {"STOXX 600": "Europe", "S&P 500": "Amerique du Nord",
                  "Nikkei 225": "Japon", "HSCEI": "Chine", "KOSPI 200": "Coree"}
+
+# ---------------------------------------------------- MSCI ACWI (14/11/2026)
+# L'indice de reference des portefeuilles personnels est le MSCI ACWI. Ses
+# constituants et ses poids viennent de deux fichiers iShares, relus a chaque
+# reconstruction :
+#   - SWDA, MSCI World (23 pays developpes, replication complete) ;
+#   - IEMM, MSCI Emerging Markets (grandes et moyennes capitalisations).
+# Le fichier de l'ETF ACWI lui-meme (SSAC) n'est PAS une source fiable des
+# poids : il echantillonne et ne detient ni l'Inde ni l'Arabie saoudite en
+# direct (constate le 14/11/2026). Il sert seulement a mesurer la part des
+# pays developpes dans l'ACWI, sur les titres qu'il partage avec SWDA.
+ISHARES_CH = ("https://www.ishares.com/ch/individual/en/products/{p}/x/"
+              "1495092304805.ajax?fileType=csv&fileName={f}_holdings&dataType=fund")
+FICHIERS_MSCI = {"MSCI World": ("251882", "SWDA"), "MSCI EM": ("251858", "IEMM")}
+FICHIER_ACWI = ("251850", "SSAC")
+
+# Place de cotation iShares -> suffixes Yahoo a essayer, dans l'ordre.
+PLACES_MSCI = {
+    **{k: [v] for k, v in PLACES_ISHARES.items()},
+    "New York Stock Exchange Inc.": [""], "NASDAQ": [""], "Cboe BZX": [""],
+    "Toronto Stock Exchange": [".TO"], "Asx - All Markets": [".AX"],
+    "Tokyo Stock Exchange": [".T"], "Hong Kong Exchanges And Clearing Ltd": [".HK"],
+    "Singapore Exchange": [".SI"], "Tel Aviv Stock Exchange": [".TA"],
+    "New Zealand Exchange Ltd": [".NZ"], "Taiwan Stock Exchange": [".TW"],
+    "Gretai Securities Market": [".TWO"], "National Stock Exchange Of India": [".NS"],
+    "Bse Ltd": [".BO"], "Korea Exchange (Stock Market)": [".KS"],
+    "Korea Exchange (Kosdaq)": [".KQ"], "Shanghai Stock Exchange": [".SS"],
+    "Shenzhen Stock Exchange": [".SZ"], "XBSP": [".SA"], "Saudi Stock Exchange": [".SR"],
+    "Johannesburg Stock Exchange": [".JO"], "Bolsa Mexicana De Valores": [".MX"],
+    "Bursa Malaysia": [".KL"], "Stock Exchange Of Thailand": [".BK"],
+    "Indonesia Stock Exchange": [".JK"], "Philippine Stock Exchange Inc.": [".PS"],
+    "Istanbul Stock Exchange": [".IS"], "Qatar Exchange": [".QA"],
+    "Abu Dhabi Securities Exchange": [".AD", ".AE"], "Dubai Financial Market": [".AE", ".DU"],
+    "Kuwait Stock Exchange": [".KW"], "Santiago Stock Exchange": [".SN"],
+    "Budapest Stock Exchange": [".BD"], "Prague Stock Exchange": [".PR"],
+    "Bolsa De Valores De Colombia": [".CL"], "Egyptian Exchange": [".CA"],
+}
+PAYS_FR.update({
+    "Canada": "Canada", "Australia": "Australie", "Hong Kong": "Hong Kong",
+    "Singapore": "Singapour", "Israel": "Israel", "New Zealand": "Nouvelle-Zelande",
+    "Taiwan": "Taiwan", "India": "Inde", "Korea (South)": "Coree du Sud",
+    "Brazil": "Bresil", "Saudi Arabia": "Arabie saoudite", "South Africa": "Afrique du Sud",
+    "Mexico": "Mexique", "Malaysia": "Malaisie", "Thailand": "Thailande",
+    "Indonesia": "Indonesie", "Philippines": "Philippines", "Turkey": "Turquie",
+    "Qatar": "Qatar", "United Arab Emirates": "Emirats arabes unis", "Kuwait": "Koweit",
+    "Chile": "Chili", "Peru": "Perou", "Colombia": "Colombie", "Hungary": "Hongrie",
+    "Czech Republic": "Republique tcheque", "Egypt": "Egypte",
+})
+# Regions de classement et d'allocation. Les pays emergents de l'Union
+# europeenne vont avec l'Europe, comme dans le STOXX 600.
+REGION_PAYS = {
+    "Etats-Unis": "Amerique du Nord", "Canada": "Amerique du Nord",
+    "Japon": "Japon",
+    "Australie": "Pacifique", "Nouvelle-Zelande": "Pacifique", "Hong Kong": "Pacifique",
+    "Singapour": "Pacifique",
+    "Chine": "Chine", "Coree du Sud": "Coree", "Taiwan": "Taiwan", "Inde": "Inde",
+    "Malaisie": "Asie emergente", "Thailande": "Asie emergente",
+    "Indonesie": "Asie emergente", "Philippines": "Asie emergente",
+    "Bresil": "Amerique latine", "Mexique": "Amerique latine", "Chili": "Amerique latine",
+    "Perou": "Amerique latine", "Colombie": "Amerique latine",
+    "Arabie saoudite": "Moyen-Orient et Afrique", "Afrique du Sud": "Moyen-Orient et Afrique",
+    "Emirats arabes unis": "Moyen-Orient et Afrique", "Qatar": "Moyen-Orient et Afrique",
+    "Koweit": "Moyen-Orient et Afrique", "Egypte": "Moyen-Orient et Afrique",
+    "Turquie": "Moyen-Orient et Afrique", "Israel": "Moyen-Orient et Afrique",
+}
+
+
+def region_de(pays: str, defaut: str = "Europe") -> str:
+    return REGION_PAYS.get(pays, defaut)
+
+
+def lire_ishares(produit: str, fichier: str) -> pd.DataFrame:
+    r = requests.get(ISHARES_CH.format(p=produit, f=fichier), headers=UA, timeout=60)
+    r.raise_for_status()
+    lignes = r.content.decode("utf-8-sig").splitlines()
+    debut = next(i for i, l in enumerate(lignes) if l.startswith("Ticker,"))
+    df = pd.read_csv(io.StringIO("\n".join(lignes[debut:])), dtype=str, on_bad_lines="skip")
+    df["poids"] = df["Weight (%)"].map(_nombre_suisse) / 100
+    return df
+
+
+def _candidats(ticker: str, place: str) -> list[str]:
+    sufs = PLACES_MSCI.get(place)
+    if sufs is None:
+        return []
+    s = str(ticker).strip()
+    s = re.sub(r"\.(E|R)$", "", s)                 # Istanbul .E, Bangkok .R (NVDR)
+    s = s.rstrip(".").rstrip("*")
+    if sufs[0] == ".HK":
+        s = s.zfill(4)
+    if sufs[0] in (".KS", ".KQ"):
+        s = s.zfill(6)
+    s = re.sub(r"[\s/.]+", "-", s)
+    return [s + x for x in sufs]
+
+
+def msci() -> pd.DataFrame:
+    """Constituants MSCI ACWI hors financieres et immobilier, avec leur poids
+    dans l'ACWI et des tickers Yahoo candidats (le premier qui cote gagne)."""
+    parts = []
+    for nom, (p, f) in FICHIERS_MSCI.items():
+        d = lire_ishares(p, f)
+        d = d[(d["Asset Class"] == "Equity") & (d["poids"] > 0)]
+        # Les ETF detenus en ligne (actions A chinoises, une partie du Bresil)
+        # ne sont pas des societes.
+        d = d[~d["Name"].str.contains(r"\bETF\b|UCITS|ISHARES|ISH ", case=False, regex=True)]
+        d["Indice"] = nom
+        parts.append(d)
+    world, em = parts
+    # Part des developpes dans l'ACWI : rapport des poids SSAC / SWDA sur les
+    # 50 premieres lignes communes (mediane, insensible aux ecarts de l'ETF).
+    acwi = lire_ishares(*FICHIER_ACWI)
+    acwi = acwi[acwi["Asset Class"] == "Equity"]
+    communs = world.merge(acwi[["Ticker", "Exchange", "poids"]], on=["Ticker", "Exchange"],
+                          suffixes=("", "_acwi")).nlargest(50, "poids")
+    part_dm = float((communs["poids_acwi"] / communs["poids"]).median())
+    print(f"part des pays developpes dans l'ACWI : {part_dm:.1%}")
+    world["poids_acwi"] = world["poids"] * part_dm
+    em["poids_acwi"] = em["poids"] * (1 - part_dm)
+    d = pd.concat([world, em], ignore_index=True)
+    d["Pays"] = d["Location"].map(lambda p: PAYS_FR.get(p, p))
+    d["Region"] = d["Pays"].map(region_de)
+    d["Secteur_source"] = d["Sector"]
+    d["Secteur"] = d["Sector"].map(GICS_FR)
+    d["candidats"] = [_candidats(t, x) for t, x in zip(d["Ticker"], d["Exchange"])]
+    d["Societe"] = d["Name"].str.title()
+    return d
 
 
 def _wiki(page: str) -> str:
@@ -230,32 +357,55 @@ def _cle_nom(s: str) -> str:
 
 def construire(essai: bool = False) -> pd.DataFrame:
     tout_actuel = pd.read_csv(cfg.DATA / "univers.csv", dtype=str)
-    # Les lignes deja presentes sont reprises TELLES QUELLES, contraintes
-    # comprises : elles sont posees a la main et ne se recalculent jamais.
-    if "contrainte_stocktrak" in tout_actuel.columns:
-        deja = tout_actuel.copy()
-        actuel = deja[deja["contrainte_stocktrak"].str.upper() == "OUI"].copy()
-    else:
-        deja, actuel = None, tout_actuel.copy()
-    base_cols = [c for c in actuel.columns if c not in ("Region", "Indice")]
-    actuel = actuel[base_cols]
-    print(f"univers actuel : {len(actuel)} lignes (conservees telles quelles)")
+    # Les lignes du fonds sont reprises TELLES QUELLES, contraintes comprises :
+    # elles sont posees a la main et ne se recalculent jamais.
+    fonds = tout_actuel[tout_actuel["contrainte_stocktrak"].str.upper() == "OUI"].copy()
+    anc = tout_actuel.set_index("Ticker")
+    print(f"univers du fonds : {len(fonds)} lignes (conservees telles quelles)")
 
-    sources = []
+    # 1. MSCI ACWI : constituants, poids, tickers Yahoo.
+    m = msci()
+    print(f"MSCI ACWI : {len(m)} lignes ({(m['Indice'] == 'MSCI World').sum()} World, "
+          f"{(m['Indice'] == 'MSCI EM').sum()} EM)")
+    cand = sorted({c for l in m["candidats"] for c in l})
+    print(f"validation de {len(cand)} tickers MSCI candidats")
+    cotes = valider_cotations(cand)
+    m["Ticker_y"] = [next((c for c in l if c in cotes), None) for l in m["candidats"]]
+    # Poids et allocation : TOUTES les lignes du fichier, cotees ou non sur
+    # Yahoo, pour que l'allocation suive l'indice et pas notre collecte.
+    m[["Ticker", "Ticker_y", "Societe", "Pays", "Region", "Secteur_source", "Secteur",
+       "Indice", "poids_acwi"]].rename(columns={"Ticker": "Ticker_ishares"}) \
+        .to_csv(cfg.DATA / "msci_acwi.csv", index=False) if not essai else None
+
+    # 2. Autres sources, conservees pour la couverture (STOXX 600 en entier,
+    #    Nikkei, KOSPI au-dela des grandes capitalisations MSCI).
+    autres = []
     for nom, f in (("STOXX 600", stoxx600), ("S&P 500", sp500), ("Nikkei 225", nikkei225),
                    ("HSCEI", hscei), ("KOSPI 200", kospi200)):
         df = f()
         print(f"{nom} : {len(df)} titres lus")
-        sources.append(df)
-    neuf = pd.concat(sources, ignore_index=True)
-    neuf = neuf[neuf["Ticker"].notna()].drop_duplicates("Ticker")
+        autres.append(df)
+    autres = pd.concat(autres, ignore_index=True)
+    autres = autres[autres["Ticker"].notna()]
+    autres["Region"] = autres["Pays"].map(lambda p: region_de(p, None))
+    autres["Region"] = autres["Region"].fillna(autres["Indice"].map(REGION_INDICE))
 
-    # Secteur Yahoo pour les indices sans GICS.
-    sans = neuf.loc[neuf["Secteur_source"].isna(), "Ticker"].tolist() \
-        if "Secteur_source" in neuf else []
-    print(f"secteurs Yahoo a lire : {len(sans)}")
-    infos = secteurs_yahoo(sans)
-    for t, (sect, _) in infos.items():
+    msci_ok = m[m["Ticker_y"].notna()].copy()
+    msci_ok["Ticker"] = msci_ok["Ticker_y"]
+    neuf = pd.concat([msci_ok[["Ticker", "Societe", "Pays", "Region", "Secteur",
+                               "Secteur_source", "Indice"]], autres], ignore_index=True)
+    neuf = neuf.drop_duplicates("Ticker", keep="first")      # MSCI d'abord : vrai GICS
+    acwi = set(msci_ok["Ticker"])
+
+    # Secteur des sources sans GICS : deja connu dans l'univers, sinon Yahoo.
+    sans = neuf["Secteur_source"].isna()
+    for i in neuf.index[sans]:
+        t = neuf.at[i, "Ticker"]
+        if t in anc.index and isinstance(anc.at[t, "Secteur"], str):
+            neuf.at[i, "Secteur"], neuf.at[i, "Secteur_source"] = anc.at[t, "Secteur"], "univers"
+    a_lire = neuf.loc[neuf["Secteur_source"].isna(), "Ticker"].tolist()
+    print(f"secteurs Yahoo a lire : {len(a_lire)}")
+    for t, (sect, _) in secteurs_yahoo(a_lire).items():
         neuf.loc[neuf["Ticker"] == t, "Secteur_source"] = sect or "inconnu"
         neuf.loc[neuf["Ticker"] == t, "Secteur"] = YAHOO_FR.get(sect)
 
@@ -264,61 +414,60 @@ def construire(essai: bool = False) -> pd.DataFrame:
     for r in neuf[exclus].itertuples():
         rejets.append((r.Ticker, r.Societe, r.Indice, f"secteur exclu : {r.Secteur_source}"))
     neuf = neuf[~exclus]
+    for r in m[m["Ticker_y"].isna() & m["Secteur"].notna()].itertuples():
+        rejets.append((r.Ticker, r.Societe, r.Indice,
+                       f"aucune cotation Yahoo (essaye : {', '.join(r.candidats) or 'place inconnue'})"))
 
-    # Doublons avec l'univers du fonds : meme ticker, ou meme nom.
-    connus = set(actuel["Ticker"])
-    noms = {_cle_nom(s): t for s, t in zip(actuel["Societe"], actuel["Ticker"])}
-    indice_connus = {}
+    # Doublons avec le fonds : meme ticker, ou meme nom pour une europeenne.
+    connus = set(fonds["Ticker"])
+    noms = {_cle_nom(s): t for s, t in zip(fonds["Societe"], fonds["Ticker"])}
     garder = []
     for r in neuf.itertuples():
         if r.Ticker in connus:
-            indice_connus[r.Ticker] = r.Indice
             continue
-        # Le fonds n'a que des europeennes : un jumeau ne peut venir que du
-        # STOXX 600 (seconde cotation, ex. Unilever a Londres et Amsterdam).
-        jumeau = noms.get(_cle_nom(r.Societe)) if r.Indice == "STOXX 600" else None
+        jumeau = noms.get(_cle_nom(r.Societe)) if r.Region == "Europe" else None
         if jumeau:
-            indice_connus.setdefault(jumeau, r.Indice)
             rejets.append((r.Ticker, r.Societe, r.Indice, f"doublon de {jumeau} (univers du fonds)"))
             continue
         garder.append(r.Index)
     neuf = neuf.loc[garder]
 
-    print(f"validation des cotations Yahoo : {len(neuf)} titres")
-    cotes = valider_cotations(neuf["Ticker"].tolist())
+    a_valider = [t for t in neuf["Ticker"] if t not in cotes]
+    print(f"validation des cotations des autres sources : {len(a_valider)} titres")
+    cotes |= valider_cotations(a_valider)
     for r in neuf[~neuf["Ticker"].isin(cotes)].itertuples():
         rejets.append((r.Ticker, r.Societe, r.Indice, "aucune cotation Yahoo"))
     neuf = neuf[neuf["Ticker"].isin(cotes)]
 
-    actuel["Region"] = "Europe"
-    actuel["Indice"] = actuel["Ticker"].map(indice_connus).fillna("hors indice")
-    actuel["contrainte_europe"], actuel["contrainte_stocktrak"] = "OUI", "OUI"
-    region = neuf["Indice"].map(REGION_INDICE)
+    fonds["Region"] = "Europe"
+    fonds["acwi"] = np.where(fonds["Ticker"].isin(acwi), "OUI", "NON")
     ajout = pd.DataFrame({
         "Ticker": neuf["Ticker"], "Symbole StockTrak": "", "Societe": neuf["Societe"],
         "Pays": neuf["Pays"], "Secteur": neuf["Secteur"], "verifie_stocktrak": "",
-        "devise_stocktrak": "", "Region": region, "Indice": neuf["Indice"],
+        "devise_stocktrak": "", "Region": neuf["Region"], "Indice": neuf["Indice"],
         # Un titre nouveau n'est jamais StockTrak : seul Jad peut ecrire OUI.
-        "contrainte_europe": np.where(region == "Europe", "OUI", "NON"),
-        "contrainte_stocktrak": "NON"})
-    if deja is not None:
-        # Une contrainte deja posee a la main sur une ligne hors fonds l'emporte.
-        anc = deja.set_index("Ticker")
-        for c in ("contrainte_europe", "contrainte_stocktrak"):
-            ajout[c] = [anc.at[t, c] if t in anc.index else v for t, v in zip(ajout["Ticker"], ajout[c])]
-    univers = pd.concat([actuel, ajout], ignore_index=True)
+        "contrainte_europe": np.where(neuf["Region"] == "Europe", "OUI", "NON"),
+        "contrainte_stocktrak": "NON",
+        "acwi": np.where(neuf["Ticker"].isin(acwi), "OUI", "NON")})
+    # Une contrainte deja posee a la main sur une ligne hors fonds l'emporte.
+    for c in ("contrainte_europe", "contrainte_stocktrak"):
+        ajout[c] = [anc.at[t, c] if t in anc.index and isinstance(anc.at[t, c], str) else v
+                    for t, v in zip(ajout["Ticker"], ajout[c])]
+    univers = pd.concat([fonds, ajout], ignore_index=True)
     rej = pd.DataFrame(rejets, columns=["Ticker", "Societe", "Indice", "motif"])
 
-    print(f"\nunivers final : {len(univers)} titres")
-    print(univers.groupby(["Region"]).size().to_string())
+    print(f"\nunivers final : {len(univers)} titres, dont {(univers['acwi'] == 'OUI').sum()} MSCI ACWI")
+    print(univers.groupby("Region").size().to_string())
     print(f"rejets : {len(rej)}")
-    print(rej["motif"].str.split(" :").str[0].value_counts().to_string())
+    print(rej["motif"].str.split(" :| \\(").str[0].value_counts().to_string())
     if not essai:
         univers.to_csv(cfg.DATA / "univers.csv", index=False)
         rej.to_csv(cfg.DATA / "univers_rejets.csv", index=False)
-        print("ecrit : data/univers.csv, data/univers_rejets.csv")
+        print("ecrit : data/univers.csv, data/univers_rejets.csv, data/msci_acwi.csv")
     return univers
 
 
 if __name__ == "__main__":
     construire(essai="--essai" in sys.argv)
+
+

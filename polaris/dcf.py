@@ -78,7 +78,7 @@ def ve_marche(capitalisation, dette_nette, minoritaires, mises_en_equivalence):
             - _z(mises_en_equivalence))
 
 
-def croissance_implicite(ve_cible, fcff0, wacc, bornes=cfg.BORNES_G1):
+def croissance_implicite(ve_cible, fcff0, wacc, bornes=cfg.BORNES_G1, g_inf=cfg.G_INF):
     """Resout g1 tel que VE(modele) = VE(marche).
 
     La VE est strictement croissante en g1, donc la racine est unique et brentq
@@ -89,7 +89,7 @@ def croissance_implicite(ve_cible, fcff0, wacc, bornes=cfg.BORNES_G1):
         return np.nan
 
     def ecart(g):
-        return valeur_entreprise(fcff0, g, wacc) - ve_cible
+        return valeur_entreprise(fcff0, g, wacc, g_inf=g_inf) - ve_cible
 
     bas, haut = bornes
     try:
@@ -106,7 +106,7 @@ def cagr(v0, v1, annees):
     return (v1 / v0) ** (1 / annees) - 1
 
 
-def seuil_veto(cagr_retenu):
+def seuil_veto(cagr_retenu, plancher=cfg.PLANCHER_SEUIL_VETO):
     """seuil = max(CAGR + max(50 % x |CAGR| ; 1,5 pt) ; croissance perpetuelle).
 
     La part relative laisse de la place aux societes volatiles, la part absolue
@@ -117,10 +117,10 @@ def seuil_veto(cagr_retenu):
     if not np.isfinite(cagr_retenu):
         return np.nan
     marge = max(cfg.MARGE_VETO_RELATIVE * abs(cagr_retenu), cfg.MARGE_VETO_ABSOLUE)
-    return max(cagr_retenu + marge, cfg.PLANCHER_SEUIL_VETO)
+    return max(cagr_retenu + marge, plancher)
 
 
-def dispersion(fcff0, g1, wacc, dette, minos, mee):
+def dispersion(fcff0, g1, wacc, dette, minos, mee, g_inf=cfg.G_INF):
     """Ecart relatif de la valeur des fonds propres pour un WACC +/- 50 pb.
 
     Au-dela de 40 %, la valeur depend plus du taux d'actualisation que de
@@ -131,7 +131,7 @@ def dispersion(fcff0, g1, wacc, dette, minos, mee):
         return np.nan
     v = []
     for w in (wacc - cfg.CHOC_WACC, wacc, wacc + cfg.CHOC_WACC):
-        ve = valeur_entreprise(fcff0, g1, w)
+        ve = valeur_entreprise(fcff0, g1, w, g_inf=g_inf)
         v.append(ve - _z(dette) - _z(minos) + _z(mee))
     v = np.array(v, dtype=float)
     if not np.all(np.isfinite(v)) or abs(v[1]) < 1e-9:
@@ -150,7 +150,7 @@ VERDICTS = {
 }
 
 
-def verdict(g1, cagr_retenu, seuil, disp, fcff0=None):
+def verdict(g1, cagr_retenu, seuil, disp, fcff0=None, g_inf=cfg.G_INF):
     """L'ordre des tests compte : on verifie d'abord que le modele tient,
     ensuite seulement ce qu'il dit."""
     if fcff0 is not None and np.isfinite(fcff0) and fcff0 <= 0:
@@ -159,7 +159,7 @@ def verdict(g1, cagr_retenu, seuil, disp, fcff0=None):
         return VERDICTS["NC"]
     if np.isfinite(disp) and disp > cfg.SEUIL_DISPERSION:
         return VERDICTS["ABS"]
-    if g1 <= cfg.G_INF:
+    if g1 <= g_inf:
         return VERDICTS["A"]
     if np.isfinite(cagr_retenu) and g1 <= cagr_retenu:
         return VERDICTS["B"]
@@ -178,16 +178,20 @@ def evaluer(classement: pd.DataFrame, dcf_in: pd.DataFrame, hist_ca: pd.DataFram
     # Hors Europe, le WACC sectoriel (construit sur le Bund) est decale de
     # l'ecart de taux sans risque de la devise de cotation. Sans effet sur
     # l'univers du fonds, tout en devises europeennes. Ajoute le 14/11/2026.
+    # La croissance perpetuelle (donc le plancher du seuil et la borne du
+    # verdict A) est decalee du meme ecart : c'est l'ecart d'inflation.
+    df["ecart_rf"] = 0.0
     if "devise" in df.columns:
-        ecart = df["devise"].map(
+        df["ecart_rf"] = df["devise"].map(
             lambda d: cfg.TAUX_SANS_RISQUE_DEVISE.get(d, cfg.TAUX_SANS_RISQUE)
-            - cfg.TAUX_SANS_RISQUE)
-        df["wacc"] = df["wacc"] + ecart.fillna(0.0)
+            - cfg.TAUX_SANS_RISQUE).fillna(0.0)
+        df["wacc"] = df["wacc"] + df["ecart_rf"]
+    df["g_inf"] = cfg.G_INF + df["ecart_rf"]
     df["fcff"] = df.apply(fcff_normatif, axis=1)
     df["ve_marche"] = [ve_marche(r.capitalisation, r.dette_nette,
                                  r.minoritaires, r.mises_en_equivalence)
                        for r in df.itertuples()]
-    df["g1"] = [croissance_implicite(r.ve_marche, r.fcff, r.wacc)
+    df["g1"] = [croissance_implicite(r.ve_marche, r.fcff, r.wacc, g_inf=r.g_inf)
                 for r in df.itertuples()]
 
     df["fenetre"] = (df["an_dernier"] - df["an_base"]).fillna(0)
@@ -203,11 +207,12 @@ def evaluer(classement: pd.DataFrame, dcf_in: pd.DataFrame, hist_ca: pd.DataFram
         "historique " + df["fenetre"].astype("Int64").astype(str) + " ans",
         "repli : mediane du secteur")
 
-    df["seuil"] = df["cagr_retenu"].apply(seuil_veto)
+    df["seuil"] = [seuil_veto(r.cagr_retenu, cfg.PLANCHER_SEUIL_VETO + r.ecart_rf)
+                   for r in df.itertuples()]
     df["dispersion"] = [dispersion(r.fcff, r.g1, r.wacc, r.dette_nette,
-                                   r.minoritaires, r.mises_en_equivalence)
+                                   r.minoritaires, r.mises_en_equivalence, r.g_inf)
                         for r in df.itertuples()]
-    df["verdict"] = [verdict(r.g1, r.cagr_retenu, r.seuil, r.dispersion, r.fcff)
+    df["verdict"] = [verdict(r.g1, r.cagr_retenu, r.seuil, r.dispersion, r.fcff, r.g_inf)
                      for r in df.itertuples()]
     df["marge"] = df["g1"] - df["seuil"]
     return df

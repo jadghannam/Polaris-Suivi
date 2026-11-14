@@ -69,10 +69,12 @@ async function afficher(){
 }
 
 /* ------------------------------------------------ portefeuille perso ---- */
-function repartition(titre,o){
-  const l=Object.entries(o||{}).sort((a,b)=>b[1]-a[1]);
-  return `<div class="panneau"><h3>${titre}</h3>${l.map(([k,v])=>`<div class="barre-l">
-    <span class="t">${esc(k)}</span><span class="v">${E(v,1)}</span>
+function repartition(titre,o,cible){
+  const cles=[...new Set([...Object.keys(o||{}),...Object.keys(cible||{})])];
+  const l=cles.map(k=>[k,(o||{})[k]||0,(cible||{})[k]]).sort((a,b)=>b[1]-a[1]||(b[2]||0)-(a[2]||0))
+    .filter(x=>x[1]>0||(x[2]||0)>=0.005);
+  return `<div class="panneau"><h3>${titre}${cible?' <span class="tick">portefeuille · ACWI</span>':""}</h3>${l.map(([k,v,c])=>`<div class="barre-l">
+    <span class="t">${esc(k)}</span><span class="v">${E(v,1)}${c!=null?` <span class="tick">${E(c,1)}</span>`:""}</span>
     <span class="b"><i style="width:${Math.max(1,v*100)}%"></i></span></div>`).join("")||'<p class="note">—</p>'}</div>`;
 }
 function vuePortefeuille(id){
@@ -98,8 +100,8 @@ function vuePortefeuille(id){
         <span><i style="background:var(--bad)"></i>${sort} sortie</span></div></div>
   </div>
   <h2>Expositions <span class="n">ce que le bottom-up ne choisit pas, mais qu'il faut voir</span></h2>
-  <div class="repart">${repartition("Régions",p.repartition_region)}${repartition("Devises",p.repartition_devise)}
-    ${repartition("Secteurs",p.repartition_secteur)}</div>
+  <div class="repart">${repartition("Régions",p.repartition_region,PFS?.allocation_acwi?.region)}${repartition("Devises",p.repartition_devise)}
+    ${repartition("Secteurs",p.repartition_secteur,PFS?.allocation_acwi?.secteur)}</div>
   <h2>Lignes <span class="n">${p.nb_lignes_reelles} titres · équipondérés à la construction</span></h2>
   <div class="card"><table><thead><tr><th class="l">Titre</th><th class="l">Région</th><th class="l">Secteur</th>
     <th>Poids</th><th>Perf. €</th><th>Perf. locale</th><th>vs indice</th><th>Rang entrée</th><th>Rang</th>
@@ -113,8 +115,11 @@ function vuePortefeuille(id){
     <td>${N(l.rang_entree)}</td><td>${N(l.rang)}</td><td class="l">${esc(code(l.verdict)||"—")}</td>
     <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td><td class="zc">${badge(l.zone)}</td></tr>`).join("")}
   </tbody></table></div>
-  <p class="note">Construit par la méthode : les ${p.nb_lignes} premiers rangs de la liste de suivi de son univers,
-    verdict DCF A ou B, sans veto qualitatif, équipondérés au cours du jour de construction. Les zones sont celles
+  <p class="note">Construit par la méthode : ${p.repartition==="acwi"
+    ?`${p.nb_lignes} lignes réparties entre les régions au prorata de leur poids dans le MSCI ACWI (hors financières),
+      les meilleures de chaque région classée contre elle-même ; chaque région reçoit exactement son poids`
+    :`les ${p.nb_lignes} premiers rangs de la liste de suivi de son univers, équipondérés`},
+    verdict DCF A ou B, sans veto qualitatif, au cours du jour de construction. Les zones sont celles
     du fonds ; rien n'est vendu automatiquement. Performance en euros, change compris.</p>
   <p style="margin-top:18px"><button class="btn" id="archiver">Archiver ce portefeuille</button></p>`;
   liensFiche(vue);
@@ -122,10 +127,27 @@ function vuePortefeuille(id){
 }
 
 /* ------------------------------------------------------------ univers ---- */
-let FU={europe:true,stocktrak:true,q:"",region:"",classes:true,lim:100};
+let FU={europe:true,stocktrak:true,q:"",region:"",classes:true,lim:100,parRegion:true};
+function blocAllocation(u){
+  const a=PFS?.allocation_acwi; if(!a||!a.region) return "";
+  const nb={}; u.lignes.forEach(x=>{if(x.rang!=null) nb[x.Region]=(nb[x.Region]||0)+1});
+  const l=Object.entries(a.region);
+  return `<h2>Allocation MSCI ACWI <span class="n">hors financières et immobilier, ramenée à 100 % ·
+      fichiers iShares du ${esc(jour(a.date_fichier))}</span></h2>
+    <div class="panneau" style="margin-bottom:18px">${l.map(([r,w])=>`<div class="barre-l">
+      <span class="t">${esc(r)} <span class="tick">${nb[r]||0} titres classés</span></span><span class="v">${E(w,1)}</span>
+      <span class="b"><i style="width:${Math.max(.5,w*100)}%"></i></span></div>`).join("")}
+      <p class="note">Les poids suivent l'indice : ils sont relus dans les fichiers iShares MSCI World et Emerging
+        Markets à chaque reconstruction de l'univers. Un portefeuille « réparti ACWI » donne à chaque région exactement
+        son poids.</p></div>`;
+}
 async function vueUnivers(){
   const c=Object.keys(CONTR).filter(k=>FU[k]);
-  const k=cleU(c);
+  // Classement par region seulement s'il existe : un univers d'une seule
+  // region (StockTrak seul = l'Europe) n'en a pas.
+  const kR=cleU(c)+"-regions";
+  const multi=!FU.europe&&!!PFS?.univers?.[kR];
+  const k=multi&&FU.parRegion?kR:cleU(c);
   const u=await charger(`classements/${k}.json`);
   if(!u){vue.innerHTML=`<div class="card err">Classement « ${esc(k)} » pas encore calculé : il le sera au prochain
     passage du programme.</div>`;return}
@@ -135,12 +157,14 @@ async function vueUnivers(){
     &&(!q||(x.Societe||"").toLowerCase().includes(q)||(x.Ticker||"").toLowerCase().includes(q)));
   l.sort((a,b)=>(a.rang??1e9)-(b.rang??1e9)||(b.rang_combine??-1)-(a.rang_combine??-1));
   const tot=l.length; l=l.slice(0,FU.lim);
-  vue.innerHTML=`<div class="filtres">
+  vue.innerHTML=(multi&&!FU.stocktrak?blocAllocation(u):"")+`<div class="filtres">
       <label><input type="checkbox" id="fEu" ${FU.europe?"checked":""}> Contrainte Europe</label>
       <label><input type="checkbox" id="fSt" ${FU.stocktrak?"checked":""}> Contrainte StockTrak</label>
       <select id="fRe"><option value="">Toutes régions</option>${regions.map(r=>
         `<option ${FU.region===r?"selected":""}>${esc(r)}</option>`).join("")}</select>
       <label><input type="checkbox" id="fCl" ${FU.classes?"checked":""}> Classés seulement</label>
+      ${multi?`<label title="Chaque région classée contre elle-même : percentiles, médianes sectorielles, planchers">
+        <input type="checkbox" id="fPr" ${FU.parRegion?"checked":""}> Classer par région</label>`:""}
       <input type="text" id="fQ" placeholder="Rechercher un titre" value="${esc(FU.q)}" style="width:220px">
       <span class="compte">${u.nb_titres} titres · ${u.nb_classes} classés · ${Math.min(tot,FU.lim)} affichés sur ${tot}</span></div>
     <div class="card"><table><thead><tr><th>Rang</th><th class="l">Titre</th><th class="l">Pays</th><th class="l">Secteur</th>
@@ -156,13 +180,15 @@ async function vueUnivers(){
       <td class="${x.marge>0?"neg":"pos"}">${S(x.marge,1)}</td></tr>`).join("")}</tbody></table></div>
     ${tot>FU.lim?`<button class="btn plus-lignes" id="fPlus">Afficher 100 de plus</button>`:""}
     <p class="note">Le classement est refait dans l'univers coché : percentiles, médianes sectorielles et planchers
-      dépendent de l'univers. Avec les deux contraintes, c'est exactement le classement du fonds. Clique une ligne
-      pour sa fiche d'analyse.</p>`;
+      dépendent de l'univers. Avec les deux contraintes, c'est exactement le classement du fonds.
+      ${multi&&FU.parRegion?" Classé par région : le rang est celui du titre <b>dans sa région</b>.":""}
+      Clique une ligne pour sa fiche d'analyse.</p>`;
   const re=()=>{FU.lim=100;vueUnivers()};
   document.getElementById("fEu").onchange=e=>{FU.europe=e.target.checked;re()};
   document.getElementById("fSt").onchange=e=>{FU.stocktrak=e.target.checked;re()};
   document.getElementById("fRe").onchange=e=>{FU.region=e.target.value;re()};
   document.getElementById("fCl").onchange=e=>{FU.classes=e.target.checked;re()};
+  const pr=document.getElementById("fPr"); if(pr) pr.onchange=e=>{FU.parRegion=e.target.checked;re()};
   let t; document.getElementById("fQ").oninput=e=>{clearTimeout(t);t=setTimeout(()=>{FU.q=e.target.value;re();
     const i=document.getElementById("fQ"); i.focus(); i.setSelectionRange(i.value.length,i.value.length)},250)};
   const p=document.getElementById("fPlus"); if(p) p.onclick=()=>{FU.lim+=100;vueUnivers()};
@@ -193,7 +219,7 @@ function courbe(series,couleurs){
 }
 async function vueBacktest(){
   const pf=(PFS?.portefeuilles||[]);
-  const choix=[["polaris","Polaris (Europe · StockTrak)"],["monde","Univers mondial, 30 lignes"],
+  const choix=[["polaris","Polaris (Europe · StockTrak)"],["monde","Univers mondial, 40 lignes réparties ACWI"],
     ...pf.map(p=>[p.id,p.nom])];
   if(!choix.some(c=>c[0]===BT)) BT="polaris";
   const r=await charger(`backtest/${BT}.json`);
@@ -263,7 +289,10 @@ function formulaire(){
       <label class="c">Nombre de lignes<input type="number" id="nN" min="5" max="60" value="25"></label>
       <label class="c">Capital (€)<input type="number" id="nCap" min="1000" step="1000" value="100000"></label>
       <label class="c" style="grid-column:1/-1">Indice de comparaison<select id="nInd">${Object.entries(ind).map(([k,v])=>
-        `<option value="${esc(k)}">${esc(v)}</option>`).join("")}</select></label>
+        `<option value="${esc(k)}" ${k==="IUSQ.DE"?"selected":""}>${esc(v)}</option>`).join("")}</select></label>
+      <label class="c" style="grid-column:1/-1">Répartition<select id="nRep">
+        <option value="acwi" selected>Pondérations MSCI ACWI par région, classement dans chaque région</option>
+        <option value="libre">Libre : les N premiers du classement global, équipondérés</option></select></label>
       <div class="cases">
         <label><input type="checkbox" id="nEu" checked> Contrainte Europe — région Europe uniquement</label>
         <label><input type="checkbox" id="nSt" checked> Contrainte StockTrak — titres vérifiés dans StockTrak</label>
@@ -280,6 +309,7 @@ function formulaire(){
     if(document.getElementById("nSt").checked) c.push("stocktrak");
     const def={id:slug(nom),nom,contraintes:c,nb_lignes:+document.getElementById("nN").value||25,
       capital:+document.getElementById("nCap").value||100000,indice:document.getElementById("nInd").value,
+      repartition:document.getElementById("nRep").value,
       date_creation:new Date().toISOString().slice(0,10)};
     try{
       await ecrireDefinitions(l=>{ if(l.some(x=>x.id===def.id)) def.id+="-"+Date.now().toString(36).slice(-4);

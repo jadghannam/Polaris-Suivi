@@ -72,16 +72,64 @@ def cle(contraintes) -> str:
 
 
 def classer_univers(univers_complet, contraintes, rang_in, dcf_in, hist_ca, wacc,
-                    cours, taux, bloques, vetos) -> pd.DataFrame:
+                    cours, taux, bloques, vetos, par_region: bool = False) -> pd.DataFrame:
     """Classement et DCF d'un univers filtre. Les blocages StockTrak ne valent
-    que sous la contrainte StockTrak : ils disent ce que StockTrak cote mal."""
+    que sous la contrainte StockTrak : ils disent ce que StockTrak cote mal.
+
+    par_region (14/11/2026) : chaque region est classee contre elle-meme
+    (percentiles, medianes sectorielles, planchers, liste de suivi). Sans
+    cela, la jambe valorisation mesure le pays plus que la societe : la Coree
+    cote structurellement sous ses fonds propres et occupait le haut du
+    classement mondial. Le DCF, lui, ne depend pas du classement.
+    """
     stocktrak = "stocktrak" in set(contraintes or ())
     u = filtrer(univers_complet, contraintes)
-    clt = cl.classer(u, rang_in, cours, taux, bloques if stocktrak else set(),
-                     exiger_stocktrak=stocktrak)
+    if par_region:
+        morceaux = [cl.classer(g, rang_in, cours, taux, bloques if stocktrak else set(),
+                               exiger_stocktrak=stocktrak)
+                    for _, g in u.groupby(u["Region"].fillna("Europe"))]
+        clt = pd.concat(morceaux, ignore_index=True)
+    else:
+        clt = cl.classer(u, rang_in, cours, taux, bloques if stocktrak else set(),
+                         exiger_stocktrak=stocktrak)
     ev = dcf.evaluer(clt, dcf_in, hist_ca, wacc)
     ev["veto_qualitatif"] = ev["Ticker"].isin(vetos)
+    ev["par_region"] = par_region
     return ev
+
+
+# ------------------------------------------------------- allocation ACWI ----
+def allocation_acwi() -> dict:
+    """Poids du MSCI ACWI par region, pays et secteur, HORS financieres et
+    immobilier, ramenes a 100 % (data/msci_acwi.csv, relu a chaque
+    reconstruction de l'univers). C'est la cible d'un portefeuille construit
+    en repartition ACWI : on suit l'allocation de l'indice, on ne la decide pas."""
+    chemin = cfg.DATA / "msci_acwi.csv"
+    if not chemin.exists():
+        return {}
+    m = pd.read_csv(chemin)
+    hors = m[m["Secteur"].notna()]
+    tot = float(hors["poids_acwi"].sum()) or 1.0
+    par = lambda c: {k: float(v) / tot for k, v in
+                     hors.groupby(c)["poids_acwi"].sum().sort_values(ascending=False).items()}
+    import datetime as _dt
+    return {"date_fichier": _dt.date.fromtimestamp(chemin.stat().st_mtime).isoformat(),
+            "part_hors_financieres": tot / float(m["poids_acwi"].sum() or 1.0),
+            "region": par("Region"), "pays": par("Pays"), "secteur": par("Secteur"),
+            "nb_constituants": int(len(m)), "nb_hors_financieres": int(len(hors))}
+
+
+def repartir(n: int, poids: dict[str, float]) -> dict[str, int]:
+    """n lignes reparties au prorata des poids (plus forts restes)."""
+    tot = sum(poids.values())
+    if n <= 0 or tot <= 0:
+        return {}
+    brut = {k: n * v / tot for k, v in poids.items()}
+    k = {r: int(np.floor(x)) for r, x in brut.items()}
+    reste = n - sum(k.values())
+    for r in sorted(brut, key=lambda r: brut[r] - k[r], reverse=True)[:reste]:
+        k[r] += 1
+    return {r: v for r, v in k.items() if v > 0}
 
 
 COLONNES_FICHE = [
@@ -140,7 +188,10 @@ def definitions() -> list[dict]:
             "nb_lignes": int(d.get("nb_lignes") or 25),
             "capital": float(d.get("capital") or 100_000),
             "date_creation": d.get("date_creation") or dt.date.today().isoformat(),
-            "indice": d.get("indice") if d.get("indice") in cfg.INDICES else "URTH",
+            "indice": d.get("indice") if d.get("indice") in cfg.INDICES else "IUSQ.DE",
+            # acwi : classement par region et poids des regions de l'ACWI ;
+            # libre : les N premiers du classement global, equiponderes.
+            "repartition": d.get("repartition") if d.get("repartition") in ("acwi", "libre") else "acwi",
             "archive": bool(d.get("archive", False)),
         })
     return out
@@ -155,22 +206,54 @@ def eligibles(ev: pd.DataFrame) -> pd.DataFrame:
     return ev[m].sort_values("rang")
 
 
-def construire(d: dict, ev: pd.DataFrame, taux: dict, aujourdhui: dt.date) -> pd.DataFrame:
-    """Les N premiers eligibles, equiponderes au cours du jour."""
-    choix = eligibles(ev).head(d["nb_lignes"])
+def choisir(el: pd.DataFrame, n: int, repartition: str, poids_region: dict) -> pd.DataFrame:
+    """Lignes retenues et leur poids cible.
+
+    libre : les n premiers, equiponderes.
+    acwi  : n lignes reparties entre les regions au prorata de leur poids dans
+            l'ACWI (hors financieres, ramene aux regions presentes), les
+            meilleures de chaque region ; chaque region recoit EXACTEMENT son
+            poids, partage egalement entre ses lignes. Une region a court de
+            titres eligibles cede ses lignes aux suivantes."""
+    if repartition != "acwi" or not poids_region:
+        c = el.head(n).copy()
+        c["poids_cible"] = 1 / len(c) if len(c) else np.nan
+        return c
+    presents = {r: w for r, w in poids_region.items() if r in set(el["Region"])}
+    k = repartir(n, presents)
+    pris, manque = [], 0
+    for r, kr in k.items():
+        g = el[el["Region"] == r].head(kr)
+        manque += kr - len(g)
+        pris.append(g)
+    c = pd.concat(pris) if pris else el.head(0)
+    if manque > 0:
+        reste = el[~el["Ticker"].isin(c["Ticker"])].sort_values("rang_combine", ascending=False)
+        c = pd.concat([c, reste.head(manque)])
+    w = c["Region"].map(presents).fillna(0.0)
+    nb = c.groupby("Region")["Ticker"].transform("count")
+    c["poids_cible"] = (w / nb) / (w / nb).sum()
+    return c
+
+
+def construire(d: dict, ev: pd.DataFrame, taux: dict, aujourdhui: dt.date,
+               alloc: dict | None = None) -> pd.DataFrame:
+    """Lignes retenues au cours du jour, selon la repartition du portefeuille."""
+    choix = choisir(eligibles(ev), d["nb_lignes"], d.get("repartition", "libre"),
+                    (alloc or {}).get("region", {}))
     if len(choix) < d["nb_lignes"]:
         note(f"portefeuille {d['id']} : {len(choix)} titres eligibles seulement "
              f"pour {d['nb_lignes']} demandes")
     if choix.empty:
         return pd.DataFrame()
-    poche = d["capital"] / len(choix)
+    poche = d["capital"] * choix["poids_cible"]
     fx = choix["devise"].map(lambda x: taux.get(x, np.nan))
     cours_eur = choix["cours"] / fx
     return pd.DataFrame({
         "Ticker": choix["Ticker"].values, "date_entree": aujourdhui.isoformat(),
         "devise": choix["devise"].values, "prix_entree": choix["cours"].values,
         "taux_entree": fx.values, "quantite": (poche / cours_eur).values,
-        "rang_entree": choix["rang"].values,
+        "rang_entree": choix["rang"].values, "poids_cible": choix["poids_cible"].values,
     })
 
 
@@ -244,7 +327,11 @@ def suivre(d: dict, pos: pd.DataFrame, ev: pd.DataFrame, taux: dict,
                     or z["decrochage"] == sg.SORTIE)
         remp = None
         if globale == sg.SORTIE:
-            m = sg.meilleur_remplacant(candidats, r.Secteur, ecarts)
+            # Reparti ACWI : le remplacant vient de la meme region, sinon
+            # l'allocation derive a chaque echange.
+            pool = candidats[candidats["Region"] == r.Region] \
+                if d.get("repartition") == "acwi" else candidats
+            m = sg.meilleur_remplacant(pool, r.Secteur, ecarts)
             if m is not None:
                 remp = {"Ticker": m["Ticker"], "Societe": m["Societe"],
                         "rang": _propre(m["rang"]), "verdict": m["verdict"]}
@@ -307,16 +394,37 @@ def calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
         ecrire_classement(ev, k, c)
         note(f"univers {k} : {len(ev)} titres, {int(ev['rang'].notna().sum())} classes, "
              f"{int(ev['liste_suivi'].fillna(False).sum())} en liste de suivi")
+    # Classement par region, pour les univers qui couvrent plusieurs regions
+    # (sans la contrainte Europe). Polaris n'est pas concerne.
+    for k, c in list(combos.items()):
+        if "europe" in c:
+            continue
+        u = filtrer(univers_complet, c)
+        if u["Region"].nunique() < 2:
+            continue
+        ev = classer_univers(univers_complet, c, rang_in, dcf_in, hist_ca, wacc,
+                             cours, taux, bloques, vetos, par_region=True)
+        classements[k + "-regions"] = ev
+        ecrire_classement(ev, k + "-regions", c)
+        note(f"univers {k} classe par region : {int(ev['rang'].notna().sum())} classes "
+             f"dans {ev['Region'].nunique()} regions")
+    alloc = allocation_acwi()
+
+    def ev_de(d):
+        k = cle(d["contraintes"])
+        if d.get("repartition") == "acwi" and k + "-regions" in classements:
+            return classements[k + "-regions"]
+        return classements[k]
 
     DOSSIER.mkdir(parents=True, exist_ok=True)
     etats = []
     for d in defs:
-        ev = classements[cle(d["contraintes"])]
+        ev = ev_de(d)
         chemin = DOSSIER / f"{d['id']}.csv"
         if chemin.exists():
             pos = pd.read_csv(chemin)
         else:
-            pos = construire(d, ev, taux, aujourdhui)
+            pos = construire(d, ev, taux, aujourdhui, alloc)
             if pos.empty:
                 note(f"ATTENTION portefeuille {d['id']} : aucun titre eligible, non construit")
                 continue
@@ -331,21 +439,22 @@ def calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
         "date": aujourdhui.isoformat(),
         "contraintes": cfg.CONTRAINTES,
         "indices": {k: v[0] for k, v in cfg.INDICES.items()},
-        "univers": {k: {"contraintes": c, "nb_titres": len(classements[k]),
-                        "nb_classes": int(classements[k]["rang"].notna().sum())}
-                    for k, c in combos.items()},
+        "univers": {k: {"nb_titres": len(v), "nb_classes": int(v["rang"].notna().sum()),
+                        "par_region": k.endswith("-regions")}
+                    for k, v in classements.items()},
+        "allocation_acwi": alloc,
         "portefeuilles": etats,
     }, ensure_ascii=False, indent=1, default=_propre), encoding="utf-8")
     note(f"docs/portefeuilles.json ecrit ({len(etats)} portefeuilles personnels)")
 
     # Backtest : le samedi (comptes rafraichis), ou des qu'il en manque un.
     from . import backtest as bt
-    voulus = {"polaris": (list(cfg.CONTRAINTES_POLARIS), 26, "^STOXX"),
-              "monde": ([], 30, "URTH")}
+    voulus = {"polaris": (list(cfg.CONTRAINTES_POLARIS), 26, "^STOXX", "libre"),
+              "monde": ([], 40, "IUSQ.DE", "acwi")}
     for d in defs:
-        voulus[d["id"]] = (d["contraintes"], d["nb_lignes"], d["indice"])
+        voulus[d["id"]] = (d["contraintes"], d["nb_lignes"], d["indice"], d["repartition"])
     manquants = {k: v for k, v in voulus.items()
                  if not (cfg.DOCS / "backtest" / f"{k}.json").exists()}
     a_faire = voulus if aujourdhui.weekday() == cfg.JOUR_FONDAMENTAUX else manquants
     if a_faire:
-        bt.tout(univers_complet, a_faire)
+        bt.tout(univers_complet, a_faire, alloc.get("region", {}))

@@ -5,6 +5,8 @@
   "stocktrak": "Disponible et verifie dans StockTrak"
  },
  "indices": {
+  "IUSQ.DE": "MSCI ACWI (ETF iShares, EUR)",
+  "EUNL.DE": "MSCI World (ETF iShares, EUR)",
   "URTH": "MSCI World (ETF iShares URTH)",
   "^STOXX": "STOXX Europe 600",
   "^GSPC": "S&P 500",
@@ -14,32 +16,109 @@
  },
  "univers": {
   "monde": {
-   "contraintes": [],
-   "nb_titres": 1262,
-   "nb_classes": 444
+   "nb_titres": 1879,
+   "nb_classes": 665,
+   "par_region": false
   },
   "europe": {
-   "contraintes": [
-    "europe"
-   ],
-   "nb_titres": 458,
-   "nb_classes": 167
+   "nb_titres": 476,
+   "nb_classes": 175,
+   "par_region": false
   },
   "stocktrak": {
-   "contraintes": [
-    "stocktrak"
-   ],
    "nb_titres": 192,
-   "nb_classes": 73
+   "nb_classes": 73,
+   "par_region": false
   },
   "europe-stocktrak": {
-   "contraintes": [
-    "europe",
-    "stocktrak"
-   ],
    "nb_titres": 192,
-   "nb_classes": 73
+   "nb_classes": 73,
+   "par_region": false
+  },
+  "monde-regions": {
+   "nb_titres": 1879,
+   "nb_classes": 686,
+   "par_region": true
   }
+ },
+ "allocation_acwi": {
+  "date_fichier": "2026-11-14",
+  "part_hors_financieres": 0.8131808951070921,
+  "region": {
+   "Amerique du Nord": 0.7087392036204089,
+   "Europe": 0.1287839068406965,
+   "Japon": 0.048014569938464084,
+   "Taiwan": 0.0343828472088082,
+   "Coree": 0.023138055685863305,
+   "Chine": 0.01789508540522642,
+   "Pacifique": 0.013024641960318991,
+   "Inde": 0.012100223516101443,
+   "Moyen-Orient et Afrique": 0.007491928585225863,
+   "Amerique latine": 0.0043461464168437335,
+   "Asie emergente": 0.0020833908220425513
+  },
+  "pays": {
+   "Etats-Unis": 0.686994674245978,
+   "Japon": 0.048014569938464084,
+   "Taiwan": 0.0343828472088082,
+   "Royaume-Uni": 0.02682193217252131,
+   "Coree du Sud": 0.023138055685863305,
+   "France": 0.022075664339523716,
+   "Canada": 0.021744529374430856,
+   "Suisse": 0.02075112447915229,
+   "Allemagne": 0.017991666436711826,
+   "Chine": 0.01789508540522642,
+   "Inde": 0.012100223516101443,
+   "Pays-Bas": 0.011810480421645187,
+   "Australie": 0.009492535665995196,
+   "Suede": 0.007174590910345207,
+   "Espagne": 0.005850051049973785,
+   "Danemark": 0.003973619581114268,
+   "Italie": 0.00386324125941665,
+   "Afrique du Sud": 0.002814647203289275,
+   "Belgique": 0.0025387013990452274,
+   "Mexique": 0.0020282016611937424,
+   "Finlande": 0.0019868097905571345,
+   "Hong Kong": 0.0018764314688595157,
+   "Arabie saoudite": 0.0017384585667374933,
+   "Bresil": 0.001683269405888684,
+   "Israel": 0.0016556748254642785,
+   "Singapour": 0.001324539860371423,
+   "Norvege": 0.001324539860371423,
+   "Thailande": 0.0010623913463395794,
+   "Pologne": 0.0008968238637931514,
+   "Emirats arabes unis": 0.0006484726399735094,
+   "Malaisie": 0.0006208780595491047,
+   "Irlande": 0.0005518916084880929,
+   "Portugal": 0.00044151328679047433,
+   "Turquie": 0.0004001214161538675,
+   "Chili": 0.00033113496509285586,
+   "Nouvelle-Zelande": 0.00033113496509285575,
+   "Grece": 0.00027594580424404656,
+   "Perou": 0.0002483512238196419,
+   "Philippines": 0.00022075664339523727,
+   "Autriche": 0.00022075664339523716,
+   "Indonesie": 0.00017936477275863028,
+   "Qatar": 0.00017936477275863028,
+   "Hongrie": 0.00013797290212202328,
+   "Republique tcheque": 9.658103148541631e-05,
+   "Colombie": 5.518916084880932e-05,
+   "Koweit": 4.139187063660698e-05,
+   "Egypte": 1.379729021220233e-05
+  },
+  "secteur": {
+   "Technologies de l'information": 0.36831866221474097,
+   "Industrie": 0.12725240762714202,
+   "Sante": 0.11751152073732718,
+   "Consommation discretionnaire": 0.1110543889180165,
+   "Services de communication": 0.0908689533375645,
+   "Consommation de base": 0.062280968017881286,
+   "Energie": 0.05031871740390187,
+   "Materiaux": 0.04248185656337095,
+   "Services aux collectivites": 0.029912525180054633
+  },
+  "nb_constituants": 1952,
+  "nb_hors_financieres": 1471
  },
  "portefeuilles": []
 }

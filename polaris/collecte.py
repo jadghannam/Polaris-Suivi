@@ -48,6 +48,19 @@ PLACES = {
     ".AT": ("EUR", 1.0),
     # Univers mondial, 14/11/2026
     ".T": ("JPY", 1.0), ".HK": ("HKD", 1.0), ".KS": ("KRW", 1.0),
+    # MSCI ACWI, 14/11/2026. Trois places cotent, comme Londres, dans une
+    # SOUS-UNITE : Johannesburg en cents (ZAc), Tel-Aviv en agorot (ILA),
+    # Koweit en fils (KWF, millieme de dinar). Sans diviseur, le B/M de ces
+    # titres serait cent ou mille fois trop faible.
+    ".JO": ("ZAR", 100.0), ".TA": ("ILS", 100.0), ".KW": ("KWD", 1000.0),
+    ".TO": ("CAD", 1.0), ".AX": ("AUD", 1.0), ".SI": ("SGD", 1.0), ".NZ": ("NZD", 1.0),
+    ".TWO": ("TWD", 1.0), ".TW": ("TWD", 1.0), ".NS": ("INR", 1.0), ".BO": ("INR", 1.0),
+    ".KQ": ("KRW", 1.0), ".SS": ("CNY", 1.0), ".SZ": ("CNY", 1.0),
+    ".SA": ("BRL", 1.0), ".SR": ("SAR", 1.0), ".MX": ("MXN", 1.0), ".KL": ("MYR", 1.0),
+    ".BK": ("THB", 1.0), ".JK": ("IDR", 1.0), ".PS": ("PHP", 1.0), ".IS": ("TRY", 1.0),
+    ".QA": ("QAR", 1.0), ".AE": ("AED", 1.0), ".AD": ("AED", 1.0), ".DU": ("AED", 1.0),
+    ".SN": ("CLP", 1.0), ".BD": ("HUF", 1.0), ".PR": ("CZK", 1.0), ".CL": ("COP", 1.0),
+    ".CA": ("EGP", 1.0),
 }
 
 

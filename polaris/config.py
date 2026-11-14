@@ -152,7 +152,11 @@ JOUR_FONDAMENTAUX = 5             # 0 = lundi ... 5 = samedi
 # JPY, HKD, KRW, CNY ajoutees le 14/11/2026 avec l'univers mondial (les
 # H-shares de Hong Kong publient le plus souvent en renminbi).
 DEVISES = ("GBP", "SEK", "DKK", "CHF", "NOK", "USD", "PLN",
-           "JPY", "HKD", "KRW", "CNY")
+           "JPY", "HKD", "KRW", "CNY",
+           # MSCI ACWI, 14/11/2026
+           "CAD", "AUD", "SGD", "ILS", "NZD", "TWD", "INR", "BRL", "SAR", "ZAR",
+           "MXN", "MYR", "THB", "IDR", "PHP", "TRY", "QAR", "AED", "KWD", "CLP",
+           "HUF", "CZK", "COP", "EGP", "PEN")
 # Hors univers du fonds, les ~1 300 titres mondiaux ont leurs comptes
 # rafraichis par tranche, un cinquieme chaque jour ouvre : 1 300 appels le
 # meme jour depuis un serveur GitHub, c'est la coupure du 5 novembre en pire.
@@ -176,6 +180,11 @@ CONTRAINTES_POLARIS = ("europe", "stocktrak")
 # Indices de comparaison proposes pour un portefeuille personnel :
 # symbole Yahoo -> (nom, devise). La performance est toujours mesuree en euros.
 INDICES = {
+    # Indice de reference des portefeuilles personnels depuis le 14/11/2026.
+    # ETF iShares MSCI ACWI cote a Xetra en euros : performance directement
+    # en euros, dividendes reinvestis (part capitalisante).
+    "IUSQ.DE": ("MSCI ACWI (ETF iShares, EUR)", "EUR"),
+    "EUNL.DE": ("MSCI World (ETF iShares, EUR)", "EUR"),
     "URTH": ("MSCI World (ETF iShares URTH)", "USD"),
     "^STOXX": ("STOXX Europe 600", "EUR"),
     "^GSPC": ("S&P 500", "USD"),
@@ -195,11 +204,25 @@ INDICES = {
 # dollar) : les valeurs ci-dessous ne servent alors que de repli.
 # JPY et KRW : Yahoo ne les sert pas. A VALIDER PAR JAD, niveaux approximatifs
 # au 14/11/2026, a recaler sur les rendements du jour avant toute decision.
+#
+# L'ecart de taux decale le WACC ET la croissance perpetuelle (et donc le seuil
+# de veto et la borne du verdict A) : c'est l'ecart d'inflation anticipee
+# entre la devise et l'euro (Fisher). Decaler le seul WACC ferait passer toute
+# societe d'un pays a inflation forte pour chere.
+#
+# Pays emergents ajoutes avec l'ACWI le 14/11/2026 : ordres de grandeur, A
+# VALIDER. Une devise absente de la table est traitee comme l'euro.
 TAUX_SANS_RISQUE_DEVISE = {
     "USD": 0.0430,   # Treasury 10 ans (repli si ^TNX indisponible)
     "JPY": 0.0150,   # JGB 10 ans
     "HKD": 0.0430,   # arrime au dollar (repli)
     "KRW": 0.0290,   # KTB 10 ans
+    "CAD": 0.0330, "AUD": 0.0440, "NZD": 0.0450, "SGD": 0.0280, "ILS": 0.0420,
+    "TWD": 0.0160, "CNY": 0.0180, "INR": 0.0660, "MYR": 0.0370, "THB": 0.0240,
+    "IDR": 0.0680, "PHP": 0.0620, "BRL": 0.1350, "MXN": 0.0950, "CLP": 0.0580,
+    "COP": 0.1050, "PEN": 0.0630, "SAR": 0.0500, "AED": 0.0450, "QAR": 0.0450,
+    "KWD": 0.0430, "ZAR": 0.1000, "EGP": 0.2200, "TRY": 0.2800, "HUF": 0.0680,
+    "CZK": 0.0420,
 }
 
 # ---------------------------- lignes fantomes --------------------------------

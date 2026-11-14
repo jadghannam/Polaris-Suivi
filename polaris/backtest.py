@@ -155,14 +155,16 @@ def rendements_eur(prix: pd.DataFrame, fx: pd.DataFrame) -> pd.DataFrame:
     return eur.pct_change(fill_method=None)
 
 
-def _panier(r: pd.DataFrame, titres: list[str], debut, fin) -> pd.Series:
-    """Equipondere au debut, poids qui derivent ensuite (buy and hold)."""
-    titres = [t for t in titres if t in r.columns]
-    bloc = r.loc[(r.index > debut) & (r.index <= fin), titres].fillna(0.0)
-    if bloc.empty or not titres:
+def _panier(r: pd.DataFrame, titres: list[str], debut, fin,
+            poids: list[float] | None = None) -> pd.Series:
+    """Poids de depart (egaux par defaut), qui derivent ensuite (buy and hold)."""
+    w = pd.Series(poids if poids is not None else [1.0] * len(titres), index=titres, dtype=float)
+    w = w[[t for t in titres if t in r.columns]]
+    bloc = r.loc[(r.index > debut) & (r.index <= fin), list(w.index)].fillna(0.0)
+    if bloc.empty or w.empty or w.sum() <= 0:
         return pd.Series(dtype=float)
-    valeur = (1 + bloc).cumprod()
-    total = valeur.mean(axis=1)
+    valeur = (1 + bloc).cumprod() * (w / w.sum())
+    total = valeur.sum(axis=1)
     return total / total.shift(1).fillna(1.0) - 1
 
 
@@ -194,7 +196,10 @@ def statistiques(r: pd.Series, ref: pd.Series | None) -> dict:
 # ------------------------------------------------------------- moteur -------
 def lancer(univers: pd.DataFrame, nom: str, nb_lignes: int, indice: str,
            etats: pd.DataFrame, prix: pd.DataFrame, fx: pd.DataFrame,
-           fx_indice: pd.DataFrame) -> dict:
+           fx_indice: pd.DataFrame, repartition: str = "libre",
+           poids_region: dict | None = None) -> dict:
+    from .portefeuilles import choisir
+    acwi = repartition == "acwi" and bool(poids_region) and univers["Region"].nunique() > 1
     r = rendements_eur(prix[[t for t in univers["Ticker"] if t in prix.columns]], fx)
     if r.empty:
         return {"erreur": "aucun cours"}
@@ -211,16 +216,24 @@ def lancer(univers: pd.DataFrame, nom: str, nb_lignes: int, indice: str,
     strat, equi, quint = [], [], {q: [] for q in range(1, 6)}
     compositions = []
     for i, d in enumerate(dates):
-        df = classer_a(d, univers, etats, prix, fx)
+        if acwi:
+            # Chaque region classee contre elle-meme, comme sur la plateforme.
+            df = pd.concat([classer_a(d, g, etats, prix, fx)
+                            for _, g in univers.groupby("Region")], ignore_index=True)
+        else:
+            df = classer_a(d, univers, etats, prix, fx)
         if len(df) < 20:
             continue
         suivant = dates[i + 1] - pd.DateOffset(months=1) if i + 1 < len(dates) else fin
-        retenus = df[df["plancher_ok"]].head(nb_lignes)
+        el = df[df["plancher_ok"]].sort_values("combine", ascending=False) \
+               .assign(rang_combine=lambda x: x["combine"])
+        retenus = choisir(el, nb_lignes, "acwi" if acwi else "libre", poids_region or {})
         compositions.append({"date": d.date().isoformat(), "nb_classes": int(len(df)),
-                             "titres": [{"Ticker": t, "Societe": s} for t, s in
-                                        zip(retenus["Ticker"], retenus["Societe"])]})
+                             "titres": [{"Ticker": t, "Societe": s, "Region": g} for t, s, g in
+                                        zip(retenus["Ticker"], retenus["Societe"], retenus["Region"])]})
         debut = d - pd.DateOffset(months=1)
-        strat.append(_panier(r, retenus["Ticker"].tolist(), debut, suivant))
+        strat.append(_panier(r, retenus["Ticker"].tolist(), debut, suivant,
+                             retenus["poids_cible"].tolist()))
         equi.append(_panier(r, df["Ticker"].tolist(), debut, suivant))
         q = pd.qcut(df["combine"].rank(method="first"), 5, labels=[5, 4, 3, 2, 1])
         for k in range(1, 6):
@@ -250,8 +263,10 @@ def lancer(univers: pd.DataFrame, nom: str, nb_lignes: int, indice: str,
         c = (1 + x.fillna(0)).cumprod()
         return [{"date": d.date().isoformat(), "v": float(v)} for d, v in c.items()]
 
+    limites_acwi = ["Repartition ACWI : poids des regions d'aujourd'hui appliques a toute la periode "
+                    "(l'historique des poids MSCI n'est pas disponible gratuitement)."] if acwi else []
     return {
-        "univers": nom, "nb_lignes": nb_lignes, "indice": indice,
+        "univers": nom, "nb_lignes": nb_lignes, "indice": indice, "repartition": "acwi" if acwi else "libre",
         "indice_nom": cfg.INDICES.get(indice, (indice,))[0],
         "calcule_le": dt.date.today().isoformat(),
         "periode": [s.index.min().date().isoformat(), s.index.max().date().isoformat()],
@@ -272,12 +287,13 @@ def lancer(univers: pd.DataFrame, nom: str, nb_lignes: int, indice: str,
             "Biais du survivant : univers d'aujourd'hui, societes disparues absentes.",
             "Environ trois ans : trop court pour conclure sur une prime, utile pour verifier la mecanique.",
             "Cours ajustes des dividendes ; frais de transaction non deduits.",
-        ],
+        ] + limites_acwi,
     }
 
 
-def tout(univers_complet: pd.DataFrame, combos: dict[str, tuple[list, int, str]]) -> None:
-    """combos : cle -> (contraintes, nb_lignes, indice). Ecrit docs/backtest/<cle>.json."""
+def tout(univers_complet: pd.DataFrame, combos: dict[str, tuple], poids_region: dict | None = None) -> None:
+    """combos : cle -> (contraintes, nb_lignes, indice, repartition).
+    Ecrit docs/backtest/<cle>.json."""
     from .portefeuilles import filtrer
     chemin = cfg.DATA / "etats_annuels.csv"
     if not chemin.exists():
@@ -291,9 +307,10 @@ def tout(univers_complet: pd.DataFrame, combos: dict[str, tuple[list, int, str]]
     fx = change_mensuel(devises)
     dossier = cfg.DOCS / "backtest"
     dossier.mkdir(parents=True, exist_ok=True)
-    for k, (contraintes, n, indice) in combos.items():
+    for k, (contraintes, n, indice, *rep) in combos.items():
         u = filtrer(univers_complet, contraintes)
-        res = lancer(u, k, n, indice, etats, prix, fx, fx)
+        res = lancer(u, k, n, indice, etats, prix, fx, fx,
+                     rep[0] if rep else "libre", poids_region)
         (dossier / f"{k}.json").write_text(json.dumps(res, ensure_ascii=False,
                                                       separators=(",", ":")), encoding="utf-8")
         st = res.get("statistiques", {}).get("strategie", {})
@@ -305,6 +322,7 @@ def tout(univers_complet: pd.DataFrame, combos: dict[str, tuple[list, int, str]]
 if __name__ == "__main__":
     from .journal import lignes
     u = pd.read_csv(cfg.DATA / "univers.csv")
-    tout(u, {"polaris": (["europe", "stocktrak"], 26, "^STOXX"),
-             "monde": ([], 30, "URTH")})
+    from .portefeuilles import allocation_acwi
+    tout(u, {"polaris": (["europe", "stocktrak"], 26, "^STOXX", "libre"),
+             "monde": ([], 40, "IUSQ.DE", "acwi")}, allocation_acwi().get("region", {}))
     print("\n".join(lignes()))
