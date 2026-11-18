@@ -1,5 +1,5 @@
 {
- "date": "2026-11-17",
+ "date": "2026-11-18",
  "contraintes": {
   "europe": "Region Europe uniquement",
   "stocktrak": "Disponible et verifie dans StockTrak"
@@ -17,7 +17,7 @@
  "univers": {
   "monde": {
    "nb_titres": 1879,
-   "nb_classes": 662,
+   "nb_classes": 663,
    "par_region": false
   },
   "europe": {
@@ -37,12 +37,12 @@
   },
   "monde-regions": {
    "nb_titres": 1879,
-   "nb_classes": 685,
+   "nb_classes": 687,
    "par_region": true
   }
  },
  "allocation_acwi": {
-  "date_fichier": "2026-11-17",
+  "date_fichier": "2026-11-18",
   "part_hors_financieres": 0.8131808951070921,
   "region": {
    "Amerique du Nord": 0.7087392036204089,
