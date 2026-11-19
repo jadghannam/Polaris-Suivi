@@ -1,0 +1,810 @@
+{
+ "etat_resume": {
+  "etat": "a_jour",
+  "ecart_beta_max": 0.0,
+  "fichiers": {
+   "betaEurope.xls": "Thu, 08 Jan 2026 19:22:44 GMT",
+   "betaGlobal.xls": "Thu, 08 Jan 2026 19:22:48 GMT",
+   "betaJapan.xls": "Thu, 08 Jan 2026 19:22:33 GMT",
+   "betaemerg.xls": "Thu, 08 Jan 2026 19:22:41 GMT",
+   "betas.xls": "Sun, 12 Apr 2026 16:39:33 GMT",
+   "ctryprem.xlsx": "Mon, 16 Feb 2026 22:20:18 GMT"
+  },
+  "calcule_le": "2026-11-19"
+ },
+ "ecarts": [
+  {
+   "Region": "Europe",
+   "Secteur": "Services de communication",
+   "beta": 0.6892628828912294,
+   "beta_actif": 0.6892628828912294,
+   "de": 0.41536232998208505,
+   "de_actif": 0.41536232998208505
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Technologies de l'information",
+   "beta": 0.9965071434586531,
+   "beta_actif": 0.9965071434586531,
+   "de": 0.11078464331769473,
+   "de_actif": 0.11078464331769473
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Sante",
+   "beta": 1.0456131703367304,
+   "beta_actif": 1.0456131703367304,
+   "de": 0.2681970861240034,
+   "de_actif": 0.2681970861240034
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Energie",
+   "beta": 0.6605529828367416,
+   "beta_actif": 0.6605529828367416,
+   "de": 0.6038949180740467,
+   "de_actif": 0.6038949180740467
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Materiaux",
+   "beta": 0.8469039164716896,
+   "beta_actif": 0.8469039164716896,
+   "de": 0.3612821003749788,
+   "de_actif": 0.3612821003749788
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Industrie",
+   "beta": 0.8812633303390108,
+   "beta_actif": 0.8812633303390108,
+   "de": 0.32852563647754873,
+   "de_actif": 0.32852563647754873
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.80682729750921,
+   "beta_actif": 0.80682729750921,
+   "de": 0.47053151958513906,
+   "de_actif": 0.47053151958513906
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Consommation de base",
+   "beta": 0.46013008180808035,
+   "beta_actif": 0.46013008180808035,
+   "de": 0.45519903654864863,
+   "de_actif": 0.45519903654864863
+  },
+  {
+   "Region": "Europe",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.4518794628379002,
+   "beta_actif": 0.4518794628379002,
+   "de": 0.7934755356499881,
+   "de_actif": 0.7934755356499881
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Services de communication",
+   "beta": 0.814343313775058,
+   "beta_actif": 0.814343313775058,
+   "de": 0.3477683630086648,
+   "de_actif": 0.3477683630086648
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.171151893672974,
+   "beta_actif": 1.171151893672974,
+   "de": 0.08241484492858114,
+   "de_actif": 0.08241484492858114
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Sante",
+   "beta": 0.959874770110556,
+   "beta_actif": 0.959874770110556,
+   "de": 0.16759246817785048,
+   "de_actif": 0.16759246817785048
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Energie",
+   "beta": 0.671352009395572,
+   "beta_actif": 0.671352009395572,
+   "de": 0.3715324563635699,
+   "de_actif": 0.3715324563635699
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Materiaux",
+   "beta": 0.8875308275858443,
+   "beta_actif": 0.8875308275858443,
+   "de": 0.2914791109449576,
+   "de_actif": 0.2914791109449576
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Industrie",
+   "beta": 0.9161231001729824,
+   "beta_actif": 0.9161231001729824,
+   "de": 0.2085294036823921,
+   "de_actif": 0.2085294036823921
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8769660836802146,
+   "beta_actif": 0.8769660836802146,
+   "de": 0.32772702454241726,
+   "de_actif": 0.32772702454241726
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Consommation de base",
+   "beta": 0.6626338439269769,
+   "beta_actif": 0.6626338439269769,
+   "de": 0.33126808438139965,
+   "de_actif": 0.33126808438139965
+  },
+  {
+   "Region": "Amerique du Nord",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.3100790704573275,
+   "beta_actif": 0.3100790704573275,
+   "de": 0.8001454278465872,
+   "de_actif": 0.8001454278465872
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Services de communication",
+   "beta": 1.1879402491094517,
+   "beta_actif": 1.1879402491094517,
+   "de": 0.38684352868694627,
+   "de_actif": 0.38684352868694627
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6989769573512805,
+   "beta_actif": 1.6989769573512805,
+   "de": 0.08926736494532668,
+   "de_actif": 0.08926736494532668
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Sante",
+   "beta": 1.260290404062761,
+   "beta_actif": 1.260290404062761,
+   "de": 0.19147536762316147,
+   "de_actif": 0.19147536762316147
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Energie",
+   "beta": 0.6779935911435139,
+   "beta_actif": 0.6779935911435139,
+   "de": 0.7721008742460594,
+   "de_actif": 0.7721008742460594
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Materiaux",
+   "beta": 1.0350860733819098,
+   "beta_actif": 1.0350860733819098,
+   "de": 0.5585927871180043,
+   "de_actif": 0.5585927871180043
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Industrie",
+   "beta": 1.0987502245154213,
+   "beta_actif": 1.0987502245154213,
+   "de": 0.2501980981751815,
+   "de_actif": 0.2501980981751815
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8913454626873304,
+   "beta_actif": 0.8913454626873304,
+   "de": 0.3698582504747633,
+   "de_actif": 0.3698582504747633
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Consommation de base",
+   "beta": 0.5688547715305922,
+   "beta_actif": 0.5688547715305922,
+   "de": 0.3612317419194612,
+   "de_actif": 0.3612317419194612
+  },
+  {
+   "Region": "Japon",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.563359185757291,
+   "beta_actif": 0.563359185757291,
+   "de": 2.174107695594164,
+   "de_actif": 2.174107695594164
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Services de communication",
+   "beta": 0.931681041663665,
+   "beta_actif": 0.931681041663665,
+   "de": 0.307061714907292,
+   "de_actif": 0.307061714907292
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.4470331980180116,
+   "beta_actif": 1.4470331980180116,
+   "de": 0.09928287363334674,
+   "de_actif": 0.09928287363334674
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Sante",
+   "beta": 1.043112936185727,
+   "beta_actif": 1.043112936185727,
+   "de": 0.18206318593711338,
+   "de_actif": 0.18206318593711338
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Energie",
+   "beta": 0.7806183388356158,
+   "beta_actif": 0.7806183388356158,
+   "de": 0.37660502162880233,
+   "de_actif": 0.37660502162880233
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Materiaux",
+   "beta": 1.0148633093845563,
+   "beta_actif": 1.0148633093845563,
+   "de": 0.32308197102790354,
+   "de_actif": 0.32308197102790354
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Industrie",
+   "beta": 1.0037719061704629,
+   "beta_actif": 1.0037719061704629,
+   "de": 0.35092686508161847,
+   "de_actif": 0.35092686508161847
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.829948696671352,
+   "beta_actif": 0.829948696671352,
+   "de": 0.30809495840949525,
+   "de_actif": 0.30809495840949525
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Consommation de base",
+   "beta": 0.6032871831190205,
+   "beta_actif": 0.6032871831190205,
+   "de": 0.3602976798176647,
+   "de_actif": 0.3602976798176647
+  },
+  {
+   "Region": "Pacifique",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.4790470576118793,
+   "beta_actif": 0.4790470576118793,
+   "de": 0.8181628067607468,
+   "de_actif": 0.8181628067607468
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Chine",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Coree",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Taiwan",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Inde",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Asie emergente",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Amerique latine",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Services de communication",
+   "beta": 1.0819850486809335,
+   "beta_actif": 1.0819850486809335,
+   "de": 0.1901361281165877,
+   "de_actif": 0.1901361281165877
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Technologies de l'information",
+   "beta": 1.6242462038188756,
+   "beta_actif": 1.6242462038188756,
+   "de": 0.11245444629690676,
+   "de_actif": 0.11245444629690676
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Sante",
+   "beta": 1.1576413369186693,
+   "beta_actif": 1.1576413369186693,
+   "de": 0.1674799577653032,
+   "de_actif": 0.1674799577653032
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Energie",
+   "beta": 0.7587958286733352,
+   "beta_actif": 0.7587958286733352,
+   "de": 0.3692375398334059,
+   "de_actif": 0.3692375398334059
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Materiaux",
+   "beta": 0.986232110756946,
+   "beta_actif": 0.986232110756946,
+   "de": 0.38726022697977186,
+   "de_actif": 0.38726022697977186
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Industrie",
+   "beta": 1.042024739860338,
+   "beta_actif": 1.042024739860338,
+   "de": 0.5799988714300007,
+   "de_actif": 0.5799988714300007
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Consommation discretionnaire",
+   "beta": 0.8232534707702296,
+   "beta_actif": 0.8232534707702296,
+   "de": 0.3851446646112579,
+   "de_actif": 0.3851446646112579
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Consommation de base",
+   "beta": 0.6433168110536437,
+   "beta_actif": 0.6433168110536437,
+   "de": 0.3606073212923003,
+   "de_actif": 0.3606073212923003
+  },
+  {
+   "Region": "Moyen-Orient et Afrique",
+   "Secteur": "Services aux collectivites",
+   "beta": 0.5001778972523012,
+   "beta_actif": 0.5001778972523012,
+   "de": 0.9099565879534628,
+   "de_actif": 0.9099565879534628
+  }
+ ],
+ "csv": "Region,Secteur,fichier,beta_desendette,de,impot,nb_societes\r\nEurope,Services de communication,betaEurope.xls,0.6892628828912294,0.41536232998208505,0.10729450043244766,508\r\nEurope,Technologies de l'information,betaEurope.xls,0.9965071434586531,0.11078464331769473,0.1144007307542341,804\r\nEurope,Sante,betaEurope.xls,1.0456131703367304,0.2681970861240034,0.07757814878835168,642\r\nEurope,Energie,betaEurope.xls,0.6605529828367416,0.6038949180740467,0.12136463332365682,198\r\nEurope,Materiaux,betaEurope.xls,0.8469039164716896,0.3612821003749788,0.12707200517331355,652\r\nEurope,Industrie,betaEurope.xls,0.8812633303390108,0.32852563647754873,0.14934132368412262,1074\r\nEurope,Consommation discretionnaire,betaEurope.xls,0.80682729750921,0.47053151958513906,0.15650030547140797,825\r\nEurope,Consommation de base,betaEurope.xls,0.46013008180808035,0.45519903654864863,0.15433365084523432,400\r\nEurope,Services aux collectivites,betaEurope.xls,0.4518794628379002,0.7934755356499881,0.17106901943029756,159\r\nAmerique du Nord,Services de communication,betas.xls,0.814343313775058,0.3477683630086648,0.048628214391926376,353\r\nAmerique du Nord,Technologies de l'information,betas.xls,1.171151893672974,0.08241484492858114,0.06647643278849294,685\r\nAmerique du Nord,Sante,betas.xls,0.959874770110556,0.16759246817785048,0.036598900986547486,1178\r\nAmerique du Nord,Energie,betas.xls,0.671352009395572,0.3715324563635699,0.07689857201951261,282\r\nAmerique du Nord,Materiaux,betas.xls,0.8875308275858443,0.2914791109449576,0.09977007485347043,346\r\nAmerique du Nord,Industrie,betas.xls,0.9161231001729824,0.2085294036823921,0.0974785188787428,681\r\nAmerique du Nord,Consommation discretionnaire,betas.xls,0.8769660836802146,0.32772702454241726,0.11446409541537757,609\r\nAmerique du Nord,Consommation de base,betas.xls,0.6626338439269769,0.33126808438139965,0.08450809438616505,302\r\nAmerique du Nord,Services aux collectivites,betas.xls,0.3100790704573275,0.8001454278465872,0.1035769121620968,89\r\nJapon,Services de communication,betaJapan.xls,1.1879402491094517,0.38684352868694627,0.24669998142224353,354\r\nJapon,Technologies de l'information,betaJapan.xls,1.6989769573512805,0.08926736494532668,0.24377697538273835,662\r\nJapon,Sante,betaJapan.xls,1.260290404062761,0.19147536762316147,0.2000000974037078,206\r\nJapon,Energie,betaJapan.xls,0.6779935911435139,0.7721008742460594,0.28929120005085995,25\r\nJapon,Materiaux,betaJapan.xls,1.0350860733819098,0.5585927871180043,0.2654323547684982,369\r\nJapon,Industrie,betaJapan.xls,1.0987502245154213,0.2501980981751815,0.2756962191019663,850\r\nJapon,Consommation discretionnaire,betaJapan.xls,0.8913454626873304,0.3698582504747633,0.26543398952030467,822\r\nJapon,Consommation de base,betaJapan.xls,0.5688547715305922,0.3612317419194612,0.28061110384715354,274\r\nJapon,Services aux collectivites,betaJapan.xls,0.563359185757291,2.174107695594164,0.23583951657100508,32\r\nPacifique,Services de communication,betaGlobal.xls,0.931681041663665,0.307061714907292,0.12023067241054833,2460\r\nPacifique,Technologies de l'information,betaGlobal.xls,1.4470331980180116,0.09928287363334674,0.11585325306651134,6206\r\nPacifique,Sante,betaGlobal.xls,1.043112936185727,0.18206318593711338,0.0844695538689013,4452\r\nPacifique,Energie,betaGlobal.xls,0.7806183388356158,0.37660502162880233,0.1157295003418566,1402\r\nPacifique,Materiaux,betaGlobal.xls,1.0148633093845563,0.32308197102790354,0.11583410740744714,7276\r\nPacifique,Industrie,betaGlobal.xls,1.0037719061704629,0.35092686508161847,0.15473013917525386,7509\r\nPacifique,Consommation discretionnaire,betaGlobal.xls,0.829948696671352,0.30809495840949525,0.1617544061357975,6879\r\nPacifique,Consommation de base,betaGlobal.xls,0.6032871831190205,0.3602976798176647,0.16076826863115498,3223\r\nPacifique,Services aux collectivites,betaGlobal.xls,0.4790470576118793,0.8181628067607468,0.1573019327820554,902\r\nChine,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nChine,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nChine,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nChine,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nChine,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nChine,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nChine,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nChine,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nChine,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nCoree,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nCoree,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nCoree,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nCoree,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nCoree,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nCoree,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nCoree,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nCoree,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nCoree,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nTaiwan,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nTaiwan,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nTaiwan,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nTaiwan,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nTaiwan,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nTaiwan,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nTaiwan,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nTaiwan,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nTaiwan,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nInde,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nInde,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nInde,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nInde,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nInde,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nInde,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nInde,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nInde,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nInde,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nAsie emergente,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nAsie emergente,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nAsie emergente,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nAsie emergente,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nAsie emergente,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nAsie emergente,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nAsie emergente,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nAsie emergente,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nAsie emergente,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nAmerique latine,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nAmerique latine,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nAmerique latine,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nAmerique latine,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nAmerique latine,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nAmerique latine,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nAmerique latine,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nAmerique latine,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nAmerique latine,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\nMoyen-Orient et Afrique,Services de communication,betaemerg.xls,1.0819850486809335,0.1901361281165877,0.11244256566151602,1116\r\nMoyen-Orient et Afrique,Technologies de l'information,betaemerg.xls,1.6242462038188756,0.11245444629690676,0.10795315989493587,3758\r\nMoyen-Orient et Afrique,Sante,betaemerg.xls,1.1576413369186693,0.1674799577653032,0.11028340549196101,2081\r\nMoyen-Orient et Afrique,Energie,betaemerg.xls,0.7587958286733352,0.3692375398334059,0.15736845196235272,564\r\nMoyen-Orient et Afrique,Materiaux,betaemerg.xls,0.986232110756946,0.38726022697977186,0.15066847751137244,3833\r\nMoyen-Orient et Afrique,Industrie,betaemerg.xls,1.042024739860338,0.5799988714300007,0.14469158733311485,4646\r\nMoyen-Orient et Afrique,Consommation discretionnaire,betaemerg.xls,0.8232534707702296,0.3851446646112579,0.14943072506495644,4418\r\nMoyen-Orient et Afrique,Consommation de base,betaemerg.xls,0.6433168110536437,0.3606073212923003,0.16218121570031763,2101\r\nMoyen-Orient et Afrique,Services aux collectivites,betaemerg.xls,0.5001778972523012,0.9099565879534628,0.16178491190594332,572\r\n"
+}

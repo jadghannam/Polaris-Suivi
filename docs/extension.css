@@ -4,6 +4,63 @@
 /* La zone de depot (display:grid) ignorerait sinon l'attribut hidden. */
 [hidden]{display:none!important}
 
+/* ------------------------------------------- mise en page (19/11/2026) ---
+   Barre laterale vert fonce a gauche, contenu blanc a droite. */
+body{display:grid;grid-template-columns:264px minmax(0,1fr);align-items:start}
+body>.wrap{max-width:1280px;width:100%;margin:0;padding:28px 36px 72px}
+.laterale{position:sticky;top:0;height:100vh;overflow:auto;background:var(--nav);color:var(--navink);
+  padding:22px 16px;display:flex;flex-direction:column;gap:18px}
+.marque-l{display:flex;align-items:center;gap:12px;padding:0 6px 4px}
+.marque-l .logo{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:var(--nav2);color:#fff;font-size:16px;border:1px solid rgba(255,255,255,.15)}
+.marque-l .nom{font-weight:700;letter-spacing:.16em;font-size:15px;color:#fff}
+.marque-l .sous-l{font-size:11.5px;color:var(--navink2)}
+.choix-pf{display:flex;flex-direction:column;gap:6px;font-size:10.5px;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--navink2);font-weight:600;padding:0 4px}
+.choix-pf select{font:inherit;font-size:13.5px;text-transform:none;letter-spacing:0;font-weight:500;
+  padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:var(--nav2);color:#fff}
+.verrou-l{font-size:11.5px;color:var(--navink2);padding:0 6px;margin-top:-8px}
+.groupe{display:flex;flex-direction:column;gap:2px}
+.nav-l{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;font-size:13.5px;color:var(--navink)}
+.nav-l:hover{background:rgba(255,255,255,.07)}
+.nav-l.on{background:#fff;color:var(--nav);font-weight:600}
+.sep-l{font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--navink2);
+  padding:10px 12px 0;border-top:1px solid rgba(255,255,255,.12)}
+header .marque{display:none}
+header{padding-bottom:16px;margin-bottom:22px}
+.titre-section h1{font-size:22px;letter-spacing:-.01em;font-weight:650;margin:0;color:var(--ink)}
+.titre-section .sous{font-size:12.5px;color:var(--ink3);margin-top:2px}
+.deux-col{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
+.deux-col h2{margin-top:30px}
+.tile{box-shadow:0 1px 2px rgba(21,32,26,.04)}
+.tile.large:first-child{background:var(--nav);border-color:var(--nav);color:#fff}
+.tile.large:first-child .k,.tile.large:first-child .s{color:var(--navink2)}
+.tile.large:first-child .v,.tile.large:first-child .s b,.tile.large:first-child .legende b{color:#fff}
+.tile.large:first-child .legende{color:var(--navink)}
+.tile.large:first-child .pos{color:#7fd49e!important} .tile.large:first-child .neg{color:#ff9d94!important}
+.tile.large:first-child .alloc{background:rgba(255,255,255,.18)}
+.alloc .a1{background:#ffffff} .alloc .a2{background:var(--sauge)} .alloc .a3{background:#6f9c7a}
+.tile.large:first-child .legende span:nth-child(1)::before{background:#ffffff}
+.tile.large:first-child .legende span:nth-child(2)::before{background:var(--sauge)}
+.tile.large:first-child .legende span:nth-child(3)::before{background:#6f9c7a}
+.card{box-shadow:0 1px 2px rgba(21,32,26,.04)}
+th{background:var(--surf2)}
+.jrn{color:var(--ink2)}
+@media(max-width:900px){
+  body{grid-template-columns:1fr}
+  .laterale{position:static;height:auto}
+  body>.wrap{padding:20px 16px 56px}
+  .deux-col{grid-template-columns:1fr}
+}
+
+/* ---------------------------------------------------------------- rappels */
+.rappels{margin:-10px 0 22px;padding:12px 18px;border-color:rgba(216,195,147,.35);background:var(--warnbg)}
+.rappel{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;padding:6px 0}
+.rappel+.rappel{border-top:1px solid var(--line)}
+.rappel b{color:var(--warn);font-weight:600}
+.rappel .act{display:flex;gap:8px;flex-shrink:0}
+.rappel a.btn{text-decoration:none}
+
 /* ---------------------------------------------------------------- onglets */
 .onglets{display:flex;flex-wrap:wrap;gap:6px;margin:-8px 0 24px;padding:4px;background:var(--surf);
   border:1px solid var(--line);border-radius:12px}

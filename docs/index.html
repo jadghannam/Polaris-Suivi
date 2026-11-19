@@ -3,29 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="light">
 <title>Polaris — Suivi du fonds</title>
 <style>
-/* Palette Polaris : anthracite #414141, vert fonce #5D6E58, sauge #B1BCAA,
-   menthe #C8E2CF, bleu-gris #B8CCD6. Le bleu-gris est l'accent ; la menthe
-   dit ce qui va bien. Hors palette, un rose et un sable tres adoucis ne servent
-   qu'aux baisses et aux alertes. */
+/* Palette Polaris (19/11/2026) : contenu blanc, cadre vert fonce, texte quasi
+   noir, accents vert sauge. Le rouge et le vert ne servent qu'aux valeurs
+   positives et negatives, dans les tableaux et les graphiques. */
 :root{
-  --bg:#1f201f; --surf:#2a2b2a; --surf2:#333433; --line:#3a3c3a; --line2:#4a4d49;
-  --ink:#f3f5f2; --ink2:#b1bcaa; --ink3:#8b9387;
-  --accent:#b8ccd6; --accentbg:rgba(184,204,214,.12);
-  --menthe:#c8e2cf; --sauge:#b1bcaa; --vert:#5d6e58;
-  --ok:#c8e2cf; --warn:#d8c393; --bad:#dba39c;
-  --okbg:rgba(200,226,207,.10); --warnbg:rgba(216,195,147,.12); --badbg:rgba(219,163,156,.13);
-  --r:14px;
+  --bg:#f6f7f4; --surf:#ffffff; --surf2:#f1f4ef; --line:#e2e7df; --line2:#cdd5c9;
+  --ink:#15201a; --ink2:#3f4d44; --ink3:#6b776f;
+  --accent:#2f5d45; --accentbg:#e4eee3;
+  --menthe:#5d7f62; --sauge:#9db59f; --vert:#1f3a2e;
+  --nav:#1f3a2e; --nav2:#2b4b3c; --navink:#e8f0e9; --navink2:#a9c0ae;
+  --ok:#1e7b45; --warn:#9a6400; --bad:#b3261e;
+  --okbg:#e6f3ea; --warnbg:#fbf1dc; --badbg:#fbe9e7;
+  --r:12px;
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0;color:var(--ink);background:
-  radial-gradient(1200px 500px at 15% -10%,rgba(93,110,88,.22),transparent 60%),var(--bg);
+body{margin:0;color:var(--ink);background:var(--bg);
   font:14.5px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased;min-height:100vh}
-::selection{background:rgba(184,204,214,.3)}
+::selection{background:var(--accentbg)}
 .wrap{max-width:1360px;margin:0 auto;padding:30px 24px 72px}
 code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surf2);
   border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink2)}
@@ -35,7 +34,7 @@ header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:s
   padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--line)}
 .marque{display:flex;align-items:center;gap:14px}
 .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
-  background:var(--vert);border:1px solid rgba(200,226,207,.25);color:var(--menthe);font-size:17px}
+  background:var(--nav2);border:1px solid rgba(232,240,233,.25);color:var(--navink);font-size:17px}
 h1{font-size:19px;margin:0;font-weight:650;letter-spacing:.14em}
 .sous{color:var(--ink3);font-size:12.5px;letter-spacing:.02em;margin-top:1px}
 .maj{display:flex;flex-wrap:wrap;gap:8px}
@@ -123,7 +122,7 @@ button.bl.on{background:var(--badbg);border-color:transparent;color:var(--bad);f
 .btn{font-size:13px;padding:7px 15px;border-radius:9px;border:1px solid var(--line2);
   background:var(--surf2);color:var(--ink)}
 .btn:hover{border-color:var(--ink3)}
-.btn.prim,.cp{background:var(--accent);border-color:var(--accent);color:#1f201f;font-weight:600}
+.btn.prim,.cp{background:var(--accent);border-color:var(--accent);color:#ffffff;font-weight:600}
 .btn.prim:hover,.cp:hover{filter:brightness(1.08)}
 .cp{font-size:13px;padding:7px 15px;border-radius:9px;margin-top:12px;border:1px solid var(--accent)}
 input[type=text],input[type=password]{font:inherit;font-size:13.5px;padding:8px 11px;
@@ -167,9 +166,9 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 .depot .aide .lien{color:var(--accent);margin-left:4px}
 .toast{position:fixed;right:20px;bottom:20px;max-width:380px;background:var(--surf2);color:var(--ink);
   border:1px solid var(--line2);border-radius:12px;padding:12px 16px;font-size:13px;z-index:10;
-  box-shadow:0 8px 30px rgba(0,0,0,.35);transition:opacity .3s;opacity:0;pointer-events:none}
-.toast.ok{border-color:rgba(200,226,207,.4)} .toast.ko{border-color:rgba(219,163,156,.5);color:var(--bad)}
-.apercu{border:1px solid rgba(216,195,147,.3);background:var(--warnbg);color:#e6d9b8;border-radius:12px;
+  box-shadow:0 8px 30px rgba(21,32,26,.18);transition:opacity .3s;opacity:0;pointer-events:none}
+.toast.ok{border-color:var(--ok)} .toast.ko{border-color:var(--bad);color:var(--bad)}
+.apercu{border:1px solid #ecd9a8;background:var(--warnbg);color:var(--ink2);border-radius:12px;
   padding:12px 16px;font-size:13px;margin-bottom:16px;line-height:1.55}
 .apercu strong{color:var(--warn)}
 
@@ -177,7 +176,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 @media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
   .tile.large .v{font-size:28px}}
 </style>
-<link rel="stylesheet" href="extension.css?v=5">
+<link rel="stylesheet" href="extension.css?v=7">
 </head>
 <body>
 <div class="wrap">
@@ -678,7 +677,7 @@ function blocIG(d){
   const o=d.obligations_ig; if(!o||!(o.lignes||[]).length) return "";
   const nb=o.lignes.filter(l=>l.detenue).length;
   const n1=v=>N(v,1);
-  const rows=o.lignes.map(l=>`<tr>
+  const ligne=l=>`<tr>
       <td class="l">${l.rang}</td>
       <td class="l"><span class="soc">${esc(l.obligation)}</span>${l.detenue?' <span class="badge b-ok">détenue</span>':""}</td>
       <td><strong style="color:var(--ink)">${n1(l.score)}</strong></td>
@@ -686,18 +685,21 @@ function blocIG(d){
       <td>${n1(l.diversification)}</td><td>${n1(l.horizon)}</td>
       <td>${E(l.ytm,2)}</td><td>${N(l.duration,2)}</td>
       <td class="${cls(l.alpha_central)}">${S(l.alpha_central,2)}</td>
-      <td class="${cls(l.alpha_stress)}">${S(l.alpha_stress,2)}</td></tr>`).join("");
+      <td class="${cls(l.alpha_stress)}">${S(l.alpha_stress,2)}</td></tr>`;
   const hors=(o.hors_classeur||[]).length?`<p class="note">Détenues mais absentes du classeur, donc non notées :
     ${o.hors_classeur.map(h=>esc(h.description||h.symbole)).join(" · ")}.</p>`:"";
-  return `<h2>Obligations IG <span class="n">score horizon /100 · ${o.lignes.length} obligations · ${nb} détenue${nb>1?"s":""}</span></h2>
-    <div class="card"><table><thead><tr><th class="l">Rang</th><th class="l">Obligation</th><th>Score</th>
+  const tete=`<thead><tr><th class="l">Rang</th><th class="l">Obligation</th><th>Score</th>
       <th>Crédit /25</th><th>Risque /25</th><th>Valo. /25</th><th>Divers. /15</th><th>Horizon /10</th>
-      <th>YTM</th><th>Duration</th><th>Alpha central</th><th>Alpha stress</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
+      <th>YTM</th><th>Duration</th><th>Alpha central</th><th>Alpha stress</th></tr></thead>`;
+  const det=o.lignes.filter(l=>l.detenue), dispo=o.lignes.filter(l=>!l.detenue);
+  return `<h2>Obligations détenues <span class="n">${nb} sur ${o.lignes.length} notées · score horizon /100</span></h2>
+    <div class="card"><table>${tete}<tbody>${det.map(ligne).join("")||'<tr><td colspan="12" class="l">Aucune obligation du classeur détenue.</td></tr>'}</tbody></table></div>
+    ${hors}
+    <h2>Disponibles, non investies <span class="n">${dispo.length} obligations · triées par score</span></h2>
+    <div class="card"><table>${tete}<tbody>${dispo.map(ligne).join("")}</tbody></table></div>
     <p class="note">Données du classeur au ${esc(jour(o.date_donnees))}, horizon de liquidation le ${esc(jour(o.liquidation))}
       (${N(o.horizon_ans,2)} an). Alpha = rendement total approché à l'horizon (YTM × H − duration × choc) moins celui
-      de l'indice IG (YTM ${E(o.indice.ytm,2)}, duration ${N(o.indice.duration,1)}). Stress : +50 pb Bund et +50 pb spread.</p>
-    ${hors}`;
+      de l'indice IG (YTM ${E(o.indice.ytm,2)}, duration ${N(o.indice.duration,1)}). Stress : +50 pb Bund et +50 pb spread.</p>`;
 }
 
 function render(d){
@@ -812,7 +814,28 @@ function render(d){
     <p class="note">Un titre bloqué reste calculé et visible, mais n'est plus proposé comme remplaçant : le suivant
       dans le classement prend sa place. Le clic écrit directement dans <code>data/blocages.csv</code>.</p>`:"";
 
-  document.getElementById("app").innerHTML=tiles+`
+  /* Sections (19/11/2026) : la page n'affiche plus tout d'un bloc. La barre
+     laterale (extension.js) choisit la section ; chaque section est un
+     morceau de ce qui etait la page unique. */
+  const aSuivre=lignes.filter(l=>l.zone!=="ok").sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3));
+  const synthese=tiles+`
+    <div class="deux-col">
+      <div><h2>À surveiller <span class="n">${aSuivre.length} ligne${aSuivre.length>1?"s":""} hors zone OK</span></h2>
+        <div class="card"><table><thead><tr><th class="l">Titre</th><th class="zc">Zone</th><th>vs indice</th><th>Marge DCF</th></tr></thead>
+        <tbody>${aSuivre.map(l=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}">${esc(l.societe)}</span>
+          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}`:""}</div>`:""}</td>
+          <td class="zc">${badge(l.zone)}<div class="rempl">${esc((l.motifs||[]).join(" · "))}</div></td>
+          <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
+          <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td></tr>`).join("")
+          ||'<tr><td colspan="4" class="l">Toutes les lignes sont en zone OK.</td></tr>'}</tbody></table></div></div>
+      <div><h2>Remplaçants prêts <span class="n">${cand.length} éligible${cand.length>1?"s":""}</span></h2>
+        <div class="card"><table><thead><tr><th class="l">Titre</th><th>Rang</th><th class="l">Verdict</th></tr></thead>
+        <tbody>${cand.slice(0,6).map(r=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(r.Ticker)}">${esc(r.Societe)}</span></td>
+          <td>${N(r.rang)}</td><td class="l">${esc(String(r.verdict||"—").split(" - ")[0])}</td></tr>`).join("")
+          ||'<tr><td colspan="3" class="l">Aucun candidat éligible aujourd’hui.</td></tr>'}</tbody></table></div></div>
+    </div>`;
+  const sections={synthese, lignes:"", remplacants:"", obligations:blocIG(d), maj:""};
+  sections.lignes=`
     <h2>Portefeuille <span class="n">${lignes.length} lignes · triées par urgence</span></h2>
     <div class="card"><table><thead>${tete}</thead><tbody>${rows}</tbody></table></div>
     <p class="note">Surveillance : rang &gt; ${d.parametres.rang_surveillance}, ou marge du DCF
@@ -833,19 +856,23 @@ function render(d){
       <td>${E(l.poids)}</td><td class="${cls(l.perf)}">${S(l.perf)}</td>
       <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td></tr>`).join("")}</tbody></table></div>
     <p class="note">Toute ligne de l'export absente de l'univers est traitée comme un ETF : elle compte
-      dans la valeur du fonds et l'allocation, sans classement ni DCF.</p>`:""}
-    ${blocIG(d)}
-
+      dans la valeur du fonds et l'allocation, sans classement ni DCF.</p>`:""}`;
+  sections.remplacants=`
     <h2>Remplaçants prêts <span class="n">${cand.length} éligibles</span></h2>
     <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>
       <th class="l">Secteur</th><th class="l">Pays</th><th>Rang</th><th class="l">Verdict</th>
       <th>g₁</th><th>Seuil</th><th>Marge</th><th>StockTrak</th></tr></thead>
       <tbody>${rempl||VIDE}</tbody></table></div>
-    ${panneau}
+    <p class="note">Éligible : liste de suivi (60 premiers), deux planchers franchis, verdict DCF A ou B, aucun veto
+      qualitatif, négociable sur StockTrak. Clique un nom pour sa fiche d'analyse.</p>
+    ${panneau}`;
+  sections.maj=`
     <h2>Journal d'exécution <span class="n">dernier passage du programme</span></h2>
     <div class="card"><div class="jrn">${esc((d.journal||[]).join("\n"))}</div></div>`;
+  const sec=(window.POLARIS_SECTION&&sections[window.POLARIS_SECTION]!==undefined)?window.POLARIS_SECTION:"synthese";
+  document.getElementById("app").innerHTML=(sec==="synthese"?"":ap)+sections[sec];
 }
 </script>
-<script src="extension.js?v=5"></script>
+<script src="extension.js?v=7"></script>
 </body>
 </html>

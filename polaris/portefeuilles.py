@@ -72,7 +72,8 @@ def cle(contraintes) -> str:
 
 
 def classer_univers(univers_complet, contraintes, rang_in, dcf_in, hist_ca, wacc,
-                    cours, taux, bloques, vetos, par_region: bool = False) -> pd.DataFrame:
+                    cours, taux, bloques, vetos, par_region: bool = False,
+                    regional: dict | None = None) -> pd.DataFrame:
     """Classement et DCF d'un univers filtre. Les blocages StockTrak ne valent
     que sous la contrainte StockTrak : ils disent ce que StockTrak cote mal.
 
@@ -92,7 +93,9 @@ def classer_univers(univers_complet, contraintes, rang_in, dcf_in, hist_ca, wacc
     else:
         clt = cl.classer(u, rang_in, cours, taux, bloques if stocktrak else set(),
                          exiger_stocktrak=stocktrak)
-    ev = dcf.evaluer(clt, dcf_in, hist_ca, wacc)
+    # WACC regional (Damodaran, pays) hors contrainte StockTrak seulement :
+    # le fonds garde sa convention figee en septembre.
+    ev = dcf.evaluer(clt, dcf_in, hist_ca, wacc, None if stocktrak else regional)
     ev["veto_qualitatif"] = ev["Ticker"].isin(vetos)
     ev["par_region"] = par_region
     return ev
@@ -139,6 +142,7 @@ COLONNES_FICHE = [
     "liquide", "negociable", "bloque", "bm_implausible", "rang", "liste_suivi",
     "wacc", "fcff", "ve_marche", "dette_nette", "g1", "cagr_brut", "cagr_retenu",
     "origine_cagr", "seuil", "dispersion", "verdict", "marge", "veto_qualitatif",
+    "origine_wacc", "g_inf",
 ]
 
 
@@ -379,7 +383,7 @@ def ecrire_etats() -> None:
 
 # --------------------------------------------------------- orchestration ----
 def calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
-             bloques, vetos, aujourdhui: dt.date) -> None:
+             bloques, vetos, aujourdhui: dt.date, regional: dict | None = None) -> None:
     defs = [d for d in definitions() if not d["archive"]]
     # Les quatre combinaisons, toujours : la page laisse cocher chaque
     # contrainte separement.
@@ -389,7 +393,7 @@ def calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
     classements = {}
     for k, c in combos.items():
         ev = classer_univers(univers_complet, c, rang_in, dcf_in, hist_ca, wacc,
-                             cours, taux, bloques, vetos)
+                             cours, taux, bloques, vetos, regional=regional)
         classements[k] = ev
         ecrire_classement(ev, k, c)
         note(f"univers {k} : {len(ev)} titres, {int(ev['rang'].notna().sum())} classes, "
@@ -403,7 +407,7 @@ def calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
         if u["Region"].nunique() < 2:
             continue
         ev = classer_univers(univers_complet, c, rang_in, dcf_in, hist_ca, wacc,
-                             cours, taux, bloques, vetos, par_region=True)
+                             cours, taux, bloques, vetos, par_region=True, regional=regional)
         classements[k + "-regions"] = ev
         ecrire_classement(ev, k + "-regions", c)
         note(f"univers {k} classe par region : {int(ev['rang'].notna().sum())} classes "

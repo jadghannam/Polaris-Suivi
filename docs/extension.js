@@ -24,14 +24,24 @@ const chips=c=>`<span class="chips">${Object.keys(CONTR).map(k=>
 const md=v=>v==null||isNaN(v)?"—":N(v/1000,1);          // millions -> milliards
 const code=v=>String(v||"").split(" - ")[0].trim();
 
-let ONGLET="polaris", PFS=null;
-const KONG="polaris_onglet";
-try{ONGLET=localStorage.getItem(KONG)||"polaris"}catch(e){}
+/* Navigation (19/11/2026) : barre laterale. On choisit un portefeuille, puis
+   une section ; Univers et Backtest sont communs a tous. */
+let PF="polaris", SEC="synthese", PFS=null;
+const KNAV="polaris_nav_v2";
+try{const n=JSON.parse(localStorage.getItem(KNAV)||"{}");PF=n.pf||PF;SEC=n.sec||SEC}catch(e){}
+const SECTIONS_POLARIS=[["synthese","Synthèse"],["lignes","Lignes et recommandations"],
+  ["remplacants","Remplaçants"],["obligations","Obligations"],["maj","Mise à jour"]];
+const SECTIONS_PERSO=[["synthese","Synthèse"],["lignes","Lignes et recommandations"],["remplacants","Remplaçants"]];
+const GLOBALES=[["univers","Univers"],["backtest","Backtest"]];
+const TITRES=Object.fromEntries([...SECTIONS_POLARIS,...GLOBALES]);
 
 /* ---------------------------------------------------------- squelette ---- */
 const header=document.querySelector("header");
-const nav=document.createElement("nav"); nav.className="onglets"; nav.id="onglets";
-header.after(nav);
+const aside=document.createElement("aside"); aside.className="laterale"; aside.id="laterale";
+document.body.prepend(aside);
+const titre=document.createElement("div"); titre.className="titre-section";
+header.prepend(titre);
+const nav=document.createElement("div"); nav.id="ancre-nav"; header.after(nav);
 const vue=document.createElement("div"); vue.id="vue"; vue.hidden=true;
 document.getElementById("app").after(vue);
 const voile=document.createElement("div"); voile.id="fiche"; voile.className="voile"; voile.hidden=true;
@@ -40,33 +50,52 @@ voile.addEventListener("click",e=>{if(e.target===voile) fermer()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!voile.hidden) fermer()});
 function fermer(){voile.hidden=true;voile.innerHTML="";document.body.classList.remove("imprime")}
 
-function onglets(){
+function laterale(){
   const pf=(PFS?.portefeuilles||[]);
-  const b=(id,html)=>`<button data-o="${esc(id)}" class="${ONGLET===id?"on":""}">${html}</button>`;
-  nav.innerHTML=b("polaris",`Polaris <span class="verrou">🔒 Europe · StockTrak</span>`)
-    +pf.map(p=>b("pf:"+p.id,esc(p.nom))).join("")
-    +`<span class="sep"></span>`
-    +b("univers","Univers")+b("backtest","Backtest")
-    +`<button class="plus" data-o="nouveau">+ Nouveau portefeuille</button>`;
-  nav.querySelectorAll("button").forEach(x=>x.onclick=()=>{
-    const o=x.dataset.o; if(o==="nouveau"){formulaire();return}
-    ONGLET=o; try{localStorage.setItem(KONG,o)}catch(e){} afficher();
-  });
+  const secs=PF==="polaris"?SECTIONS_POLARIS:SECTIONS_PERSO;
+  const lien=(id,lib)=>`<button class="nav-l ${SEC===id?"on":""}" data-s="${id}">${lib}</button>`;
+  aside.innerHTML=`<div class="marque-l"><div class="logo">✦</div><div><div class="nom">POLARIS</div>
+      <div class="sous-l">Suivi des portefeuilles</div></div></div>
+    <label class="choix-pf">Portefeuille
+      <select id="choixPf"><option value="polaris" ${PF==="polaris"?"selected":""}>Polaris — fonds StockTrak</option>
+        ${pf.map(p=>`<option value="${esc(p.id)}" ${PF===p.id?"selected":""}>${esc(p.nom)}</option>`).join("")}
+        <option value="__nouveau">+ Nouveau portefeuille…</option></select></label>
+    ${PF==="polaris"?'<div class="verrou-l">🔒 Europe · StockTrak</div>':`<div class="verrou-l">${
+      esc((pf.find(p=>p.id===PF)||{}).repartition==="acwi"?"Réparti MSCI ACWI":"Classement global")}</div>`}
+    <nav class="groupe">${secs.map(([i,l])=>lien(i,l)).join("")}</nav>
+    <div class="sep-l">Outils</div>
+    <nav class="groupe">${GLOBALES.map(([i,l])=>lien(i,l)).join("")}</nav>`;
+  aside.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{SEC=b.dataset.s;memo();afficher()});
+  document.getElementById("choixPf").onchange=e=>{
+    if(e.target.value==="__nouveau"){e.target.value=PF;formulaire();return}
+    PF=e.target.value; if(!(GLOBALES.some(g=>g[0]===SEC))) SEC="synthese"; memo(); afficher();
+  };
 }
+function memo(){try{localStorage.setItem(KNAV,JSON.stringify({pf:PF,sec:SEC}))}catch(e){}}
 async function afficher(){
-  onglets();
-  const polaris=ONGLET==="polaris";
-  document.getElementById("depot").hidden=!polaris;
+  // Un portefeuille memorise n'est abandonne qu'une fois la liste chargee.
+  if(PFS&&PF!=="polaris"&&!(PFS.portefeuilles||[]).some(p=>p.id===PF)) PF="polaris";
+  const secs=PF==="polaris"?SECTIONS_POLARIS:SECTIONS_PERSO;
+  if(!secs.some(s=>s[0]===SEC)&&!GLOBALES.some(g=>g[0]===SEC)) SEC="synthese";
+  laterale();
+  const nomPf=PF==="polaris"?"Polaris":((PFS?.portefeuilles||[]).find(p=>p.id===PF)||{}).nom||PF;
+  titre.innerHTML=GLOBALES.some(g=>g[0]===SEC)?`<h1>${esc(TITRES[SEC])}</h1>`
+    :`<h1>${esc(TITRES[SEC]||"Synthèse")}</h1><div class="sous">${esc(nomPf)}</div>`;
+  const polaris=PF==="polaris"&&!GLOBALES.some(g=>g[0]===SEC);
+  document.getElementById("depot").hidden=!(polaris&&SEC==="maj");
   document.getElementById("app").hidden=!polaris;
   vue.hidden=polaris;
-  if(polaris) return;
+  window.scrollTo({top:0});
+  if(polaris){window.POLARIS_SECTION=SEC; if(typeof DATA!=="undefined"&&DATA) render(DATA); return}
   vue.innerHTML='<p class="note">Chargement…</p>';
   try{
-    if(ONGLET==="univers") await vueUnivers();
-    else if(ONGLET==="backtest") await vueBacktest();
-    else if(ONGLET.startsWith("pf:")) vuePortefeuille(ONGLET.slice(3));
+    if(SEC==="univers") await vueUnivers();
+    else if(SEC==="backtest") await vueBacktest();
+    else await vuePortefeuille(PF,SEC);
   }catch(e){vue.innerHTML=`<div class="card err">${esc(e.message||e)}</div>`}
 }
+/* La page Polaris redessine la section active a chaque rendu. */
+window.POLARIS_SECTION=SEC;
 
 /* ------------------------------------------------ portefeuille perso ---- */
 function repartition(titre,o,cible){
@@ -77,7 +106,7 @@ function repartition(titre,o,cible){
     <span class="t">${esc(k)}</span><span class="v">${E(v,1)}${c!=null?` <span class="tick">${E(c,1)}</span>`:""}</span>
     <span class="b"><i style="width:${Math.max(1,v*100)}%"></i></span></div>`).join("")||'<p class="note">—</p>'}</div>`;
 }
-function vuePortefeuille(id){
+async function vuePortefeuille(id,sec){
   const p=(PFS?.portefeuilles||[]).find(x=>x.id===id);
   if(!p){vue.innerHTML=`<div class="card err">Portefeuille introuvable. S'il vient d'être créé,
     le programme le construira à son prochain passage (quelques minutes).</div>`;return}
@@ -86,7 +115,25 @@ function vuePortefeuille(id){
   const lignes=p.lignes.slice().sort((a,b)=>(ordre[a.zone]??3)-(ordre[b.zone]??3)||(a.rang??999)-(b.rang??999));
   const surv=lignes.filter(l=>l.zone==="surveillance").length, sort=lignes.filter(l=>l.zone==="sortie").length;
   const cu=p.cle_univers;
-  vue.innerHTML=`<div class="tiles">
+  if(sec==="remplacants"){
+    // Candidats de l'univers du portefeuille : liste de suivi, verdict A ou B,
+    // sans veto, negociables, non detenus ; meme region si reparti ACWI.
+    const k=cu+(p.repartition==="acwi"&&PFS?.univers?.[cu+"-regions"]?"-regions":"");
+    const u=await charger(`classements/${k}.json`);
+    const det=new Set(p.lignes.map(l=>l.ticker));
+    const c=(u?.lignes||[]).filter(x=>x.liste_suivi&&["A","B"].includes(code(x.verdict))&&!x.veto_qualitatif
+      &&x.negociable&&!x.bm_implausible&&!det.has(x.Ticker)).sort((a,b)=>(a.Region||"").localeCompare(b.Region||"")||a.rang-b.rang);
+    vue.innerHTML=`<h2>Remplaçants éligibles <span class="n">${c.length} titres${p.repartition==="acwi"?" · rang dans leur région":""}</span></h2>
+      <div class="card"><table><thead><tr><th>Rang</th><th class="l">Titre</th><th class="l">Région</th><th class="l">Secteur</th>
+        <th class="l">Verdict</th><th>g₁</th><th>Seuil</th><th>Marge</th></tr></thead><tbody>${c.map(x=>`<tr class="clic" data-f="${esc(x.Ticker)}" data-u="${esc(k)}">
+        <td>${N(x.rang)}</td><td class="l"><span class="soc">${esc(x.Societe)}</span><span class="tick">${esc(x.Ticker)}</span></td>
+        <td class="l">${esc(x.Region||"")}</td><td class="l">${esc(x.Secteur||"")}</td><td class="l">${esc(code(x.verdict))}</td>
+        <td>${E(x.g1,1)}</td><td>${E(x.seuil,1)}</td><td class="${x.marge>0?"neg":"pos"}">${S(x.marge,1)}</td></tr>`).join("")
+        ||'<tr><td colspan="8" class="l">Aucun candidat éligible aujourd’hui.</td></tr>'}</tbody></table></div>
+      <p class="note">${p.repartition==="acwi"?"Réparti ACWI : une ligne sortante est remplacée par un titre de sa région. ":""}Clique une ligne pour sa fiche d'analyse.</p>`;
+    liensFiche(vue); return;
+  }
+  const tuiles=`<div class="tiles">
     <div class="tile large"><div class="k">${esc(p.nom)}</div>
       <div class="v">${N(p.valeur_eur)}<small>€</small>
         <span class="${cls(p.perf)}" style="font-size:16px;margin-left:12px">${S(p.perf,2)}</span></div>
@@ -98,10 +145,15 @@ function vuePortefeuille(id){
       <div class="v">${surv+sort}<small>ligne${surv+sort>1?"s":""}</small></div>
       <div class="points"><span><i style="background:var(--warn)"></i>${surv} surveillance</span>
         <span><i style="background:var(--bad)"></i>${sort} sortie</span></div></div>
-  </div>
+  </div>`;
+  if(sec!=="lignes"){
+    vue.innerHTML=tuiles+`
   <h2>Expositions <span class="n">ce que le bottom-up ne choisit pas, mais qu'il faut voir</span></h2>
   <div class="repart">${repartition("Régions",p.repartition_region,PFS?.allocation_acwi?.region)}${repartition("Devises",p.repartition_devise)}
-    ${repartition("Secteurs",p.repartition_secteur,PFS?.allocation_acwi?.secteur)}</div>
+    ${repartition("Secteurs",p.repartition_secteur,PFS?.allocation_acwi?.secteur)}</div>`;
+    return;
+  }
+  vue.innerHTML=`
   <h2>Lignes <span class="n">${p.nb_lignes_reelles} titres · équipondérés à la construction</span></h2>
   <div class="card"><table><thead><tr><th class="l">Titre</th><th class="l">Région</th><th class="l">Secteur</th>
     <th>Poids</th><th>Perf. €</th><th>Perf. locale</th><th>vs indice</th><th>Rang entrée</th><th>Rang</th>
@@ -213,7 +265,8 @@ function courbe(series,couleurs){
       <text x="${g-8}" y="${y(v)+4}" fill="var(--ink3)" font-size="11" text-anchor="end">${N((v-1)*100,0)} %</text>`;}
   const ans=dates.filter((dt,i)=>i===0||dt.slice(0,4)!==dates[i-1].slice(0,4));
   const ax=ans.map(dt=>`<text x="${x(dt)}" y="${H-8}" fill="var(--ink3)" font-size="11" text-anchor="middle">${dt.slice(0,4)}</text>`).join("");
-  const lignes=noms.map(k=>`<polyline fill="none" stroke="${couleurs[k]||"var(--ink3)"}" stroke-width="${k==="strategie"?2.4:1.5}"
+  const lignes=noms.map(k=>`<polyline fill="none" stroke="${couleurs[k]||"var(--ink3)"}" stroke-width="${k==="strategie"?2.6:1.6}"
+    ${k==="indice"?'stroke-dasharray="5 4"':""}
     points="${series[k].map(p=>`${x(p.date).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ")}"/>`).join("");
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Performance cumulée">${grille}${ax}${lignes}</svg>`;
 }
@@ -227,7 +280,7 @@ async function vueBacktest(){
     ${r&&r.periode?`<span class="compte">${esc(jour(r.periode[0]))} → ${esc(jour(r.periode[1]))} · calculé le ${esc(jour(r.calcule_le))}</span>`:""}</div>`;
   if(!r||r.erreur){vue.innerHTML=sel+`<div class="card err">${r?esc(r.erreur):"Backtest pas encore calculé : il l'est chaque samedi."}</div>`;
     document.getElementById("bSel").onchange=e=>{BT=e.target.value;vueBacktest()};return}
-  const coul={strategie:"#b8ccd6",univers_equipondere:"#b1bcaa",indice:"#d8c393"};
+  const coul={strategie:"#1f3a2e",univers_equipondere:"#9db59f",indice:"#15201a"};
   const noms={strategie:`Stratégie (${r.nb_lignes} lignes)`,univers_equipondere:"Univers équipondéré",indice:r.indice_nom};
   const st=r.statistiques, ks=["strategie","univers_equipondere","indice"].filter(k=>st[k]);
   const ligne=(lib,f)=>`<tr><td class="l">${lib}</td>${ks.map(k=>`<td>${f(st[k]||{})}</td>`).join("")}</tr>`;
@@ -250,7 +303,7 @@ async function vueBacktest(){
     <h2>Quintiles du score combiné <span class="n">Q1 = meilleurs scores · la prime existe si l'escalier descend</span></h2>
     <div class="panneau">${qs.map(k=>{const v=st["Q"+k].rendement_annualise;return `<div class="barre-l">
       <span class="t">Q${k}${k===1?" — meilleurs":k===5?" — moins bons":""}</span><span class="v ${cls(v)}">${S(v,1)}</span>
-      <span class="b"><i style="width:${Math.abs(v||0)/qmax*100}%;background:${v>=0?"var(--menthe)":"var(--bad)"}"></i></span></div>`}).join("")}</div>
+      <span class="b"><i style="width:${Math.abs(v||0)/qmax*100}%;background:${v>=0?"var(--ok)":"var(--bad)"}"></i></span></div>`}).join("")}</div>
     <h2>Rebalancements <span class="n">1<sup>er</sup> juillet, comptes clos au moins 4 mois avant</span></h2>
     <div class="panneau compo">${r.rebalancements.map(c=>`<div><b>${esc(jour(c.date))}</b> · ${c.nb_classes} titres classés :
       ${c.titres.map(t=>esc(t.Societe)).join(", ")}</div>`).join("")}</div>
@@ -386,7 +439,8 @@ async function fiche(t,cu){
   const aujourd=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
   const nb=u?.nb_classes;
   voile.innerHTML=`<div class="feuille">
-    <div class="barre-outils"><button class="btn" id="fFerm">Fermer</button>
+    <div class="barre-outils"><button class="btn" id="fVeto">${x.veto_qualitatif?"Lever le veto":"Poser un veto"}</button>
+      <button class="btn" id="fFerm">Fermer</button>
       <button class="btn prim" id="fPdf">Exporter en PDF</button></div>
     <div class="page">
     <div class="f-tete"><div><div class="f-marque">POLARIS · FICHE D'ANALYSE</div>
@@ -429,7 +483,8 @@ async function fiche(t,cu){
     <div class="f-section"><h3>2 · DCF inversé</h3>
       <table><tbody>
         <tr><td>FCFF normatif (moyenne 3 ans)</td><td>${N(x.fcff)} M€</td></tr>
-        <tr><td>WACC sectoriel${x.devise&&!["EUR","GBP","SEK","DKK","CHF","NOK","PLN"].includes(x.devise)?" (ajusté devise)":""}</td><td>${E(x.wacc,2)}</td></tr>
+        <tr><td>WACC</td><td>${E(x.wacc,2)}</td></tr>
+        <tr><td colspan="2" style="color:#7c837a;font-size:10.5px;text-align:left">${esc(x.origine_wacc||"convention du fonds")}</td></tr>
         <tr><td>Valeur d'entreprise de marché</td><td>${md(x.ve_marche)} Md€</td></tr>
         <tr><td>Dette nette</td><td>${N(x.dette_nette)} M€</td></tr>
         <tr class="fort"><td>Croissance implicite g₁ (5 ans)</td><td>${E(x.g1,2)}</td></tr>
@@ -454,6 +509,7 @@ async function fiche(t,cu){
       <span>Document d'analyse, pas un conseil en investissement</span></div>
     </div></div>`;
   document.getElementById("fFerm").onclick=fermer;
+  document.getElementById("fVeto").onclick=()=>basculerVeto(x.Ticker,x.Societe,!!x.veto_qualitatif);
   document.getElementById("fPdf").onclick=()=>{
     const titre=document.title; document.title=`Polaris - ${x.Societe} - fiche`;
     document.body.classList.add("imprime"); window.print();
@@ -469,9 +525,70 @@ document.getElementById("app").addEventListener("click",ev=>{
   fiche(s.dataset.f,"europe-stocktrak");
 });
 
+/* ------------------------------------------------ rappels (19/11/2026) ---
+   Ce qui demande un geste : taux saisis a la main, mise a jour Damodaran a
+   appliquer, historiques de CA a verifier, revue annuelle. Publie par le
+   programme dans data.json. */
+const bandeau=document.createElement("div"); bandeau.id="rappels"; nav.after(bandeau);
+async function rappels(){
+  const d=await charger("data.json"); const r=(d&&d.rappels)||[];
+  const auj=new Date().toISOString().slice(0,10);
+  const dans=(iso,j)=>iso&&(new Date(iso)-new Date(auj))/864e5<=j;
+  const visibles=r.filter(x=>x.type==="damodaran"||x.type==="cagr"||dans(x.echeance,30));
+  if(!visibles.length){bandeau.innerHTML="";return}
+  bandeau.innerHTML=`<div class="panneau rappels">${visibles.map(x=>`<div class="rappel">
+      <div><b>${esc(x.titre)}</b>${x.echeance?` <span class="tick">échéance ${esc(jour(x.echeance))}</span>`:""}
+        <div class="rempl" style="white-space:normal">${esc(x.detail||"")}</div></div>
+      <div class="act">${x.lien?`<a class="btn" href="${esc(x.lien)}" target="_blank" rel="noopener">Source</a>`:""}
+        ${x.type==="damodaran"?`<button class="btn prim" id="appDamo">Appliquer</button>`:""}</div></div>`).join("")}</div>`;
+  const b=document.getElementById("appDamo"); if(b) b.onclick=appliquerDamodaran;
+}
+async function appliquerDamodaran(){
+  if(!exigerCle()) return;
+  const p=await charger("wacc_regions_propose.json"); if(!p||!p.csv){toast("Table proposée introuvable.","ko");return}
+  const n=(p.ecarts||[]).filter(e=>e.beta_actif!=null&&Math.abs(e.beta-e.beta_actif)>1e-6).length;
+  if(!confirm(`Appliquer la nouvelle table Damodaran ? ${n} couples région × secteur changent `
+    +`(écart de bêta max ${N(p.etat_resume?.ecart_beta_max,2)}). Le fonds Polaris n'est pas concerné.`)) return;
+  try{ await ecrireFichier("data/wacc_regions.csv",()=>p.csv,"WACC regional : table Damodaran appliquee");
+    toast("Table appliquée. Le programme recalcule les portefeuilles (quelques minutes).","ok"); }
+  catch(e){toast("Impossible : "+e.message,"ko")}
+}
+/* Ecrit un fichier du depot (cle GitHub) : f(texte_actuel) -> nouveau texte. */
+async function ecrireFichier(chemin,f,message){
+  for(let essai=0;;essai++){
+    try{
+      const br=(await gh("")).default_branch; let texte="",sha;
+      try{const x=await gh(`/contents/${chemin}?ref=${br}`);texte=b64utf8(x.content);sha=x.sha}
+      catch(e){if(e.status!==404) throw e}
+      const corps={message,content:utf8b64(f(texte)),branch:br}; if(sha) corps.sha=sha;
+      await gh(`/contents/${chemin}`,{method:"PUT",body:JSON.stringify(corps)}); return;
+    }catch(e){if(!(e.status===409||e.status===422)||essai>=2) throw e}
+  }
+}
+/* Veto qualitatif depuis la fiche : ecrit data/vetos.csv, comme le bouton
+   bloquer ecrit data/blocages.csv. Un veto se pose sur un fait etabli. */
+async function basculerVeto(t,societe,actif){
+  if(!exigerCle()) return;
+  let motif="";
+  if(!actif){
+    motif=prompt(`Veto sur ${societe} : quel fait établi le justifie (fusion, offre, contentieux…) ?`,"");
+    if(motif===null||!motif.trim()) return;
+  } else if(!confirm(`Lever le veto sur ${societe} ? Le fait qui le justifiait a-t-il disparu ?`)) return;
+  const j=new Date().toISOString().slice(0,10);
+  try{
+    await ecrireFichier("data/vetos.csv",texte=>{
+      const l=(texte||"Ticker,date,motif\n").replace(/\r/g,"").split("\n").filter(x=>x.trim());
+      const tete=l.shift()||"Ticker,date,motif";
+      const reste=l.filter(x=>x.split(",")[0].trim()!==t);
+      if(!actif) reste.push([t,j,motif.trim()].map(csvChamp).join(","));
+      return [tete,...reste].join("\n")+"\n";
+    },(actif?"veto leve ":"veto ")+t+(actif?"":" : "+motif.trim()));
+    toast(`Veto ${actif?"levé":"posé"} sur ${societe}. Le programme recalcule (quelques minutes).`,"ok");
+    fermer();
+  }catch(e){toast("Impossible : "+e.message,"ko")}
+}
+
 /* ------------------------------------------------------------ demarrage -- */
-charger("portefeuilles.json").then(p=>{PFS=p;
-  if(ONGLET.startsWith("pf:")&&!(p?.portefeuilles||[]).some(x=>"pf:"+x.id===ONGLET)) ONGLET="polaris";
-  afficher();});
-onglets(); afficher();
+charger("portefeuilles.json").then(p=>{PFS=p; afficher();});
+laterale(); afficher(); rappels();
 })();

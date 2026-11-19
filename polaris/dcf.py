@@ -168,24 +168,66 @@ def verdict(g1, cagr_retenu, seuil, disp, fcff0=None, g_inf=cfg.G_INF):
     return VERDICTS["D"]
 
 
+def wacc_regional(r, params: dict, rf: dict, rf_eur: float) -> tuple[float, float]:
+    """WACC d'une societe hors fonds, et l'ecart de taux de sa devise.
+
+    Construit comme celui du fonds, mais avec les parametres de SA region et de
+    SON pays (19/11/2026) :
+      beta re-endette = beta desendette (Damodaran, region x secteur)
+                        x (1 + (1 - t) x D/E)
+      Ke = rf de la devise + beta re-endette x prime actions du pays
+      Kd = rf de la devise + spread de credit + ecart de defaut du pays
+      WACC = Ke x E/V + Kd x (1 - t) x D/V
+    """
+    from .damodaran import prime_du_pays
+    devise = getattr(r, "devise", None) or "EUR"
+    rfl = rf.get(devise, rf_eur)
+    try:
+        s = params["secteurs"].loc[(r.Region if isinstance(r.Region, str) else "Europe", r.Secteur)]
+    except KeyError:
+        return np.nan, rfl - rf_eur
+    prime, defaut = prime_du_pays(params, r.Pays)
+    t, de = float(s["impot"]), float(s["de"])
+    beta = float(s["beta_desendette"]) * (1 + (1 - t) * de)
+    wd = de / (1 + de)
+    ke = rfl + beta * prime
+    kd = rfl + cfg.SPREAD_CREDIT + defaut
+    return ke * (1 - wd) + kd * (1 - t) * wd, rfl - rf_eur
+
+
 def evaluer(classement: pd.DataFrame, dcf_in: pd.DataFrame, hist_ca: pd.DataFrame,
-            wacc: pd.DataFrame) -> pd.DataFrame:
-    """Applique le DCF inverse a toute la liste de suivi."""
+            wacc: pd.DataFrame, regional: dict | None = None) -> pd.DataFrame:
+    """Applique le DCF inverse a toute la liste de suivi.
+
+    regional (19/11/2026) : {"params": damodaran.parametres(), "rf": {devise:
+    taux}, "rf_eur": taux de l'euro}. Absent, c'est la convention du fonds
+    (WACC sectoriel fige en septembre). Present, chaque societe a le WACC de
+    sa region et de son pays. Seuls les univers sans la contrainte StockTrak
+    le recoivent."""
     w = dict(zip(wacc["Secteur"], wacc["WACC"]))
     df = classement.merge(dcf_in, on="Ticker", how="left") \
                    .merge(hist_ca, on="Ticker", how="left")
     df["wacc"] = df["Secteur"].map(w)
-    # Hors Europe, le WACC sectoriel (construit sur le Bund) est decale de
-    # l'ecart de taux sans risque de la devise de cotation. Sans effet sur
-    # l'univers du fonds, tout en devises europeennes. Ajoute le 14/11/2026.
-    # La croissance perpetuelle (donc le plancher du seuil et la borne du
-    # verdict A) est decalee du meme ecart : c'est l'ecart d'inflation.
     df["ecart_rf"] = 0.0
-    if "devise" in df.columns:
+    if regional and regional.get("params"):
+        calc = [wacc_regional(r, regional["params"], regional["rf"], regional["rf_eur"])
+                for r in df.itertuples()]
+        reg = pd.Series([c[0] for c in calc], index=df.index)
+        df["ecart_rf"] = [c[1] for c in calc]
+        df["wacc"] = reg.fillna(df["wacc"] + df["ecart_rf"])
+        df["origine_wacc"] = np.where(reg.notna(), "Damodaran region x secteur, prime du pays",
+                                      "convention du fonds, decalee de l'ecart de taux")
+    elif "devise" in df.columns:
+        # Hors Europe, le WACC sectoriel (construit sur le Bund) est decale de
+        # l'ecart de taux sans risque de la devise de cotation. Sans effet sur
+        # l'univers du fonds, tout en devises europeennes. Ajoute le 14/11/2026.
         df["ecart_rf"] = df["devise"].map(
             lambda d: cfg.TAUX_SANS_RISQUE_DEVISE.get(d, cfg.TAUX_SANS_RISQUE)
             - cfg.TAUX_SANS_RISQUE).fillna(0.0)
         df["wacc"] = df["wacc"] + df["ecart_rf"]
+        df["origine_wacc"] = "convention du fonds (septembre 2026)"
+    # La croissance perpetuelle (donc le plancher du seuil et la borne du
+    # verdict A) est decalee du meme ecart : c'est l'ecart d'inflation.
     df["g_inf"] = cfg.G_INF + df["ecart_rf"]
     df["fcff"] = df.apply(fcff_normatif, axis=1)
     df["ve_marche"] = [ve_marche(r.capitalisation, r.dette_nette,
@@ -196,16 +238,31 @@ def evaluer(classement: pd.DataFrame, dcf_in: pd.DataFrame, hist_ca: pd.DataFram
 
     df["fenetre"] = (df["an_dernier"] - df["an_base"]).fillna(0)
     df["cagr_brut"] = [cagr(r.ca_base, r.ca_dernier, r.fenetre) for r in df.itertuples()]
-    fiable = df["fenetre"] >= cfg.FENETRE_MIN_CAGR
+    fiable = (df["fenetre"] >= cfg.FENETRE_MIN_CAGR) & df["cagr_brut"].notna()
     med = df[fiable].groupby("Secteur")["cagr_brut"].median()
     med_globale = df.loc[fiable, "cagr_brut"].median()
-    df["cagr_retenu"] = [
-        r.cagr_brut if (r.fenetre >= cfg.FENETRE_MIN_CAGR and np.isfinite(r.cagr_brut))
-        else med.get(r.Secteur, med_globale) for r in df.itertuples()]
-    df["origine_cagr"] = np.where(
-        (df["fenetre"] >= cfg.FENETRE_MIN_CAGR) & df["cagr_brut"].notna(),
-        "historique " + df["fenetre"].astype("Int64").astype(str) + " ans",
-        "repli : mediane du secteur")
+    # Repli d'abord sur la mediane du secteur DANS LA REGION (19/11/2026) :
+    # une societe americaine recevait sinon la mediane des europeennes, seules
+    # a avoir un historique de dix ans. Au moins trois historiques requis.
+    if "Region" in df.columns:
+        reg = df["Region"].fillna("Europe")
+        n_rs = df[fiable].groupby([reg[fiable], "Secteur"])["cagr_brut"].agg(["median", "count"])
+        med_rs = n_rs.loc[n_rs["count"] >= 3, "median"].to_dict()
+    else:
+        reg, med_rs = pd.Series("Europe", index=df.index), {}
+    retenu, origine = [], []
+    for r, rg in zip(df.itertuples(), reg):
+        if r.fenetre >= cfg.FENETRE_MIN_CAGR and np.isfinite(r.cagr_brut):
+            retenu.append(r.cagr_brut)
+            origine.append(f"historique {int(r.fenetre)} ans"
+                           + (f" ({r.origine_ca})" if isinstance(getattr(r, "origine_ca", None), str) else ""))
+        elif (rg, r.Secteur) in med_rs:
+            retenu.append(med_rs[(rg, r.Secteur)])
+            origine.append("repli : mediane du secteur dans la region")
+        else:
+            retenu.append(med.get(r.Secteur, med_globale))
+            origine.append("repli : mediane du secteur")
+    df["cagr_retenu"], df["origine_cagr"] = retenu, origine
 
     df["seuil"] = [seuil_veto(r.cagr_retenu, cfg.PLANCHER_SEUIL_VETO + r.ecart_rf)
                    for r in df.itertuples()]

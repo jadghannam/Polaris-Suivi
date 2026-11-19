@@ -212,6 +212,12 @@ INDICES = {
 #
 # Pays emergents ajoutes avec l'ACWI le 14/11/2026 : ordres de grandeur, A
 # VALIDER. Une devise absente de la table est traitee comme l'euro.
+#
+# 19/11/2026 : ces valeurs ne servent plus que de REPLI. polaris/taux.py lit
+# les taux reels (Yahoo, BCE, OCDE) ; seules les devises qu'aucune source
+# gratuite ne couvre gardent la valeur ci-dessous (Taiwan, Asie du Sud-Est,
+# Egypte, Perou), avec un rappel annuel sur la page. A recaler chaque annee.
+DATE_TAUX_MANUELS = "2026-11-14"
 TAUX_SANS_RISQUE_DEVISE = {
     "USD": 0.0430,   # Treasury 10 ans (repli si ^TNX indisponible)
     "JPY": 0.0150,   # JGB 10 ans

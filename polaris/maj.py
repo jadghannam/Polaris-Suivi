@@ -21,6 +21,8 @@ import pandas as pd
 
 from . import classement as cl
 from . import collecte, config as cfg, dcf, signaux as sg
+from . import croissance, damodaran
+from . import taux as tx
 from . import obligations as ob
 from . import portefeuilles as pfs
 from . import positions as ps
@@ -83,10 +85,36 @@ def rafraichir_monde(tickers: list[str], taux: dict) -> None:
     note(f"univers mondial : comptes lus pour {len(neufs)} / {len(tickers)} titres")
 
 
+def _anniversaire(iso: str) -> str:
+    d = dt.date.fromisoformat(iso)
+    return dt.date(d.year + 1, d.month, d.day).isoformat()
+
+
+def reconstruire_univers_si_mensuel(aujourdhui: dt.date) -> None:
+    """Le premier samedi du mois, l'univers et les poids MSCI ACWI sont relus
+    dans les fichiers iShares (MSCI revoit ses indices chaque trimestre).
+    Les lignes du fonds n'y sont jamais modifiees (univers_monde.py)."""
+    marque = cfg.DATA / "univers_reconstruit_le.txt"
+    dernier = marque.read_text().strip() if marque.exists() else "2000-01-01"
+    if not (aujourdhui.weekday() == cfg.JOUR_FONDAMENTAUX and aujourdhui.day <= 7):
+        return
+    if (aujourdhui - dt.date.fromisoformat(dernier)).days < 20:
+        return
+    from . import univers_monde
+    try:
+        avant = len(_lire("univers.csv"))
+        apres = len(univers_monde.construire())
+        marque.write_text(aujourdhui.isoformat())
+        note(f"univers reconstruit (mensuel) : {avant} -> {apres} titres")
+    except Exception as e:                              # noqa: BLE001
+        note(f"ATTENTION reconstruction mensuelle de l'univers impossible : {e}")
+
+
 def main() -> None:
     vider()
     aujourdhui = dt.date.today()
     note(f"mise a jour du {aujourdhui.isoformat()}")
+    reconstruire_univers_si_mensuel(aujourdhui)
 
     # Univers mondial (14/11/2026) et univers du fonds. Tout ce qui suit
     # jusqu'a l'ecriture de data.json ne voit QUE l'univers du fonds, filtre
@@ -183,9 +211,23 @@ def main() -> None:
             if sans_taux:
                 note(f"ATTENTION comptes sans taux de change, dette non mise a jour : "
                      f"{', '.join(sans_taux)}")
-            for c in ("dette_nette", "minoritaires", "mises_en_equivalence"):
+            for c in MONTANTS_DCF:
                 if c in neufs.columns:
-                    neufs[c] = neufs[c] / div
+                    neufs[c] = pd.to_numeric(neufs[c], errors="coerce") / div
+            # 19/11/2026 : les flux du DCF (EBIT, amortissements, capex,
+            # variation du BFR), le taux d'impot et le nombre d'actions sont
+            # rafraichis comme la dette. Ils venaient du fichier de septembre
+            # et n'etaient jamais relus : Rockwool, Acerinox, Syensqo et
+            # Centrica y avaient un flux normatif negatif que les trois
+            # derniers exercices publies contredisent.
+            ancien_dcf = _lire("fondamentaux_dcf.csv").set_index("Ticker")
+            if "actions_m" in neufs.columns:
+                a = neufs.set_index("Ticker")["actions_m"].dropna()
+                avant = ancien_dcf["actions_m"].reindex(a.index)
+                bouge = a[(avant.notna()) & ((a / avant - 1).abs() > 0.10)]
+                if len(bouge):
+                    note("nombre d'actions modifie de plus de 10 % : " + ", ".join(
+                        f"{t} {avant[t]:,.0f} -> {v:,.0f} M" for t, v in bouge.items()))
             for cible, colonnes in (
                 # La devise voyage avec les montants : sans elle, les chiffres
                 # fraichement collectes (en devise de publication) se
@@ -194,8 +236,7 @@ def main() -> None:
                 ("fondamentaux_rang.csv", ["ca", "cogs", "profit_brut",
                                            "actif", "fonds_propres",
                                            "devise_etats"]),
-                ("fondamentaux_dcf.csv", ["dette_nette", "minoritaires",
-                                          "mises_en_equivalence"]),
+                ("fondamentaux_dcf.csv", MONTANTS_DCF + ["taux_impot", "actions_m"]),
             ):
                 ancien = _lire(cible).set_index("Ticker")
                 maj = neufs.set_index("Ticker")[[c for c in colonnes
@@ -230,6 +271,11 @@ def main() -> None:
                     dcf_in = garde
 
     # ------------------------------------------------- classement et DCF ----
+    # Croissance du CA : historique saisi prolonge avec Yahoo, sous controle
+    # (polaris/croissance.py). Le fichier saisi n'est jamais reecrit.
+    chemin_etats = cfg.DATA / "etats_annuels.csv"
+    hist_ca, ca_a_verifier = croissance.etendre(
+        hist_ca, pd.read_csv(chemin_etats) if chemin_etats.exists() else None)
     if "actions_m" in dcf_in.columns:
         rang_in = rang_in.merge(dcf_in[["Ticker", "actions_m"]], on="Ticker",
                                 how="left")
@@ -543,16 +589,57 @@ def main() -> None:
     # Taux sans risque hors Europe : ceux que Yahoo donne remplacent la saisie
     # de config.py pour ce passage. Sans effet sur le fonds (devises europeennes,
     # et son DCF est deja ecrit plus haut).
-    lus = collecte.taux_sans_risque()
-    cfg.TAUX_SANS_RISQUE_DEVISE.update(lus)
-    note("taux sans risque hors Europe : " + ", ".join(
-        f"{k} {v:.2%}{' (Yahoo)' if k in lus else ' (config.py, a valider)'}"
-        for k, v in cfg.TAUX_SANS_RISQUE_DEVISE.items()))
+    # Taux sans risque par devise (Yahoo, BCE, OCDE ; config.py en repli).
+    # Les devises europeennes n'entrent PAS dans la table de decalage de la
+    # convention du fonds : elle ne decale que le non-europeen.
+    usd = collecte.taux_sans_risque().get("USD")
+    table_rf = tx.taux_du_jour(usd)
+    rf = dict(zip(table_rf["devise"], table_rf["taux"]))
+    europeennes = {"EUR", "GBP", "SEK", "DKK", "NOK", "CHF", "PLN", "CZK", "HUF"}
+    cfg.TAUX_SANS_RISQUE_DEVISE.update({k: v for k, v in rf.items() if k not in europeennes})
+    manuels = table_rf[table_rf["source"].str.startswith("saisi")]
+    note("taux sans risque : " + ", ".join(
+        f"{r.devise} {r.taux:.2%} ({r.source.split(',')[0]})" for r in table_rf.itertuples()))
+    # Parametres annuels de Damodaran (WACC regional des portefeuilles perso).
+    try:
+        etat_damo = damodaran.mettre_a_jour()
+        params = damodaran.parametres()
+    except Exception as e:                              # noqa: BLE001
+        note(f"ATTENTION parametres Damodaran indisponibles : {e}")
+        etat_damo, params = {"etat": "indisponible"}, None
+    regional = {"params": params, "rf": rf, "rf_eur": rf.get("EUR", cfg.TAUX_SANS_RISQUE)} \
+        if params else None
     try:
         pfs.calculer(univers_complet, rang_in, dcf_in, hist_ca, wacc, cours, taux,
-                     bloques, vetos, aujourdhui)
+                     bloques, vetos, aujourdhui, regional)
     except Exception as e:                              # noqa: BLE001
         note(f"ATTENTION portefeuilles personnels non calcules : {e}")
+
+    # Rappels pour la page : ce qui demande un geste, et quand.
+    rappels = []
+    if len(manuels):
+        rappels.append({"type": "taux", "echeance": _anniversaire(cfg.DATE_TAUX_MANUELS),
+                        "titre": f"{len(manuels)} taux sans risque saisis a la main",
+                        "detail": ", ".join(f"{r.devise} {r.taux:.2%}" for r in manuels.itertuples())
+                        + " : aucune source gratuite. A recaler chaque annee dans config.py.",
+                        "lien": "https://www.investing.com/rates-bonds/world-government-bonds"})
+    if etat_damo.get("etat") == "proposee":
+        rappels.append({"type": "damodaran", "echeance": aujourdhui.isoformat(),
+                        "titre": "Mise a jour annuelle Damodaran disponible",
+                        "detail": f"ecart de beta desendette max {etat_damo['ecart_beta_max']:.2f} ; "
+                                  "a appliquer depuis l'onglet Univers (portefeuilles perso, pas le fonds).",
+                        "lien": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html"})
+    if ca_a_verifier:
+        rappels.append({"type": "cagr", "echeance": aujourdhui.isoformat(),
+                        "titre": f"{len(ca_a_verifier)} historiques de CA a verifier",
+                        "detail": " ; ".join(f"{x['Ticker']} : {x['motif']}" for x in ca_a_verifier),
+                        "lien": None})
+    rappels.append({"type": "annuel", "echeance": f"{aujourdhui.year + (aujourdhui.month > 1)}-01-15",
+                    "titre": "Revue annuelle des vetos et des verifications StockTrak",
+                    "detail": "Chaque veto repose-t-il encore sur un fait etabli ? Chaque titre "
+                              "verifie l'est-il toujours ?", "lien": None})
+    sortie["rappels"] = rappels
+    sortie["taux_sans_risque"] = table_rf.to_dict("records")
     # Le journal de data.json est reecrit pour inclure ces dernieres lignes.
     sortie["journal"] = lignes()
     (cfg.DOCS / "data.json").write_text(

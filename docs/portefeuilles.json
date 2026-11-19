@@ -17,27 +17,27 @@
  "univers": {
   "monde": {
    "nb_titres": 1879,
-   "nb_classes": 663,
+   "nb_classes": 661,
    "par_region": false
   },
   "europe": {
    "nb_titres": 476,
-   "nb_classes": 176,
+   "nb_classes": 174,
    "par_region": false
   },
   "stocktrak": {
    "nb_titres": 192,
-   "nb_classes": 73,
+   "nb_classes": 72,
    "par_region": false
   },
   "europe-stocktrak": {
    "nb_titres": 192,
-   "nb_classes": 73,
+   "nb_classes": 72,
    "par_region": false
   },
   "monde-regions": {
    "nb_titres": 1879,
-   "nb_classes": 692,
+   "nb_classes": 689,
    "par_region": true
   }
  },

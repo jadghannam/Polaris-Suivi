@@ -315,6 +315,26 @@ On suit l'allocation de l'indice, on ne la décide pas : pas de macro.
 croissance perpétuelle (écart d'inflation, Fisher). Taux des émergents dans
 `config.py`, à valider ; seuls USD et HKD sont relus sur Yahoo.
 
+**Fréquence de mise à jour de chaque donnée (19/11/2026).**
+
+| Fréquence | Donnée | Source |
+|---|---|---|
+| Chaque soir | cours, volumes, change, indice, Treasury 10 ans ; recalcul du classement, du DCF, des zones | Yahoo |
+| Chaque samedi | comptes du classement (CA, coût des ventes, actif, fonds propres) | Yahoo |
+| Chaque samedi | dette nette, minoritaires, mises en équivalence, **flux du DCF (EBIT, amortissements, capex, BFR), impôt, nombre d'actions** | Yahoo, convertis en euros |
+| Chaque samedi | prolongement du CAGR du CA (contrôle à 5 % sur l'exercice commun) | Yahoo + `historique_ca.csv` |
+| Chaque samedi | taux sans risque hors euro | BCE, OCDE ; `config.py` en repli |
+| Chaque samedi (vérifie la date) | bêtas Damodaran, primes de risque pays | fichiers de Damodaran, appliqués d'un clic |
+| Premier samedi du mois | univers et poids MSCI ACWI | fichiers iShares |
+| Une fois par an | taux sans source gratuite (Taïwan, Asie du Sud-Est, Égypte, Pérou, Turquie), revue des vetos et des vérifications StockTrak | rappel sur la page |
+| Sur événement | vetos (bouton dans la fiche), blocages (bouton du portefeuille), comités | Jad |
+
+Le flux et le nombre d'actions du fonds venaient du fichier de septembre et
+n'étaient jamais relus ; ce fichier contenait déjà des minoritaires fantômes
+(Novo, ASML, Ahold…). Depuis le 19/11, ils sont rafraîchis comme la dette.
+Le WACC du fonds (`wacc_secteurs.csv`) reste figé jusqu'à la clôture :
+Damodaran ne nourrit que les portefeuilles personnels.
+
 **Bug corrigé le même jour.** Le premier rafraîchissement hebdomadaire écrivait
 la dette nette en devise de publication dans `fondamentaux_dcf.csv`, tenu en
 euros : Assa Abloy, Essity et Royal Unibrew tombaient en veto DCF. La
