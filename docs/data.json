@@ -958,9 +958,11 @@
      "solde_liquidites_eur": -1967.4276128137572,
      "liquidites_apres_eur": 23276.29011993661,
      "execution": {
-      "statut": "comite",
+      "statut": "confirmation",
       "comite": "2026-12-04",
-      "motif": "sortie non confirmee : attendre les 5 clotures ou le comite"
+      "clotures": 1,
+      "requises": 5,
+      "motif": "sortie non confirmee (1 / 5 clotures) : pas de vente avant la 5e cloture, meme en comite"
      }
     }
    },
