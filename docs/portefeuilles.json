@@ -17,7 +17,7 @@
  "univers": {
   "monde": {
    "nb_titres": 1879,
-   "nb_classes": 662,
+   "nb_classes": 663,
    "par_region": false
   },
   "europe": {
@@ -27,17 +27,17 @@
   },
   "stocktrak": {
    "nb_titres": 192,
-   "nb_classes": 71,
+   "nb_classes": 72,
    "par_region": false
   },
   "europe-stocktrak": {
    "nb_titres": 192,
-   "nb_classes": 71,
+   "nb_classes": 72,
    "par_region": false
   },
   "monde-regions": {
    "nb_titres": 1879,
-   "nb_classes": 690,
+   "nb_classes": 692,
    "par_region": true
   }
  },
