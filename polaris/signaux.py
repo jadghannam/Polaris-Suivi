@@ -162,6 +162,25 @@ def meilleur_remplacant(candidats: pd.DataFrame, secteur_sortant: str,
     return c.iloc[0]
 
 
+# ------------------------------------------------------- ordre d'achat ----
+def ordre_achat(cours, devise: str, montant_eur: float, taux: dict) -> dict:
+    """Quantite entiere a acheter pour atteindre un montant cible en euros.
+
+    Ajoute le 19/11/2026. La cible d'une ligne est la valeur ACTUELLE de la
+    poche actions divisee par le nombre de lignes (1/N) : elle suit la poche,
+    pas les 27 000 EUR du lancement. On arrondit a l'action inferieure, parce
+    que StockTrak ne traite pas de fractions et qu'un arrondi superieur
+    depasserait la cible.
+    """
+    fx = taux.get(devise or "EUR", np.nan)
+    if cours is None or not np.isfinite(cours) or cours <= 0 or not np.isfinite(fx) \
+            or not np.isfinite(montant_eur):
+        return {"quantite": None, "montant_eur": None, "cible_eur": montant_eur}
+    q = int(np.floor(montant_eur * fx / cours))
+    return {"quantite": q, "montant_eur": q * cours / fx, "cible_eur": montant_eur,
+            "cours": float(cours), "devise": devise}
+
+
 # ---------------------------------------------------------- budget -----------
 def budget(transactions_faites: int, transactions_initiales: int = 0,
            aujourdhui: dt.date | None = None) -> dict:

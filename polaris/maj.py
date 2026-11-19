@@ -434,6 +434,10 @@ def main() -> None:
         ecarts[s] = float(bloc["poids_poche"].sum())
     candidats = sg.remplacants_eligibles(ev[ev["liste_suivi"].fillna(False)], detenus,
                                          vetos)
+    # Ordre d'achat d'un remplacant : 1/N de la poche actions d'aujourd'hui.
+    cible_ligne = float(total) / len(pf) if len(pf) else np.nan
+    achats = {r.Ticker: sg.ordre_achat(r.cours, r.devise, cible_ligne, taux)
+              for r in candidats.itertuples()}
 
     portefeuille = []
     for r in pf.itertuples():
@@ -472,9 +476,15 @@ def main() -> None:
         if globale == sg.SORTIE:
             m = sg.meilleur_remplacant(candidats, r.Secteur, ecarts)
             if m is not None:
+                a = achats.get(m["Ticker"], {})
                 remp = {"Ticker": m["Ticker"], "Societe": m["Societe"],
                         "Secteur": m["Secteur"], "rang": _nan(m["rang"]),
-                        "verdict": m["verdict"], "marge": _nan(m["marge"])}
+                        "verdict": m["verdict"], "marge": _nan(m["marge"]),
+                        "achat": {k: _nan(v) for k, v in a.items()},
+                        # La vente de toute la ligne finance l'achat ; l'ecart
+                        # vient des liquidites (ou y retourne).
+                        "vente": {"quantite": _nan(r.quantite), "valeur_eur": _nan(r.valeur_eur)},
+                        "solde_liquidites_eur": _nan((r.valeur_eur or 0) - (a.get("montant_eur") or 0))}
         portefeuille.append(_propre({
             "ticker": r.Ticker, "stocktrak": r.symbole_stocktrak,
             "societe": r.Societe, "pays": r.Pays, "secteur": r.Secteur,
@@ -558,9 +568,11 @@ def main() -> None:
             "hors_classeur": hors_ig,
         },
         "univers": table_univers,
-        "remplacants": [_propre(x) for x in candidats.head(20)[
+        "remplacants": [{**_propre(x), "achat": {k: _nan(v) for k, v in achats.get(x["Ticker"], {}).items()}}
+                        for x in candidats.head(20)[
             ["Ticker", "Societe", "Secteur", "Pays", "rang", "verdict",
              "g1", "seuil", "marge"]].to_dict("records")],
+        "cible_ligne_eur": _nan(cible_ligne),
         "ecartes": [_propre(x) for x in clt[clt["bloque"]][
             ["Ticker", "Societe", "Secteur", "rang"]].to_dict("records")],
         "budget": sg.budget(transactions, transactions_initiales, aujourdhui),

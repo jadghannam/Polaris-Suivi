@@ -176,7 +176,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 @media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
   .tile.large .v{font-size:28px}}
 </style>
-<link rel="stylesheet" href="extension.css?v=7">
+<link rel="stylesheet" href="extension.css?v=8">
 </head>
 <body>
 <div class="wrap">
@@ -702,6 +702,9 @@ function blocIG(d){
       de l'indice IG (YTM ${E(o.indice.ytm,2)}, duration ${N(o.indice.duration,1)}). Stress : +50 pb Bund et +50 pb spread.</p>`;
 }
 
+/* Ordre d'un echange : vendre toute la ligne sortante, acheter 1/N de la poche. */
+const ordreEch=rp=>rp&&rp.achat&&rp.achat.quantite!=null
+  ?` · acheter <b>${N(rp.achat.quantite)}</b> (≈ ${N(rp.achat.montant_eur)} €)`:"";
 function render(d){
   const bl=lire();
   const estBloque=t=>estBloqueGlobal(t,d);
@@ -763,7 +766,7 @@ function render(d){
   const rows=lignes.slice().sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3)||(c.marge??-99)-(a.marge??-99))
     .map(l=>{
       const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
-        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:"";
+        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${ordreEch(l.remplacant)}</div>`:"";
       const conf=l.zone==="sortie"
         ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
       const mot=(l.motifs&&l.motifs.length)
@@ -795,7 +798,10 @@ function render(d){
       <td>${N(r.rang)}</td><td class="l">${esc(r.verdict||"—")}</td>
       <td>${E(r.g1,2)}</td><td>${E(r.seuil,2)}</td>
       <td class="${r.marge>0?"neg":"pos"}">${S(r.marge,2)}</td>
+      <td>${r.achat?.cours!=null?`${N(r.achat.cours,2)} <span class="tick">${esc(r.achat.devise)}</span>`:"—"}</td>
+      <td><strong>${N(r.achat?.quantite)}</strong></td><td>${N(r.achat?.montant_eur)} €</td>
       <td><button class="bl" onclick="basculer('${r.Ticker}','${esc(r.Societe).replace(/'/g,"")}')">bloquer</button></td></tr>`).join("");
+
 
   // Titres bloques : publies par le programme, plus les changements en attente.
   const tousBloques=(d.blocages||[]).filter(x=>!bl[x.Ticker]||bl[x.Ticker].etat==="bloque")
@@ -823,15 +829,15 @@ function render(d){
       <div><h2>À surveiller <span class="n">${aSuivre.length} ligne${aSuivre.length>1?"s":""} hors zone OK</span></h2>
         <div class="card"><table><thead><tr><th class="l">Titre</th><th class="zc">Zone</th><th>vs indice</th><th>Marge DCF</th></tr></thead>
         <tbody>${aSuivre.map(l=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}">${esc(l.societe)}</span>
-          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}`:""}</div>`:""}</td>
+          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}${ordreEch(l.remplacant)}`:""}</div>`:""}</td>
           <td class="zc">${badge(l.zone)}<div class="rempl">${esc((l.motifs||[]).join(" · "))}</div></td>
           <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
           <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td></tr>`).join("")
           ||'<tr><td colspan="4" class="l">Toutes les lignes sont en zone OK.</td></tr>'}</tbody></table></div></div>
       <div><h2>Remplaçants prêts <span class="n">${cand.length} éligible${cand.length>1?"s":""}</span></h2>
-        <div class="card"><table><thead><tr><th class="l">Titre</th><th>Rang</th><th class="l">Verdict</th></tr></thead>
+        <div class="card"><table><thead><tr><th class="l">Titre</th><th>Rang</th><th class="l">Verdict</th><th>À acheter</th></tr></thead>
         <tbody>${cand.slice(0,6).map(r=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(r.Ticker)}">${esc(r.Societe)}</span></td>
-          <td>${N(r.rang)}</td><td class="l">${esc(String(r.verdict||"—").split(" - ")[0])}</td></tr>`).join("")
+          <td>${N(r.rang)}</td><td class="l">${esc(String(r.verdict||"—").split(" - ")[0])}</td><td>${r.achat?.quantite!=null?`<b>${N(r.achat.quantite)}</b> <span class="tick">${N(r.achat.montant_eur)} €</span>`:"—"}</td></tr>`).join("")
           ||'<tr><td colspan="3" class="l">Aucun candidat éligible aujourd’hui.</td></tr>'}</tbody></table></div></div>
     </div>`;
   const sections={synthese, lignes:"", remplacants:"", obligations:blocIG(d), maj:""};
@@ -861,8 +867,12 @@ function render(d){
     <h2>Remplaçants prêts <span class="n">${cand.length} éligibles</span></h2>
     <div class="card"><table><thead><tr><th class="l">#</th><th class="l">Titre</th>
       <th class="l">Secteur</th><th class="l">Pays</th><th>Rang</th><th class="l">Verdict</th>
-      <th>g₁</th><th>Seuil</th><th>Marge</th><th>StockTrak</th></tr></thead>
+      <th>g₁</th><th>Seuil</th><th>Marge</th><th>Cours</th><th>À acheter</th><th>Montant</th><th>StockTrak</th></tr></thead>
       <tbody>${rempl||VIDE}</tbody></table></div>
+    <p class="note">Montant cible d'une ligne : la valeur actuelle de la poche actions divisée par le nombre de lignes,
+      soit <b>${N(d.cible_ligne_eur)} €</b> aujourd'hui (1/N). Quantité arrondie à l'action inférieure, au cours de
+      clôture du jour ; elle sera à recaler sur le cours affiché dans StockTrak au moment de l'ordre. Les autres
+      lignes ne sont pas rééquilibrées : chaque ajustement coûterait une transaction.</p>
     <p class="note">Éligible : liste de suivi (60 premiers), deux planchers franchis, verdict DCF A ou B, aucun veto
       qualitatif, négociable sur StockTrak. Clique un nom pour sa fiche d'analyse.</p>
     ${panneau}`;
@@ -873,6 +883,6 @@ function render(d){
   document.getElementById("app").innerHTML=(sec==="synthese"?"":ap)+sections[sec];
 }
 </script>
-<script src="extension.js?v=7"></script>
+<script src="extension.js?v=8"></script>
 </body>
 </html>

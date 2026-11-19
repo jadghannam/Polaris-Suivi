@@ -337,8 +337,15 @@ def suivre(d: dict, pos: pd.DataFrame, ev: pd.DataFrame, taux: dict,
                 if d.get("repartition") == "acwi" else candidats
             m = sg.meilleur_remplacant(pool, r.Secteur, ecarts)
             if m is not None:
+                # Cible : poids de construction de la ligne sortante (1/N, ou
+                # la part de sa region si reparti ACWI), sur la valeur du jour.
+                w = getattr(r, "poids_cible", None)
+                w = w if w is not None and np.isfinite(w) else 1 / len(p)
+                a = sg.ordre_achat(m["cours"], m["devise"], total * w, taux)
                 remp = {"Ticker": m["Ticker"], "Societe": m["Societe"],
-                        "rang": _propre(m["rang"]), "verdict": m["verdict"]}
+                        "rang": _propre(m["rang"]), "verdict": m["verdict"],
+                        "achat": {k: _propre(v) for k, v in a.items()},
+                        "vente": {"quantite": _propre(r.quantite), "valeur_eur": _propre(r.valeur_eur)}}
         sortie.append({
             "ticker": r.Ticker, "societe": r.Societe, "pays": r.Pays,
             "region": r.Region, "secteur": r.Secteur, "devise": r.devise,

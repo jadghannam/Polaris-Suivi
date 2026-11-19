@@ -121,16 +121,26 @@ async function vuePortefeuille(id,sec){
     const k=cu+(p.repartition==="acwi"&&PFS?.univers?.[cu+"-regions"]?"-regions":"");
     const u=await charger(`classements/${k}.json`);
     const det=new Set(p.lignes.map(l=>l.ticker));
+    // Cible d'une ligne : 1/N de la valeur du jour (meme regle que le fonds) ;
+    // reparti ACWI, la ligne sortante transmet son propre poids (indique par ligne).
+    const taux=(await charger("data.json"))?.taux||{EUR:1};
+    const cibleL=p.valeur_eur/(p.nb_lignes_reelles||1);
+    const qte=x=>{const fx=taux[x.devise||"EUR"]; if(!fx||!(x.cours>0)) return null;
+      const q=Math.floor(cibleL*fx/x.cours); return {q,m:q*x.cours/fx}};
     const c=(u?.lignes||[]).filter(x=>x.liste_suivi&&["A","B"].includes(code(x.verdict))&&!x.veto_qualitatif
       &&x.negociable&&!x.bm_implausible&&!det.has(x.Ticker)).sort((a,b)=>(a.Region||"").localeCompare(b.Region||"")||a.rang-b.rang);
     vue.innerHTML=`<h2>Remplaçants éligibles <span class="n">${c.length} titres${p.repartition==="acwi"?" · rang dans leur région":""}</span></h2>
       <div class="card"><table><thead><tr><th>Rang</th><th class="l">Titre</th><th class="l">Région</th><th class="l">Secteur</th>
-        <th class="l">Verdict</th><th>g₁</th><th>Seuil</th><th>Marge</th></tr></thead><tbody>${c.map(x=>`<tr class="clic" data-f="${esc(x.Ticker)}" data-u="${esc(k)}">
+        <th class="l">Verdict</th><th>g₁</th><th>Seuil</th><th>Marge</th><th>Cours</th><th>À acheter</th><th>Montant</th></tr></thead><tbody>${c.map(x=>{const a=qte(x);return `<tr class="clic" data-f="${esc(x.Ticker)}" data-u="${esc(k)}">
         <td>${N(x.rang)}</td><td class="l"><span class="soc">${esc(x.Societe)}</span><span class="tick">${esc(x.Ticker)}</span></td>
         <td class="l">${esc(x.Region||"")}</td><td class="l">${esc(x.Secteur||"")}</td><td class="l">${esc(code(x.verdict))}</td>
-        <td>${E(x.g1,1)}</td><td>${E(x.seuil,1)}</td><td class="${x.marge>0?"neg":"pos"}">${S(x.marge,1)}</td></tr>`).join("")
-        ||'<tr><td colspan="8" class="l">Aucun candidat éligible aujourd’hui.</td></tr>'}</tbody></table></div>
-      <p class="note">${p.repartition==="acwi"?"Réparti ACWI : une ligne sortante est remplacée par un titre de sa région. ":""}Clique une ligne pour sa fiche d'analyse.</p>`;
+        <td>${E(x.g1,1)}</td><td>${E(x.seuil,1)}</td><td class="${x.marge>0?"neg":"pos"}">${S(x.marge,1)}</td>
+        <td>${N(x.cours,2)} <span class="tick">${esc(x.devise||"")}</span></td>
+        <td><strong>${a?N(a.q):"—"}</strong></td><td>${a?N(a.m)+" €":"—"}</td></tr>`}).join("")
+        ||'<tr><td colspan="11" class="l">Aucun candidat éligible aujourd’hui.</td></tr>'}</tbody></table></div>
+      <p class="note">Montant cible : 1/N de la valeur actuelle du portefeuille, soit <b>${N(cibleL)} €</b>, en actions
+        entières au cours du jour.${p.repartition==="acwi"?" Réparti ACWI : une ligne sortante est remplacée par un titre de sa région, pour le poids de la ligne qu'il remplace (indiqué dans Lignes et recommandations).":""}
+        Clique une ligne pour sa fiche d'analyse.</p>`;
     liensFiche(vue); return;
   }
   const tuiles=`<div class="tiles">
@@ -159,7 +169,8 @@ async function vuePortefeuille(id,sec){
     <th>Poids</th><th>Perf. €</th><th>Perf. locale</th><th>vs indice</th><th>Rang entrée</th><th>Rang</th>
     <th class="l">Verdict</th><th>Marge</th><th class="zc">Zone</th></tr></thead><tbody>${lignes.map(l=>`<tr>
     <td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}" data-u="${esc(cu)}">${esc(l.societe)}</span><span class="tick">${esc(l.ticker)}</span>
-      ${l.remplacant?`<div class="rempl vers">→ ${esc(l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})</div>`:""}
+      ${l.remplacant?`<div class="rempl vers">→ ${esc(l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${
+        l.remplacant.achat?.quantite!=null?` · acheter <b>${N(l.remplacant.achat.quantite)}</b> (≈ ${N(l.remplacant.achat.montant_eur)} €)`:""}</div>`:""}
       ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} clôture(s)${l.sortie_confirmee?" — confirmée":""}</div>`:""}</td>
     <td class="l">${esc(l.region||"")}</td><td class="l">${esc(l.secteur||"")}</td><td>${E(l.poids)}</td>
     <td class="${cls(l.perf)}">${S(l.perf)}</td><td class="${cls(l.perf_locale)}">${S(l.perf_locale)}</td>
