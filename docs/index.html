@@ -177,7 +177,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
   .tile.large .v{font-size:28px}}
 </style>
 <link rel="stylesheet" href="extension.css?v=10">
-<script src="i18n.js?v=2"></script>
+<script src="i18n.js?v=3"></script>
 </head>
 <body>
 <div class="wrap">
@@ -722,6 +722,7 @@ function render(d){
   const fr=iso=>iso?iso.split("-").reverse().join("/"):"";
   document.getElementById("maj").innerHTML=
     `<span class="pill">Données du <b>${esc(jour(d.date))}</b></span>`+
+    (d.fonds?.cours_au?`<span class="pill">Clôtures du <b>${esc(jour(d.fonds.cours_au))}</b></span>`:"")+
     `<span class="pill">Positions : <b>${esc(src.type==="export"?"export StockTrak du "+jour(src.date)
       :src.type==="apercu"?"aperçu "+src.fichier:"saisie initiale")}</b></span>`;
   const p=d.portefeuille,b=d.budget,lignes=p.lignes,etfs=p.etf||[],f=d.fonds||{};
@@ -738,7 +739,10 @@ function render(d){
 
   const tot=f.valeur_eur||0, pc=v=>tot&&v?Math.max(0,v/tot*100):0;
   const liqOk=f.liquidites_eur!=null&&isFinite(f.liquidites_eur);
-  const tiles=ap+`<div class="tiles">
+  const sv=(f.lignes_sans_valeur_du_jour||[]);
+  const alerteValeur=sv.length?`<div class="apercu"><strong>Valeur à vérifier :</strong> pas de cours ou de change
+    du jour pour ${esc(sv.join(", "))} ; leur dernière valeur publiée est reprise, la ligne n'est pas retirée du total.</div>`:"";
+  const tiles=ap+alerteValeur+`<div class="tiles">
     <div class="tile large"><div class="k">Valeur du fonds</div>
       <div class="v">${N(f.valeur_eur)}<small>€</small>
         <span class="${cls(f.perf)}" style="font-size:16px;margin-left:12px">${S(f.perf,2)}</span></div>

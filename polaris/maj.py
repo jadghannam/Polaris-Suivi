@@ -321,6 +321,23 @@ def main() -> None:
              f"{r.cours_local:.4g} pour {r.Ticker} ({r.cours_stocktrak / r.cours_local - 1:+.0%})")
     pf["valeur_eur"] = pf["quantite"] * pf["cours_local"] / \
         pf["devise"].map(lambda d: taux.get(d, np.nan))
+    # Garde-fou (19/11/2026) : une ligne detenue sans valeur (cours ou change
+    # manquant) n'est JAMAIS retiree du total. Elle garde la valeur du dernier
+    # passage publie, et la page l'annonce. Une donnee manquante ne doit pas
+    # ressembler a une perte : le 19/11, la couronne absente avait fait
+    # disparaitre 80 000 EUR de lignes suedoises.
+    sans_valeur = pf.loc[pf["valeur_eur"].isna(), "Ticker"].tolist()
+    if sans_valeur:
+        try:
+            avant = json.loads((cfg.DOCS / "data.json").read_text(encoding="utf-8"))
+            dernieres = {l["ticker"]: l.get("valeur_eur") for l in avant["portefeuille"]["lignes"]}
+        except Exception:                               # noqa: BLE001
+            dernieres = {}
+        for t in sans_valeur:
+            if dernieres.get(t) is not None:
+                pf.loc[pf["Ticker"] == t, "valeur_eur"] = dernieres[t]
+        note(f"ATTENTION lignes sans valeur du jour, derniere valeur publiee reprise : "
+             f"{', '.join(sans_valeur)}")
     total = pf["valeur_eur"].sum()
 
     # ETF : cours de l'export (Yahoo ne les suit pas), convertis en euros.
@@ -587,6 +604,11 @@ def main() -> None:
             "capital_eur": cfg.CAPITAL_INITIAL,
             "perf": _nan(total_fonds / cfg.CAPITAL_INITIAL - 1),
             "date_compte": etat["date"],
+            "lignes_sans_valeur_du_jour": sans_valeur,
+            # Date de la seance cloturee qui valorise les lignes (la plus
+            # recente parmi les titres detenus).
+            "cours_au": (str(cours.loc[cours["Ticker"].isin(positions["Ticker"]), "date"].max())
+                         if not cours.empty else None),
         },
         "portefeuille": {
             "valeur_eur": _nan(float(total)),

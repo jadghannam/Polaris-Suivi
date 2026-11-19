@@ -17,7 +17,7 @@
  "univers": {
   "monde": {
    "nb_titres": 1879,
-   "nb_classes": 663,
+   "nb_classes": 661,
    "par_region": false
   },
   "europe": {
@@ -37,7 +37,7 @@
   },
   "monde-regions": {
    "nb_titres": 1879,
-   "nb_classes": 691,
+   "nb_classes": 689,
    "par_region": true
   }
  },

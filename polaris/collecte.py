@@ -79,6 +79,55 @@ def place(ticker: str) -> tuple[str, float]:
     return "EUR", 1.0
 
 
+# ------------------------------------------------ seances cloturees ---------
+# Ajoute le 19/11/2026. Pendant les heures de bourse, la derniere ligne que
+# renvoie Yahoo est la seance EN COURS : un passage a 14 h valorisait le fonds
+# au cours intraday, et la valeur changeait a chaque passage. On ne garde la
+# ligne du jour qu'une fois la place fermee (heure locale de cloture, avec une
+# marge) ; sinon on prend la seance precedente, deja cloturee.
+CLOTURES = {
+    ("Europe/Paris", "17:45"): [".PA", ".AS", ".BR", ".MC", ".MI", ".LS", ".IR", ".HE", ".VI",
+                                ".DE", ".F", ".ST", ".CO", ".OL", ".SW", ".VX", ".WA", ".AT",
+                                ".PR", ".BD"],
+    ("Europe/London", "16:45"): [".L"], ("America/New_York", "16:15"): ["", ".TO"],
+    ("America/Sao_Paulo", "17:15"): [".SA"], ("America/Mexico_City", "15:15"): [".MX"],
+    ("America/Santiago", "16:15"): [".SN"], ("America/Bogota", "16:15"): [".CL"],
+    ("Asia/Tokyo", "15:45"): [".T"], ("Asia/Hong_Kong", "16:20"): [".HK"],
+    ("Asia/Seoul", "15:45"): [".KS", ".KQ"], ("Asia/Taipei", "13:45"): [".TW", ".TWO"],
+    ("Asia/Shanghai", "15:15"): [".SS", ".SZ"], ("Asia/Kolkata", "15:45"): [".NS", ".BO"],
+    ("Australia/Sydney", "16:30"): [".AX"], ("Pacific/Auckland", "17:00"): [".NZ"],
+    ("Asia/Singapore", "17:15"): [".SI"], ("Asia/Kuala_Lumpur", "17:15"): [".KL"],
+    ("Asia/Bangkok", "16:45"): [".BK"], ("Asia/Jakarta", "16:15"): [".JK"],
+    ("Asia/Manila", "15:15"): [".PS"], ("Asia/Riyadh", "15:30"): [".SR"],
+    ("Asia/Qatar", "13:30"): [".QA"], ("Asia/Dubai", "15:15"): [".AE", ".AD", ".DU"],
+    ("Asia/Kuwait", "13:00"): [".KW"], ("Africa/Johannesburg", "17:15"): [".JO"],
+    ("Asia/Jerusalem", "17:45"): [".TA"], ("Europe/Istanbul", "18:15"): [".IS"],
+    ("Africa/Cairo", "14:45"): [".CA"],
+}
+_PLACE_CLOTURE = {s: k for k, sufs in CLOTURES.items() for s in sufs}
+
+
+def _cloture_de(ticker: str) -> tuple[str, str]:
+    for s in sorted(_PLACE_CLOTURE, key=len, reverse=True):
+        if s and ticker.endswith(s):
+            return _PLACE_CLOTURE[s]
+    return _PLACE_CLOTURE[""] if "." not in ticker else ("Europe/Paris", "17:45")
+
+
+def seance_close(ticker: str, jour: dt.date, maintenant: dt.datetime | None = None) -> bool:
+    """La seance `jour` (date locale de la place) est-elle terminee ?"""
+    from zoneinfo import ZoneInfo
+    tz, heure = _cloture_de(ticker)
+    z = ZoneInfo(tz)
+    now = (maintenant or dt.datetime.now(dt.timezone.utc)).astimezone(z)
+    if jour < now.date():
+        return True
+    if jour > now.date():
+        return False
+    h, m = map(int, heure.split(":"))
+    return now.time() >= dt.time(h, m)
+
+
 # --------------------------------------------------------------- cours -------
 def _extraire(data, t: str) -> pd.DataFrame | None:
     """Sort le sous-tableau d'un titre d'un telechargement groupe."""
@@ -96,6 +145,9 @@ def _extraire(data, t: str) -> pd.DataFrame | None:
         # valeur du fonds. Une ligne sans cloture n'est pas un cours.
         if "Close" in h.columns:
             h = h[h["Close"].notna()]
+        # Seance en cours : ecartee tant que la place n'a pas cloture.
+        if not h.empty and not seance_close(t, h.index[-1].date()):
+            h = h.iloc[:-1]
         return h if not h.empty else None
     except Exception:                                   # noqa: BLE001
         return None
@@ -189,21 +241,78 @@ def cours_du_jour(tickers: list[str], derniers: pd.DataFrame | None = None
     return df
 
 
-def taux_de_change() -> dict[str, float]:
-    """Unites de devise par euro, comme dans la base (1 EUR = 0,86 GBP)."""
-    taux = {"EUR": 1.0}
-    paires = [f"EUR{d}=X" for d in cfg.DEVISES]
+CHEMIN_CHANGE = cfg.DATA / "taux_change.csv"
+BCE_CHANGE = ("https://data-api.ecb.europa.eu/service/data/EXR/D.{devises}.EUR.SP00.A"
+              "?lastNObservations=1&format=csvdata")
+
+
+def _change_bce(devises: list[str]) -> dict[str, tuple[float, str]]:
+    """Taux de reference de la BCE (un par jour ouvre, vers 16 h) : la
+    reference officielle pour valoriser en euros, stable sur la journee."""
+    import io
+    import requests
+    out = {}
     try:
-        h = yf.download(paires, period="5d", progress=False)["Close"]
-        for d, p in zip(cfg.DEVISES, paires):
-            s = h[p].dropna() if p in h.columns else pd.Series(dtype=float)
-            if not s.empty:
-                taux[d] = float(s.iloc[-1])
+        r = requests.get(BCE_CHANGE.format(devises="+".join(devises)), timeout=60,
+                         headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        d = pd.read_csv(io.StringIO(r.text))
+        for x in d.itertuples():
+            if pd.notna(x.OBS_VALUE):
+                out[x.CURRENCY] = (float(x.OBS_VALUE), str(x.TIME_PERIOD))
     except Exception as e:                              # noqa: BLE001
-        note(f"taux de change groupes indisponibles : {e}")
+        note(f"taux de reference BCE indisponibles : {e}")
+    return out
+
+
+def taux_de_change() -> dict[str, float]:
+    """Unites de devise par euro, comme dans la base (1 EUR = 0,86 GBP).
+
+    19/11/2026 : trois sources, dans l'ordre.
+      1. Taux de reference de la BCE (publies une fois par jour) ;
+      2. Yahoo pour les devises que la BCE ne publie pas, en ne gardant que la
+         derniere journee CLOTUREE (pas le taux de l'instant) ;
+      3. le dernier taux connu (data/taux_change.csv) si les deux se taisent.
+    Corrige le jour ou Yahoo n'a pas renvoye la couronne suedoise : les trois
+    lignes suedoises avaient disparu de la valeur du fonds (921 kEUR affiches
+    au lieu d'un million). Une devise qui manque ne fait plus disparaitre de
+    ligne : elle garde son dernier taux, et le journal le dit.
+    """
+    taux, source = {"EUR": 1.0}, {"EUR": ("EUR", "")}
+    bce = _change_bce(list(cfg.DEVISES))
+    for d, (v, jour) in bce.items():
+        taux[d], source[d] = v, ("BCE", jour)
+    reste = [d for d in cfg.DEVISES if d not in taux]
+    if reste:
+        paires = [f"EUR{d}=X" for d in reste]
+        try:
+            h = yf.download(paires, period="7d", progress=False)["Close"]
+            if isinstance(h, pd.Series):
+                h = h.to_frame(paires[0])
+            for d, p in zip(reste, paires):
+                s = h[p].dropna() if p in h.columns else pd.Series(dtype=float)
+                # Journee en cours ecartee : on veut un taux arrete.
+                if len(s) > 1 and s.index[-1].date() >= dt.datetime.now(dt.timezone.utc).date():
+                    s = s.iloc[:-1]
+                if not s.empty:
+                    taux[d], source[d] = float(s.iloc[-1]), ("Yahoo", s.index[-1].date().isoformat())
+        except Exception as e:                          # noqa: BLE001
+            note(f"taux de change Yahoo indisponibles : {e}")
+    connus = pd.read_csv(CHEMIN_CHANGE) if CHEMIN_CHANGE.exists() else pd.DataFrame(
+        columns=["devise", "taux", "source", "date"])
+    anciens = {r.devise: r for r in connus.itertuples()}
+    repris = []
+    for d in cfg.DEVISES:
+        if d not in taux and d in anciens:
+            taux[d], source[d] = float(anciens[d].taux), ("dernier connu", str(anciens[d].date))
+            repris.append(f"{d} ({anciens[d].date})")
+    if repris:
+        note(f"ATTENTION taux de change repris du dernier passage : {', '.join(repris)}")
     absents = [d for d in cfg.DEVISES if d not in taux]
     if absents:
-        note(f"ATTENTION taux manquants : {', '.join(absents)}")
+        note(f"ATTENTION taux manquants, sans valeur connue : {', '.join(absents)}")
+    pd.DataFrame([{"devise": d, "taux": v, "source": source[d][0], "date": source[d][1]}
+                  for d, v in taux.items() if d != "EUR"]).to_csv(CHEMIN_CHANGE, index=False)
     return taux
 
 
