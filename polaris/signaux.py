@@ -243,6 +243,63 @@ def plan_echanges(sorties: list[dict], candidats: pd.DataFrame, poche_eur: float
     return plan
 
 
+def periode(compte: pd.DataFrame, transactions_initiales: int,
+            aujourdhui: dt.date | None = None) -> dict:
+    """Periode entre deux comites et son enveloppe de transactions.
+
+    `compte` : data/compte.csv (date, transactions_consommees). L'enveloppe est
+    figee a l'ouverture de la periode, avec les transactions faites AVANT le
+    jour du comite : celles du comite comptent dans la periode qu'il ouvre.
+    """
+    j = aujourdhui or dt.date.today()
+    dates = [dt.date.fromisoformat(d) for d in cfg.COMITES]
+    passes = [d for d in dates if d <= j]
+    suivant = next((d for d in dates if d > j), None)
+    debut = passes[-1] if passes else dt.date.fromisoformat(cfg.DATE_LANCEMENT)
+    c = compte.copy()
+    c["date"] = pd.to_datetime(c["date"]).dt.date
+    c["t"] = pd.to_numeric(c["transactions_consommees"], errors="coerce")
+    c = c.dropna(subset=["t"])
+    avant = c[c["date"] < debut]["t"]
+    faites_avant = int(avant.iloc[-1]) if len(avant) else transactions_initiales
+    jusqu = c[c["date"] <= j]["t"]
+    faites = int(jusqu.iloc[-1]) if len(jusqu) else transactions_initiales
+    restants = len([d for d in dates if d >= debut]) if passes else len(dates)
+    rotation_avant = max(faites_avant - transactions_initiales, 0)
+    enveloppe = int((cfg.BUDGET_ACTIONS - rotation_avant) / restants) if restants else 0
+    utilisees = max(faites - max(faites_avant, transactions_initiales), 0)
+    return {"debut": debut.isoformat(), "comite_ouvrant": bool(passes),
+            "prochain_comite": suivant.isoformat() if suivant else None,
+            "enveloppe": enveloppe, "utilisees": utilisees,
+            "restantes": max(enveloppe - utilisees, 0)}
+
+
+def statut_execution(plan: list[dict], confirmees: set[str], per: dict) -> None:
+    """Ajoute a chaque echange du plan : maintenant, ou au prochain comite.
+
+    Dans l'ordre du plan (priorite), chaque echange executable consomme deux
+    transactions de l'enveloppe restante de la periode."""
+    reste = per["restantes"]
+    comite = per["prochain_comite"]
+    for e in plan:
+        if not e.get("remplacant"):
+            e["execution"] = {"statut": "aucun", "motif": e.get("decision", ""), "comite": comite}
+        elif e["Ticker"] not in confirmees:
+            e["execution"] = {"statut": "comite", "comite": comite,
+                              "motif": "sortie non confirmee : attendre les 5 clotures ou le comite"}
+        elif not cfg.ECHANGES_ENTRE_COMITES:
+            e["execution"] = {"statut": "comite", "comite": comite,
+                              "motif": "echanges reserves aux comites (config.py)"}
+        elif reste < 2:
+            e["execution"] = {"statut": "comite", "comite": comite,
+                              "motif": f"enveloppe de la periode epuisee ({per['utilisees']} / {per['enveloppe']})"}
+        else:
+            reste -= 2
+            e["execution"] = {"statut": "maintenant", "comite": comite,
+                              "motif": f"sortie confirmee, remplacant disponible, {reste} transactions "
+                                       f"restantes dans l'enveloppe apres l'echange"}
+
+
 # ---------------------------------------------------------- budget -----------
 def budget(transactions_faites: int, transactions_initiales: int = 0,
            aujourdhui: dt.date | None = None) -> dict:

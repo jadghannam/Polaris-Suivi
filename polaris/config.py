@@ -134,6 +134,16 @@ COMITES = [
     "2027-02-19",
     "2027-03-12",
 ]
+# Execution entre deux comites, decidee le 19/11/2026 avec Jad (a ratifier en
+# comite). Une sortie CONFIRMEE (5 clotures, ou rang / decrochage en sortie)
+# n'est pas un arbitrage : elle decoule d'une regle ecrite avant. Elle peut donc
+# etre executee sans attendre le comite si un remplacant est achetable (seuil de
+# 75 %) et s'il reste de quoi payer l'echange (2 transactions) dans l'enveloppe
+# de la periode en cours. Une sortie non confirmee attend le comite.
+# L'enveloppe d'une periode est fixee a son ouverture (le jour du comite) :
+# (budget actions - rotation deja faite) / comites restants, comite du jour
+# compris. Elle ne bouge plus ensuite.
+ECHANGES_ENTRE_COMITES = True
 # Pas de plafond fixe par comite : l'enveloppe est le budget actions restant
 # divise par le nombre de comites restants. Au lancement cela donne environ
 # 42 transactions, soit 21 echanges. Ce n'est pas un objectif, c'est un

@@ -335,6 +335,23 @@ n'étaient jamais relus ; ce fichier contenait déjà des minoritaires fantômes
 Le WACC du fonds (`wacc_secteurs.csv`) reste figé jusqu'à la clôture :
 Damodaran ne nourrit que les portefeuilles personnels.
 
+**Échanges entre deux comités (19/11/2026, à ratifier au comité du 4 décembre).**
+Une sortie *confirmée* (5 clôtures, ou rang / décrochage en sortie) découle d'une
+règle écrite avant : elle n'est pas un arbitrage de calendrier. Elle peut donc être
+exécutée sans attendre le comité si un remplaçant est achetable (règle des 75 %) et
+s'il reste au moins deux transactions dans l'enveloppe de la période. L'enveloppe
+est figée à l'ouverture de la période : (300 − rotation déjà faite) / comités
+restants, comité du jour compris ; au 13/11, 41 transactions. Une sortie non
+confirmée attend le comité. La page l'indique ligne par ligne : « Exécutable
+maintenant » ou « Au comité du … ». Interrupteur : `ECHANGES_ENTRE_COMITES` dans
+`config.py`.
+
+**Montant d'un remplacement (19/11/2026).** Vente à 100 %, achat à la « meilleure
+1/N possible » (moyenne des lignes restantes), payé par la vente puis par les
+liquidités au-delà d'une réserve de 5 % du fonds ; pas de remplacement si l'on ne
+peut acheter au moins 75 % de la cible. Exception à « aucune sortie sans
+remplaçant » à inscrire dans les règles du comité.
+
 **Bug corrigé le même jour.** Le premier rafraîchissement hebdomadaire écrivait
 la dette nette en devise de publication dans `fondamentaux_dcf.csv`, tenu en
 euros : Assa Abloy, Essity et Royal Unibrew tombaient en veto DCF. La

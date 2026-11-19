@@ -176,7 +176,8 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 @media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
   .tile.large .v{font-size:28px}}
 </style>
-<link rel="stylesheet" href="extension.css?v=9">
+<link rel="stylesheet" href="extension.css?v=10">
+<script src="i18n.js?v=2"></script>
 </head>
 <body>
 <div class="wrap">
@@ -228,12 +229,12 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 <script>
 const E=(s,n=1)=>(s==null||isNaN(s))?"—":(s*100).toFixed(n)+" %";
 const S=(s,n=1)=>(s==null||isNaN(s))?"—":(s>=0?"+":"")+(s*100).toFixed(n)+" %";
-const N=(v,n=0)=>(v==null||isNaN(v))?"—":v.toLocaleString("fr-FR",{minimumFractionDigits:n,maximumFractionDigits:n});
+const N=(v,n=0)=>(v==null||isNaN(v))?"—":v.toLocaleString((window.LOCALE||"fr-FR"),{minimumFractionDigits:n,maximumFractionDigits:n});
 const cls=v=>v==null||isNaN(v)?"":(v>=0?"pos":"neg");
 const ZB={ok:["b-ok","OK"],surveillance:["b-surv","surveillance"],sortie:["b-sortie","sortie"]};
 const badge=z=>{const[c,t]=ZB[z]||["b-na","en attente"];return `<span class="badge ${c}">${t}</span>`};
 const jour=iso=>{if(!iso)return"";const d=new Date(iso+"T12:00:00");
-  return isNaN(d)?iso:d.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short",year:"numeric"})};
+  return isNaN(d)?iso:d.toLocaleDateString((window.LOCALE||"fr-FR"),{weekday:"short",day:"numeric",month:"short",year:"numeric"})};
 const VIDE='<tr><td colspan="10" class="l">Aucun candidat &eacute;ligible '
   +'aujourd&rsquo;hui. On attend qu&rsquo;un titre s&rsquo;am&eacute;liore ou entre '
   +'dans la zone de s&eacute;lection.</td></tr>';
@@ -705,6 +706,12 @@ function blocIG(d){
 /* Ordre d'un echange : vendre toute la ligne sortante, acheter 1/N de la poche. */
 const ordreEch=rp=>rp&&rp.achat&&rp.achat.quantite!=null
   ?` · acheter <b>${N(rp.achat.quantite)}</b> (≈ ${N(rp.achat.montant_eur)} €)`:"";
+/* Execution d'un echange (19/11/2026) : maintenant, ou au prochain comite. */
+const execEch=l=>{const x=l.echange&&l.echange.execution; if(!x) return "";
+  if(x.statut==="maintenant") return `<div class="exec ok" title="${esc(x.motif)}">Exécutable maintenant</div>`;
+  if(x.statut==="comite") return `<div class="exec attente" title="${esc(x.motif)}">Au comité du ${esc(jour(x.comite))}</div>
+    <div class="rempl">${esc(x.motif)}</div>`;
+  return "";};
 /* Decision d'echange sans remplacant (cible inaccessible, aucun candidat). */
 const decisionEch=l=>!l.remplacant&&l.echange?`<div class="rempl neg">${esc(l.echange.decision)}</div>`:"";
 function render(d){
@@ -761,14 +768,15 @@ function render(d){
       <div class="bar ${b.etat==='vert'?'':b.etat}"><i style="width:${Math.min(100,b.faites/400*100)}%"></i></div></div>
     <div class="tile"><div class="k">Prochain comité</div>
       <div class="v" style="font-size:22px">${b.prochain_comite?esc(jour(b.prochain_comite)):"—"}</div>
-      <div class="s"><b>${b.echanges_max_par_comite}</b> échanges max · ${b.comites_restants} comités restants</div></div>
+      <div class="s">${d.periode?`période en cours : <b>${d.periode.utilisees}</b> / ${d.periode.enveloppe} transactions ·
+        <b>${d.periode.restantes}</b> restantes`:`<b>${b.echanges_max_par_comite}</b> échanges max`} · ${b.comites_restants} comités restants</div></div>
   </div>`;
 
   const ordre={sortie:0,surveillance:1,ok:2};
   const rows=lignes.slice().sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3)||(c.marge??-99)-(a.marge??-99))
     .map(l=>{
       const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
-        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${ordreEch(l.remplacant)}</div>`:decisionEch(l);
+        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${ordreEch(l.remplacant)}</div>${execEch(l)}`:decisionEch(l);
       const conf=l.zone==="sortie"
         ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
       const mot=(l.motifs&&l.motifs.length)
@@ -831,7 +839,7 @@ function render(d){
       <div><h2>À surveiller <span class="n">${aSuivre.length} ligne${aSuivre.length>1?"s":""} hors zone OK</span></h2>
         <div class="card"><table><thead><tr><th class="l">Titre</th><th class="zc">Zone</th><th>vs indice</th><th>Marge DCF</th></tr></thead>
         <tbody>${aSuivre.map(l=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}">${esc(l.societe)}</span>
-          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}${ordreEch(l.remplacant)}`:""}</div>${decisionEch(l)}`:""}</td>
+          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}${ordreEch(l.remplacant)}`:""}</div>${execEch(l)}${decisionEch(l)}`:""}</td>
           <td class="zc">${badge(l.zone)}<div class="rempl">${esc((l.motifs||[]).join(" · "))}</div></td>
           <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
           <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td></tr>`).join("")
@@ -888,6 +896,6 @@ function render(d){
   document.getElementById("app").innerHTML=(sec==="synthese"?"":ap)+sections[sec];
 }
 </script>
-<script src="extension.js?v=9"></script>
+<script src="extension.js?v=10"></script>
 </body>
 </html>

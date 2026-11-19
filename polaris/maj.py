@@ -520,6 +520,12 @@ def main() -> None:
         [{"Ticker": l["ticker"], "Secteur": l["secteur"], "quantite": l["quantite"],
           "valeur_eur": l["valeur_eur"]} for l in sorties],
         candidats, float(total), len(pf), liq_dispo, taux, ecarts)
+    # Maintenant ou au prochain comite (regle du 19/11/2026, config.py).
+    chemin_compte = cfg.DATA / "compte.csv"
+    per = sg.periode(pd.read_csv(chemin_compte) if chemin_compte.exists()
+                     else pd.DataFrame(columns=["date", "transactions_consommees"]),
+                     cfg.TRANSACTIONS_CONSTRUCTION, aujourdhui)
+    sg.statut_execution(plan, {l["ticker"] for l in portefeuille if l["sortie_confirmee"]}, per)
     par_ticker = {e["Ticker"]: e for e in plan}
     affectes = {e["remplacant"]["Ticker"]: (e["Ticker"], e["remplacant"]["achat"])
                 for e in plan if e.get("remplacant")}
@@ -609,6 +615,7 @@ def main() -> None:
             ["Ticker", "Societe", "Secteur", "Pays", "rang", "verdict",
              "g1", "seuil", "marge"]].to_dict("records")],
         "cible_ligne_eur": _nan(cible_ligne),
+        "periode": per,
         "echanges": {"liquidites_disponibles_eur": _nan(liq_dispo),
                      "reserve_eur": _nan(cfg.RESERVE_LIQUIDITES * total_fonds),
                      "seuil_remplacement": cfg.SEUIL_REMPLACEMENT,

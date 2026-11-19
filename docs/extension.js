@@ -64,7 +64,11 @@ function laterale(){
       esc((pf.find(p=>p.id===PF)||{}).repartition==="acwi"?"Réparti MSCI ACWI":"Classement global")}</div>`}
     <nav class="groupe">${secs.map(([i,l])=>lien(i,l)).join("")}</nav>
     <div class="sep-l">Outils</div>
-    <nav class="groupe">${GLOBALES.map(([i,l])=>lien(i,l)).join("")}</nav>`;
+    <nav class="groupe">${GLOBALES.map(([i,l])=>lien(i,l)).join("")}</nav>
+    <div class="langue-l"><span>Langue</span>
+      <button class="${window.LANG!=="en"?"on":""}" data-l="fr">FR</button>
+      <button class="${window.LANG==="en"?"on":""}" data-l="en">EN</button></div>`;
+  aside.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{if(b.dataset.l!==window.LANG) window.choisirLangue(b.dataset.l)});
   aside.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{SEC=b.dataset.s;memo();afficher()});
   document.getElementById("choixPf").onchange=e=>{
     if(e.target.value==="__nouveau"){e.target.value=PF;formulaire();return}
@@ -447,7 +451,7 @@ async function fiche(t,cu){
       <td>${N(e.ebit)}</td><td>${e.ebit!=null&&e.ca?E(e.ebit/e.ca,1):"—"}</td><td>${N(e.actif)}</td>
       <td>${gp!=null&&e.actif?E(gp/e.actif,1):"—"}</td><td>${N(e.fonds_propres)}</td>
       <td>${e.dette!=null?N(e.dette-(e.tresorerie||0)):"—"}</td><td>${N(fcff)}</td></tr>`}).join("");
-  const aujourd=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  const aujourd=new Date().toLocaleDateString((window.LOCALE||"fr-FR"),{day:"numeric",month:"long",year:"numeric"});
   const nb=u?.nb_classes;
   voile.innerHTML=`<div class="feuille">
     <div class="barre-outils"><button class="btn" id="fVeto">${x.veto_qualitatif?"Lever le veto":"Poser un veto"}</button>
