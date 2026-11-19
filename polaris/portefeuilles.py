@@ -330,22 +330,6 @@ def suivre(d: dict, pos: pd.DataFrame, ev: pd.DataFrame, taux: dict,
         confirme = (clot >= cfg.CLOTURES_CONFIRMATION or z["rang"] == sg.SORTIE
                     or z["decrochage"] == sg.SORTIE)
         remp = None
-        if globale == sg.SORTIE:
-            # Reparti ACWI : le remplacant vient de la meme region, sinon
-            # l'allocation derive a chaque echange.
-            pool = candidats[candidats["Region"] == r.Region] \
-                if d.get("repartition") == "acwi" else candidats
-            m = sg.meilleur_remplacant(pool, r.Secteur, ecarts)
-            if m is not None:
-                # Cible : poids de construction de la ligne sortante (1/N, ou
-                # la part de sa region si reparti ACWI), sur la valeur du jour.
-                w = getattr(r, "poids_cible", None)
-                w = w if w is not None and np.isfinite(w) else 1 / len(p)
-                a = sg.ordre_achat(m["cours"], m["devise"], total * w, taux)
-                remp = {"Ticker": m["Ticker"], "Societe": m["Societe"],
-                        "rang": _propre(m["rang"]), "verdict": m["verdict"],
-                        "achat": {k: _propre(v) for k, v in a.items()},
-                        "vente": {"quantite": _propre(r.quantite), "valeur_eur": _propre(r.valeur_eur)}}
         sortie.append({
             "ticker": r.Ticker, "societe": r.Societe, "pays": r.Pays,
             "region": r.Region, "secteur": r.Secteur, "devise": r.devise,
@@ -359,8 +343,36 @@ def suivre(d: dict, pos: pd.DataFrame, ev: pd.DataFrame, taux: dict,
             "zone_decrochage": z["decrochage"], "zone_degradation": z["degradation"],
             "zone": globale, "clotures_consecutives": clot,
             "sortie_confirmee": bool(confirme and globale == sg.SORTIE),
-            "remplacant": remp,
+            "remplacant": remp, "poids_cible": _propre(getattr(r, "poids_cible", None)),
         })
+    # Plan des echanges, meme regle que le fonds (signaux.plan_echanges). Un
+    # portefeuille personnel ne tient pas de liquidites : l'achat est finance
+    # par la seule vente, sous le meme seuil de 75 % de la cible. Reparti
+    # ACWI, le remplacant vient de la region de la ligne sortante et vise son
+    # poids de construction.
+    sorties = sorted([s for s in sortie if s["zone"] == sg.SORTIE],
+                     key=lambda s: (not s["sortie_confirmee"], -(s["marge"] or 0)))
+    acwi = d.get("repartition") == "acwi"
+    plan = []
+    for s in sorties:                       # une region a la fois si reparti ACWI
+        plan += sg.plan_echanges(
+            [{"Ticker": s["ticker"], "Secteur": s["secteur"], "Region": s["region"],
+              "quantite": s["quantite"], "valeur_eur": s["valeur_eur"],
+              "poids_cible": s["poids_cible"] if acwi else None}],
+            candidats[~candidats["Ticker"].isin([e["remplacant"]["Ticker"] for e in plan
+                                                 if e.get("remplacant")])],
+            total, len(p), 0.0, taux, ecarts, meme_region=acwi)
+    par = {e["Ticker"]: e for e in plan}
+    for s in sortie:
+        e = par.get(s["ticker"])
+        if e is None:
+            continue
+        r = e.get("remplacant")
+        s["remplacant"] = None if r is None else {
+            "Ticker": r["Ticker"], "Societe": r["Societe"], "rang": _propre(r["rang"]),
+            "verdict": r["verdict"], "achat": {k: _propre(v) for k, v in r["achat"].items()},
+            "vente": {k: _propre(v) for k, v in e["vente"].items()}}
+        s["echange"] = {"cible_eur": _propre(e["cible_eur"]), "decision": e["decision"]}
     cout = float(p["cout_eur"].sum())
     return {
         **d, "cle_univers": cle(d["contraintes"]),

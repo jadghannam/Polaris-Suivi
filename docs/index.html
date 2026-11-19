@@ -176,7 +176,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
 @media(max-width:560px){.wrap{padding:20px 14px 56px}.tiles{grid-template-columns:1fr}.tile.large{grid-column:auto}
   .tile.large .v{font-size:28px}}
 </style>
-<link rel="stylesheet" href="extension.css?v=8">
+<link rel="stylesheet" href="extension.css?v=9">
 </head>
 <body>
 <div class="wrap">
@@ -705,6 +705,8 @@ function blocIG(d){
 /* Ordre d'un echange : vendre toute la ligne sortante, acheter 1/N de la poche. */
 const ordreEch=rp=>rp&&rp.achat&&rp.achat.quantite!=null
   ?` · acheter <b>${N(rp.achat.quantite)}</b> (≈ ${N(rp.achat.montant_eur)} €)`:"";
+/* Decision d'echange sans remplacant (cible inaccessible, aucun candidat). */
+const decisionEch=l=>!l.remplacant&&l.echange?`<div class="rempl neg">${esc(l.echange.decision)}</div>`:"";
 function render(d){
   const bl=lire();
   const estBloque=t=>estBloqueGlobal(t,d);
@@ -766,7 +768,7 @@ function render(d){
   const rows=lignes.slice().sort((a,c)=>(ordre[a.zone]??3)-(ordre[c.zone]??3)||(c.marge??-99)-(a.marge??-99))
     .map(l=>{
       const r=l.remplacant&&!estBloque(l.remplacant.Ticker)
-        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${ordreEch(l.remplacant)}</div>`:"";
+        ? `<div class="rempl vers">→ ${esc(l.remplacant.societe||l.remplacant.Societe)} (rang ${N(l.remplacant.rang)})${ordreEch(l.remplacant)}</div>`:decisionEch(l);
       const conf=l.zone==="sortie"
         ? `<div class="rempl">${l.clotures_consecutives} clôture${l.clotures_consecutives>1?"s":""} / ${d.parametres.clotures_confirmation}${l.sortie_confirmee?" — confirmée":""}</div>`:"";
       const mot=(l.motifs&&l.motifs.length)
@@ -793,7 +795,7 @@ function render(d){
   const cand=(d.remplacants||[]).filter(r=>!estBloque(r.Ticker));
   const rempl=cand.map((r,i)=>`<tr>
       <td class="l">${i===0?"<strong>1<sup>er</sup></strong>":i+1}</td>
-      <td class="l"><span class="soc lien-fiche" data-f="${esc(r.Ticker)}">${esc(r.Societe)}</span><span class="tick">${esc(r.Ticker)}</span></td>
+      <td class="l"><span class="soc lien-fiche" data-f="${esc(r.Ticker)}">${esc(r.Societe)}</span><span class="tick">${esc(r.Ticker)}</span>${r.remplace?`<div class="rempl vers">remplace ${esc(r.remplace)} dans le plan du jour</div>`:""}</td>
       <td class="l">${esc(r.Secteur)}</td><td class="l">${esc(r.Pays)}</td>
       <td>${N(r.rang)}</td><td class="l">${esc(r.verdict||"—")}</td>
       <td>${E(r.g1,2)}</td><td>${E(r.seuil,2)}</td>
@@ -829,7 +831,7 @@ function render(d){
       <div><h2>À surveiller <span class="n">${aSuivre.length} ligne${aSuivre.length>1?"s":""} hors zone OK</span></h2>
         <div class="card"><table><thead><tr><th class="l">Titre</th><th class="zc">Zone</th><th>vs indice</th><th>Marge DCF</th></tr></thead>
         <tbody>${aSuivre.map(l=>`<tr><td class="l"><span class="soc lien-fiche" data-f="${esc(l.ticker)}">${esc(l.societe)}</span>
-          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}${ordreEch(l.remplacant)}`:""}</div>`:""}</td>
+          ${l.zone==="sortie"?`<div class="rempl">${l.clotures_consecutives} / ${d.parametres.clotures_confirmation} clôtures${l.sortie_confirmee?" — confirmée":""}${l.remplacant?` · → ${esc(l.remplacant.Societe||l.remplacant.societe)}${ordreEch(l.remplacant)}`:""}</div>${decisionEch(l)}`:""}</td>
           <td class="zc">${badge(l.zone)}<div class="rempl">${esc((l.motifs||[]).join(" · "))}</div></td>
           <td class="${cls(l.perf_relative)}">${S(l.perf_relative)}</td>
           <td class="${l.marge>0?"neg":"pos"}">${S(l.marge,2)}</td></tr>`).join("")
@@ -869,10 +871,13 @@ function render(d){
       <th class="l">Secteur</th><th class="l">Pays</th><th>Rang</th><th class="l">Verdict</th>
       <th>g₁</th><th>Seuil</th><th>Marge</th><th>Cours</th><th>À acheter</th><th>Montant</th><th>StockTrak</th></tr></thead>
       <tbody>${rempl||VIDE}</tbody></table></div>
-    <p class="note">Montant cible d'une ligne : la valeur actuelle de la poche actions divisée par le nombre de lignes,
-      soit <b>${N(d.cible_ligne_eur)} €</b> aujourd'hui (1/N). Quantité arrondie à l'action inférieure, au cours de
-      clôture du jour ; elle sera à recaler sur le cours affiché dans StockTrak au moment de l'ordre. Les autres
-      lignes ne sont pas rééquilibrées : chaque ajustement coûterait une transaction.</p>
+    <p class="note">Échange : la ligne sortante est vendue à 100 % ; le remplaçant est acheté à la « meilleure 1/N possible »,
+      la valeur moyenne des autres lignes, (poche − ligne vendue) / (N − 1). La vente paie d'abord ; un surplus reste en
+      liquidités ; un manque est pris sur les liquidités au-delà de la réserve de ${E((d.echanges?.reserve_eur||0)/((d.fonds||{}).valeur_eur||1),0)}
+      du fonds (${N(d.echanges?.liquidites_disponibles_eur)} € disponibles aujourd'hui). Si l'on ne peut pas acheter au moins
+      ${E(d.echanges?.seuil_remplacement,0)} de la cible, on ne remplace pas : la vente reste en liquidités. Un remplaçant sans
+      sortie en face affiche un montant indicatif (1/N du jour, ${N(d.cible_ligne_eur)} €). Quantités entières au cours de
+      clôture, à recaler sur StockTrak au moment de l'ordre. Les autres lignes ne sont pas rééquilibrées.</p>
     <p class="note">Éligible : liste de suivi (60 premiers), deux planchers franchis, verdict DCF A ou B, aucun veto
       qualitatif, négociable sur StockTrak. Clique un nom pour sa fiche d'analyse.</p>
     ${panneau}`;
@@ -883,6 +888,6 @@ function render(d){
   document.getElementById("app").innerHTML=(sec==="synthese"?"":ap)+sections[sec];
 }
 </script>
-<script src="extension.js?v=8"></script>
+<script src="extension.js?v=9"></script>
 </body>
 </html>

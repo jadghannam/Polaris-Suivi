@@ -94,6 +94,18 @@ REMPLACANT_VERDICTS = ("A", "B")  # pas de C : on ne remplace pas un titre
                                   # marginal par un autre titre marginal
 PART_MAX_VOLUME = 0.05            # notre ligne sous 5 % du volume quotidien
 
+# Montant d'un remplacement, decide le 19/11/2026 avec Jad. La ligne sortante
+# est vendue a 100 %. On achete la « meilleure 1/N possible » sans toucher aux
+# autres lignes : la valeur moyenne des lignes qui restent,
+#     cible = (poche actions - ligne vendue) / (N - 1).
+# Le produit de la vente paie d'abord ; s'il depasse la cible, le surplus reste
+# en liquidites ; s'il ne suffit pas, les liquidites completent, hors reserve.
+# Si meme ainsi on ne peut acheter qu'une fraction trop faible de la cible, on
+# ne remplace pas : la vente reste en liquidites.
+SEUIL_REMPLACEMENT = 0.75         # achat minimal, en part de la cible
+RESERVE_LIQUIDITES = 0.05         # part du fonds jamais utilisee pour completer
+                                  # un achat (les 5 % ESTR de l'indice)
+
 # ---------------------------------------------------- budget de transactions --
 CAPITAL_INITIAL = 1_000_000       # euros, au 02/11/2026
 BUDGET_TOTAL = 400

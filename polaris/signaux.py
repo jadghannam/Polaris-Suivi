@@ -181,6 +181,68 @@ def ordre_achat(cours, devise: str, montant_eur: float, taux: dict) -> dict:
             "cours": float(cours), "devise": devise}
 
 
+def plan_echanges(sorties: list[dict], candidats: pd.DataFrame, poche_eur: float,
+                 nb_lignes: int, liquidites_eur: float, taux: dict,
+                 ecarts_secteur: dict[str, float], meme_region: bool = False) -> list[dict]:
+    """Montants des echanges du jour, sortie par sortie (19/11/2026).
+
+    `sorties` : lignes en zone de sortie, deja dans l'ordre de priorite, avec
+    Ticker, Secteur, Region, quantite, valeur_eur. Chaque sortie recoit le
+    meilleur remplacant encore libre (deux sorties ne prennent jamais le meme),
+    puis le montant :
+        cible  = (poche - ligne vendue) / (N - 1), moyenne des lignes restantes ;
+        budget = produit de la vente + liquidites disponibles (hors reserve) ;
+        achat  = cible si budget >= cible, sinon budget ;
+        pas de remplacement si achat < SEUIL_REMPLACEMENT x cible.
+    Les sorties sont traitees l'une apres l'autre : la poche et les
+    liquidites evoluent avec chaque echange.
+    """
+    poche, dispo, pris, plan = float(poche_eur), max(float(liquidites_eur), 0.0), set(), []
+    for s in sorties:
+        libres = candidats[~candidats["Ticker"].isin(pris)]
+        if meme_region and "Region" in libres.columns:
+            libres = libres[libres["Region"] == s.get("Region")]
+        m = meilleur_remplacant(libres, s.get("Secteur"), ecarts_secteur)
+        vente = float(s.get("valeur_eur") or 0.0)
+        # Poids cible de la ligne : 1/N par defaut, ou celui de sa construction
+        # (repartition ACWI). L'achat A doit peser w dans la poche d'apres :
+        # A = w x (poche - vente + A), soit A = w x (poche - vente) / (1 - w).
+        # Pour w = 1/N, c'est la moyenne des N - 1 lignes restantes.
+        w = s.get("poids_cible")
+        w = w if w is not None and 0 < w < 1 else (1 / nb_lignes if nb_lignes > 1 else 1.0)
+        cible = w * (poche - vente) / (1 - w) if w < 1 else vente
+        e = {"Ticker": s["Ticker"], "vente": {"quantite": s.get("quantite"), "valeur_eur": vente},
+             "cible_eur": cible, "liquidites_avant_eur": dispo, "remplacant": None}
+        if m is None:
+            e["decision"] = "aucun remplacant eligible : la ligne n'est pas vendue (pas de sortie sans remplacant)"
+            e["liquidites_apres_eur"] = dispo
+            plan.append(e)
+            continue
+        budget = vente + dispo
+        montant = min(cible, budget)
+        a = ordre_achat(m["cours"], m["devise"], montant, taux)
+        reel = a.get("montant_eur") or 0.0
+        if reel < cfg.SEUIL_REMPLACEMENT * cible:
+            e["decision"] = (f"pas de remplacement : {reel:,.0f} EUR achetables, sous "
+                             f"{cfg.SEUIL_REMPLACEMENT:.0%} de la cible ; la vente reste en liquidites")
+            e["remplacant_envisage"] = m["Ticker"]
+            dispo += vente
+            poche -= vente
+        else:
+            pris.add(m["Ticker"])
+            dispo = budget - reel
+            poche = poche - vente + reel
+            e["remplacant"] = {"Ticker": m["Ticker"], "Societe": m["Societe"],
+                               "Secteur": m["Secteur"], "rang": m["rang"], "verdict": m["verdict"],
+                               "marge": m["marge"], "achat": a}
+            e["decision"] = ("achat a la cible" if montant >= cible
+                             else "achat au maximum des liquidites disponibles")
+            e["solde_liquidites_eur"] = vente - reel
+        e["liquidites_apres_eur"] = dispo
+        plan.append(e)
+    return plan
+
+
 # ---------------------------------------------------------- budget -----------
 def budget(transactions_faites: int, transactions_initiales: int = 0,
            aujourdhui: dt.date | None = None) -> dict:

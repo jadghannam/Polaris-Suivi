@@ -508,6 +508,37 @@ def main() -> None:
             "remplacant": remp,
         }))
 
+    # Plan des echanges (19/11/2026) : une ligne sortante vendue a 100 %, un
+    # remplacant different par sortie, achete a la « meilleure 1/N possible »
+    # dans la limite de la vente et des liquidites hors reserve. Les sorties
+    # confirmees passent d'abord, puis par marge DCF decroissante.
+    sorties = sorted([l for l in portefeuille if l["zone"] == sg.SORTIE],
+                     key=lambda l: (not l["sortie_confirmee"], -(l["marge"] or 0)))
+    liq_dispo = (liquidites - cfg.RESERVE_LIQUIDITES * total_fonds) \
+        if np.isfinite(liquidites) else 0.0
+    plan = sg.plan_echanges(
+        [{"Ticker": l["ticker"], "Secteur": l["secteur"], "quantite": l["quantite"],
+          "valeur_eur": l["valeur_eur"]} for l in sorties],
+        candidats, float(total), len(pf), liq_dispo, taux, ecarts)
+    par_ticker = {e["Ticker"]: e for e in plan}
+    affectes = {e["remplacant"]["Ticker"]: (e["Ticker"], e["remplacant"]["achat"])
+                for e in plan if e.get("remplacant")}
+    for l in portefeuille:
+        e = par_ticker.get(l["ticker"])
+        if e is None:
+            continue
+        r = e.get("remplacant")
+        l["remplacant"] = None if r is None else {
+            **{k: _nan(v) for k, v in r.items() if k != "achat"},
+            "achat": {k: _nan(v) for k, v in r["achat"].items()},
+            "vente": {k: _nan(v) for k, v in e["vente"].items()},
+            "solde_liquidites_eur": _nan(e.get("solde_liquidites_eur"))}
+        l["echange"] = {k: _nan(v) if not isinstance(v, (dict, str)) else v
+                        for k, v in e.items() if k != "remplacant"}
+    if plan:
+        note("plan des echanges : " + " ; ".join(
+            f"{e['Ticker']} -> {(e.get('remplacant') or {}).get('Ticker', '-')} ({e['decision']})" for e in plan))
+
     # Obligations IG : score horizon du classeur, rapproche des obligations
     # detenues (export StockTrak).
     classement_ig = ob.scorer(ob.charger())
@@ -568,11 +599,21 @@ def main() -> None:
             "hors_classeur": hors_ig,
         },
         "univers": table_univers,
-        "remplacants": [{**_propre(x), "achat": {k: _nan(v) for k, v in achats.get(x["Ticker"], {}).items()}}
+        # Un remplacant affecte a une sortie porte l'ordre du plan ; les autres,
+        # un montant indicatif a la 1/N du jour.
+        "remplacants": [{**_propre(x), **(
+            {"achat": {k: _nan(v) for k, v in affectes[x["Ticker"]][1].items()},
+             "remplace": affectes[x["Ticker"]][0]} if x["Ticker"] in affectes else
+            {"achat": {k: _nan(v) for k, v in achats.get(x["Ticker"], {}).items()}, "remplace": None})}
                         for x in candidats.head(20)[
             ["Ticker", "Societe", "Secteur", "Pays", "rang", "verdict",
              "g1", "seuil", "marge"]].to_dict("records")],
         "cible_ligne_eur": _nan(cible_ligne),
+        "echanges": {"liquidites_disponibles_eur": _nan(liq_dispo),
+                     "reserve_eur": _nan(cfg.RESERVE_LIQUIDITES * total_fonds),
+                     "seuil_remplacement": cfg.SEUIL_REMPLACEMENT,
+                     "liquidites_apres_eur": _nan(plan[-1]["liquidites_apres_eur"]) if plan else None,
+                     "nb": len(plan)},
         "ecartes": [_propre(x) for x in clt[clt["bloque"]][
             ["Ticker", "Societe", "Secteur", "rang"]].to_dict("records")],
         "budget": sg.budget(transactions, transactions_initiales, aujourdhui),
