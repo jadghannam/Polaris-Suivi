@@ -177,7 +177,7 @@ textarea{width:100%;min-height:86px;font:12px/1.6 ui-monospace,SFMono-Regular,Me
   .tile.large .v{font-size:28px}}
 </style>
 <link rel="stylesheet" href="extension.css?v=10">
-<script src="i18n.js?v=3"></script>
+<script src="i18n.js?v=4"></script>
 </head>
 <body>
 <div class="wrap">
@@ -709,6 +709,8 @@ const ordreEch=rp=>rp&&rp.achat&&rp.achat.quantite!=null
 /* Execution d'un echange (19/11/2026) : maintenant, ou au prochain comite. */
 const execEch=l=>{const x=l.echange&&l.echange.execution; if(!x) return "";
   if(x.statut==="maintenant") return `<div class="exec ok" title="${esc(x.motif)}">Exécutable maintenant</div>`;
+  if(x.statut==="confirmation") return `<div class="exec attente" title="${esc(x.motif)}">En attente de confirmation (${x.clotures} / ${x.requises} clôtures)</div>
+    <div class="rempl">Pas de vente avant la ${x.requises}e clôture, même en comité.</div>`;
   if(x.statut==="comite") return `<div class="exec attente" title="${esc(x.motif)}">Au comité du ${esc(jour(x.comite))}</div>
     <div class="rempl">${esc(x.motif)}</div>`;
   return "";};

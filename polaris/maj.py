@@ -542,7 +542,8 @@ def main() -> None:
     per = sg.periode(pd.read_csv(chemin_compte) if chemin_compte.exists()
                      else pd.DataFrame(columns=["date", "transactions_consommees"]),
                      cfg.TRANSACTIONS_CONSTRUCTION, aujourdhui)
-    sg.statut_execution(plan, {l["ticker"] for l in portefeuille if l["sortie_confirmee"]}, per)
+    sg.statut_execution(plan, {l["ticker"] for l in portefeuille if l["sortie_confirmee"]}, per,
+                        {l["ticker"]: l["clotures_consecutives"] for l in portefeuille})
     par_ticker = {e["Ticker"]: e for e in plan}
     affectes = {e["remplacant"]["Ticker"]: (e["Ticker"], e["remplacant"]["achat"])
                 for e in plan if e.get("remplacant")}

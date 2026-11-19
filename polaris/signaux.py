@@ -274,9 +274,17 @@ def periode(compte: pd.DataFrame, transactions_initiales: int,
             "restantes": max(enveloppe - utilisees, 0)}
 
 
-def statut_execution(plan: list[dict], confirmees: set[str], per: dict) -> None:
-    """Ajoute a chaque echange du plan : maintenant, ou au prochain comite.
+def statut_execution(plan: list[dict], confirmees: set[str], per: dict,
+                     clotures: dict[str, int] | None = None) -> None:
+    """Ajoute a chaque echange du plan son statut d'execution.
 
+    Ordre des conditions (corrige le 19/11/2026, le libelle laissait croire
+    qu'un comite pouvait vendre une sortie non confirmee) :
+      1. sortie non confirmee -> « confirmation » : pas de vente, ni avant ni
+         pendant le comite, tant que les 5 clotures ne sont pas atteintes ;
+      2. confirmee, mais echanges reserves aux comites ou enveloppe epuisee
+         -> « comite » : vente au prochain comite ;
+      3. confirmee, remplacant achetable, enveloppe disponible -> « maintenant ».
     Dans l'ordre du plan (priorite), chaque echange executable consomme deux
     transactions de l'enveloppe restante de la periode."""
     reste = per["restantes"]
@@ -285,8 +293,11 @@ def statut_execution(plan: list[dict], confirmees: set[str], per: dict) -> None:
         if not e.get("remplacant"):
             e["execution"] = {"statut": "aucun", "motif": e.get("decision", ""), "comite": comite}
         elif e["Ticker"] not in confirmees:
-            e["execution"] = {"statut": "comite", "comite": comite,
-                              "motif": "sortie non confirmee : attendre les 5 clotures ou le comite"}
+            n = (clotures or {}).get(e["Ticker"], 0)
+            e["execution"] = {"statut": "confirmation", "comite": comite, "clotures": n,
+                              "requises": cfg.CLOTURES_CONFIRMATION,
+                              "motif": f"sortie non confirmee ({n} / {cfg.CLOTURES_CONFIRMATION} clotures) : "
+                                       f"pas de vente avant la {cfg.CLOTURES_CONFIRMATION}e cloture, meme en comite"}
         elif not cfg.ECHANGES_ENTRE_COMITES:
             e["execution"] = {"statut": "comite", "comite": comite,
                               "motif": "echanges reserves aux comites (config.py)"}
