@@ -161,7 +161,13 @@ def main() -> None:
     note(f"taux de change : {', '.join(f'{k} {v:.4f}' for k, v in taux.items())}")
     chemin_cours = cfg.DATA / "cours.csv"
     derniers = pd.read_csv(chemin_cours) if chemin_cours.exists() else None
-    cours = collecte.cours_du_jour(univers_complet["Ticker"].tolist(), derniers)
+    # Titres prioritaires pour completer une cloture manquante : l'univers du
+    # fonds et toutes les lignes detenues des portefeuilles personnels.
+    prioritaires = set(univers["Ticker"])
+    for f_ in (cfg.DATA / "portefeuilles").glob("*.csv") if (cfg.DATA / "portefeuilles").exists() else []:
+        if not f_.name.endswith("_historique.csv"):
+            prioritaires |= set(pd.read_csv(f_)["Ticker"])
+    cours = collecte.cours_du_jour(univers_complet["Ticker"].tolist(), derniers, prioritaires)
     if not cours.empty:
         # On garde les cours du jour : ils serviront de repli si Yahoo nous
         # coupe demain. Une donnee manquante ne doit jamais ressembler a un

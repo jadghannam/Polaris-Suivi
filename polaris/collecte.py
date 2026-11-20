@@ -129,6 +129,37 @@ def seance_close(ticker: str, jour: dt.date, maintenant: dt.datetime | None = No
 
 
 # --------------------------------------------------------------- cours -------
+_INCOMPLETES: dict[str, dt.date] = {}
+
+
+def cloture_par_cotation(t: str, jour: dt.date) -> float | None:
+    """Cloture officielle d'une seance par la cotation Yahoo (regularMarketPrice),
+    acceptee seulement si son horodatage tombe sur cette seance, heure locale
+    de la place. Un appel par titre : reserve aux titres qui comptent."""
+    from zoneinfo import ZoneInfo
+    try:
+        i = yf.Ticker(t).info or {}
+    except Exception:                                   # noqa: BLE001
+        return None
+    px, ts = i.get("regularMarketPrice"), i.get("regularMarketTime")
+    if px is None or ts is None:
+        return None
+    tz, _ = _cloture_de(t)
+    quand = dt.datetime.fromtimestamp(ts, dt.timezone.utc).astimezone(ZoneInfo(tz))
+    if quand.date() == jour:
+        return float(px)
+    # La place a rouvert depuis : la cotation est celle du jour, et la cloture
+    # precedente est celle de la seance cherchee, si c'etait bien la derniere
+    # seance ouvree avant (pas de seance intercalee).
+    if quand.date() > jour:
+        prec = quand.date() - dt.timedelta(days=1)
+        while prec.weekday() >= 5:
+            prec -= dt.timedelta(days=1)
+        if prec == jour and i.get("regularMarketPreviousClose") is not None:
+            return float(i["regularMarketPreviousClose"])
+    return None
+
+
 def _extraire(data, t: str) -> pd.DataFrame | None:
     """Sort le sous-tableau d'un titre d'un telechargement groupe."""
     try:
@@ -143,18 +174,83 @@ def _extraire(data, t: str) -> pd.DataFrame | None:
         # volume, mais SANS cloture. Prise pour la derniere ligne, elle donnait
         # un cours vide compte comme frais : 17 lignes sur 26 sortaient de la
         # valeur du fonds. Une ligne sans cloture n'est pas un cours.
-        if "Close" in h.columns:
-            h = h[h["Close"].notna()]
         # Seance en cours : ecartee tant que la place n'a pas cloture.
         if not h.empty and not seance_close(t, h.index[-1].date()):
             h = h.iloc[:-1]
+        # Seance cloturee SANS cloture dans la serie quotidienne (constate le
+        # 20/11/2026 pour toute l'Europe : la ligne du 19/11 avait ouverture,
+        # plus haut, plus bas et volume, mais pas de cloture, le lendemain
+        # matin encore). On la signale pour la completer par la cotation.
+        if not h.empty and "Close" in h.columns and pd.isna(h["Close"].iloc[-1]) \
+                and h[["High", "Low"]].iloc[-1].notna().all():
+            r = h.iloc[-1]
+            _INCOMPLETES[t] = (h.index[-1].date(), {k: float(r[k]) for k in ("Open", "High", "Low", "Volume")
+                                                    if k in h.columns and pd.notna(r[k])})
+        if "Close" in h.columns:
+            h = h[h["Close"].notna()]
+        # Dans un telechargement groupe, la ligne peut meme manquer en entier :
+        # on compare au calendrier. Si la derniere seance qui devrait etre
+        # cloturee n'est pas dans les donnees, on la signale aussi. Un jour
+        # ferie est sans risque : la cotation porterait alors la date de la
+        # seance precedente et serait refusee.
+        attendue = derniere_seance(t)
+        if not h.empty and h.index[-1].date() < attendue and t not in _INCOMPLETES:
+            _INCOMPLETES[t] = (attendue, {})
         return h if not h.empty else None
     except Exception:                                   # noqa: BLE001
         return None
 
 
-def cours_du_jour(tickers: list[str], derniers: pd.DataFrame | None = None
-                  ) -> pd.DataFrame:
+def derniere_seance(t: str, maintenant: dt.datetime | None = None) -> dt.date:
+    """Date locale de la derniere seance cloturee de la place (jours ouvres)."""
+    from zoneinfo import ZoneInfo
+    tz, _ = _cloture_de(t)
+    j = (maintenant or dt.datetime.now(dt.timezone.utc)).astimezone(ZoneInfo(tz)).date()
+    for _ in range(7):
+        if j.weekday() < 5 and seance_close(t, j, maintenant):
+            return j
+        j -= dt.timedelta(days=1)
+    return j
+
+
+def cours_du_jour(tickers: list[str], derniers: pd.DataFrame | None = None,
+                  prioritaires: set[str] | None = None) -> pd.DataFrame:
+    """Voir _cours_du_jour. `prioritaires` : titres dont une cloture absente
+    de la serie quotidienne est completee par la cotation (univers du fonds,
+    lignes detenues). Pour les autres, la seance precedente reste retenue."""
+    _INCOMPLETES.clear()
+    df = _cours_du_jour(tickers, derniers)
+    if df.empty or not _INCOMPLETES:
+        return df
+    a_completer = [t for t in _INCOMPLETES if t in (prioritaires or set())]
+    faits = []
+    for t in a_completer:
+        jour, ohlv = _INCOMPLETES[t]
+        px = cloture_par_cotation(t, jour)
+        if px is None:
+            continue
+        devise, diviseur = place(t)
+        i = df.index[df["Ticker"] == t]
+        if len(i):
+            # La seance du jour, complete : sa cloture par la cotation, et
+            # ouverture, extremes et volume de la ligne quotidienne.
+            df.loc[i, ["date", "cours"]] = [jour.isoformat(), px / diviseur]
+            for k, col in (("Open", "ouverture"), ("High", "haut"), ("Low", "bas")):
+                if k in ohlv:
+                    df.loc[i, col] = ohlv[k] / diviseur
+            if "Volume" in ohlv:
+                df.loc[i, "volume"] = ohlv["Volume"]
+            faits.append(t)
+        time.sleep(0.2)
+    reste = len(_INCOMPLETES) - len(faits)
+    note(f"clotures absentes de la serie quotidienne Yahoo : {len(_INCOMPLETES)} titres ; "
+         f"{len(faits)} completees par la cotation"
+         + (f", {reste} gardent la seance precedente" if reste else ""))
+    return df
+
+
+def _cours_du_jour(tickers: list[str], derniers: pd.DataFrame | None = None
+                   ) -> pd.DataFrame:
     """Dernier cours, volume et amplitude du jour, en devise de cotation.
 
     Un seul telechargement groupe pour tout l'univers, puis un second essai
