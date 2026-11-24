@@ -1,5 +1,5 @@
 devise,taux,source,date
-AED,0.049119997024536136,Yahoo ^TNX (devise arrimee au dollar),2026-11-21
+AED,0.049180002212524415,Yahoo ^TNX (devise arrimee au dollar),2026-11-24
 AUD,0.052649999999999995,"OCDE, taux long",2026-10
 BRL,0.0929,"OCDE, taux long",2026-10
 CAD,0.03874762,"OCDE, taux long",2026-10
@@ -12,14 +12,14 @@ DKK,0.03228,"BCE, taux long UE",2026-10
 EGP,0.22,saisi a la main (config.py),2026-11-14
 EUR,0.034415130227000004,"BCE, courbe AAA zone euro 10 ans",2026-11-19
 GBP,0.053392999999999996,"OCDE, taux long",2026-10
-HKD,0.049119997024536136,Yahoo ^TNX (devise arrimee au dollar),2026-11-21
+HKD,0.049180002212524415,Yahoo ^TNX (devise arrimee au dollar),2026-11-24
 HUF,0.0557,"BCE, taux long UE",2026-10
 IDR,0.068,saisi a la main (config.py),2026-11-14
 ILS,0.0425,"OCDE, taux long",2026-10
 INR,0.0738,"OCDE, taux long",2026-10
 JPY,0.027549999999999998,"OCDE, taux long",2026-10
 KRW,0.0421,"OCDE, taux long",2026-10
-KWD,0.049119997024536136,Yahoo ^TNX (devise arrimee au dollar),2026-11-21
+KWD,0.049180002212524415,Yahoo ^TNX (devise arrimee au dollar),2026-11-24
 MXN,0.0925,"OCDE, taux long",2026-10
 MYR,0.037,saisi a la main (config.py),2026-11-14
 NOK,0.04433045,"OCDE, taux long",2026-10
@@ -27,12 +27,12 @@ NZD,0.0501,"OCDE, taux long",2026-10
 PEN,0.063,saisi a la main (config.py),2026-11-14
 PHP,0.062,saisi a la main (config.py),2026-11-14
 PLN,0.0632,"BCE, taux long UE",2026-10
-QAR,0.049119997024536136,Yahoo ^TNX (devise arrimee au dollar),2026-11-21
-SAR,0.049119997024536136,Yahoo ^TNX (devise arrimee au dollar),2026-11-21
+QAR,0.049180002212524415,Yahoo ^TNX (devise arrimee au dollar),2026-11-24
+SAR,0.049180002212524415,Yahoo ^TNX (devise arrimee au dollar),2026-11-24
 SEK,0.0317,"BCE, taux long UE",2026-10
 SGD,0.028,saisi a la main (config.py),2026-11-14
 THB,0.024,saisi a la main (config.py),2026-11-14
 TRY,0.28,saisi a la main (config.py),2026-11-14
 TWD,0.016,saisi a la main (config.py),2026-11-14
-USD,0.049119997024536136,Yahoo ^TNX,2026-11-21
+USD,0.049180002212524415,Yahoo ^TNX,2026-11-24
 ZAR,0.0894,"OCDE, taux long",2026-10
